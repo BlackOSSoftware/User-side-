@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-heading: 'Outfit', sans-serif;
+    --font-primary: 'Outfit', sans-serif;
+
+    /* Default Theme: Dark */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 217 33% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217 33% 25%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 25%;
+    --input: 217 33% 15%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+  }
+
+  /* --- THEMES (Light/Dark) --- */
+
+  .light {
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 90%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 90%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 90%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 80%;
+    --input: 0 0% 100%;
+    --ring: 217 91% 60%;
+    --radius: 0px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+  @apply bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground;
+  font-family: var(--font-primary), sans-serif;
+
+  /* subtle grid that works in both themes */
+  background-image:
+    linear-gradient(hsl(var(--foreground) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--foreground) / 0.04) 1px, transparent 1px);
+
+  background-size: 40px 40px;
+}
+}
+
+@layer utilities {
+  .font-outfit { font-family: 'Outfit', sans-serif; }
+  .font-inter { font-family: 'Inter', sans-serif; }
+  .font-roboto { font-family: 'Roboto', sans-serif; }
+  .font-poppins { font-family: 'Poppins', sans-serif; }
+  .font-montserrat { font-family: 'Montserrat', sans-serif; }
+  .font-lato { font-family: 'Lato', sans-serif; }
+  .font-playfair { font-family: 'Playfair Display', serif; }
+  .font-space { font-family: 'Space Grotesk', sans-serif; }
+  .font-fira { font-family: 'Fira Code', monospace; }
+  .font-oswald { font-family: 'Oswald', sans-serif; }
+  .font-ubuntu { font-family: 'Ubuntu', sans-serif; }
+
+  .text-glow {
+    text-shadow: 0 0 10px var(--tw-shadow-color);
+  }
+  
+  .terminal-panel {
+    @apply bg-card border border-border shadow-none;
+  }
+
+  .font-mono-numbers {
+    @apply font-mono tabular-nums tracking-tight;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px; 
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-background border-l border-border;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 transition-colors rounded-none;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+     @apply bg-primary/50;
+  }
+
+  .bg-cyber-grid {
+    background-size: 20px 20px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+
+  .bg-scanline {
+    background: linear-gradient(
+      to bottom,
+      rgba(255,255,255,0),
+      rgba(255,255,255,0) 50%,
+      rgba(0,0,0,0.1) 50%,
+      rgba(0,0,0,0.1)
+    );
+    background-size: 100% 4px;
+  }
+
+  .neon-border-b {
+    border-bottom: 1px solid theme('colors.primary.DEFAULT');
+    box-shadow: 0 4px 12px -4px theme('colors.primary.DEFAULT');
+  }
+
+  .text-glow-sm {
+    text-shadow: 0 0 5px currentColor;
+  }
+
+  .typewriter {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    padding-right: 2px;
+    border-right: 2px solid currentColor;
+    color: hsl(var(--primary));
+    animation: typing 4.2s steps(36, end) forwards, blink 0.7s step-end infinite;
+  }
+
+  @keyframes typing {
+    0% { width: 0; }
+    65% { width: 100%; }
+    90% { width: 100%; }
+    100% { width: 0; }
+  }
+
+  @keyframes blink {
+    50% { border-color: transparent; }
+  }
+
+  .color-cycle {
+    animation: colorCycle 8s linear infinite;
+  }
+
+  @keyframes colorCycle {
+    0% { color: #ef4444; }
+    25% { color: #3b82f6; }
+    50% { color: #facc15; }
+    75% { color: #22c55e; }
+    100% { color: #ef4444; }
+  }
+
+  .mask-linear-fade {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+}
