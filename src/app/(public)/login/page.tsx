@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { MarketTicker } from '@/components/market-ticker';
 import { Loader2, Lock, Mail, ArrowRight, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 // import { signIn } from 'next-auth/react'; // Standard for Next.js, uncomment when Auth logic is ready
@@ -40,7 +41,10 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white selection:bg-primary/30 transition-colors duration-300 relative overflow-hidden">
+        <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300">
+
+            {/* <MarketTicker /> */}
+
             {/* Background Grid & Spotlights */}
             <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-[0.2]"></div>

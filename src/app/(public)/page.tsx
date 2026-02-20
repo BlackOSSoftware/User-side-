@@ -65,7 +65,7 @@ export default function Home() {
     return (
         <div className="flex flex-col min-h-screen font-sans overflow-x-hidden">
             {/* Hero Section - Fintech Style */}
-            <section className="relative pt-16 pb-20 md:pb-32 overflow-hidden">
+            <section className="relative pt-14 pb-12 md:pb-20 overflow-hidden">
 
                 {/* BACKGROUND SYSTEM */}
                 <div className="absolute inset-0 z-0 bg-background">
@@ -84,7 +84,7 @@ export default function Home() {
                 <div className="relative z-10 w-full max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 lg:gap-8 items-center lg:[grid-template-columns:minmax(0,1fr)_540px]">
 
                     {/* Left Column: Text & CTAs */}
-                    <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 relative z-10 pt-20 lg:pt-0">
+                    <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 relative z-10 pt-12 sm:pt-16 lg:pt-0">
 
 
                         {/* Social Proof Pill */}
@@ -168,10 +168,10 @@ export default function Home() {
 
 
                 {/* Dashboard Preivew (Moved Below Split Hero) */}
-                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 mt-8 lg:mt-0 flex flex-col items-center gap-10 text-center">
+                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 mt-4 lg:mt-0 flex flex-col items-center gap-6 md:gap-8 text-center">
                     {/* High-Fidelity Dashboard Mockup (Flat & Premium) */}
                     {/* SIGNAL VALUE CANVAS */}
-                    <div className="relative w-full max-w-7xl mx-auto px-3 group mt-8">
+                    <div className="relative w-full max-w-7xl mx-auto px-3 group mt-6 md:mt-8">
 
                         {/* soft glow */}
                         <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition duration-500"></div>
@@ -197,7 +197,7 @@ export default function Home() {
                                 </div>
 
                                 {/* KEY VALUE WORDS */}
-                                <div className="w-full max-w-5xl space-y-4 overflow-hidden">
+                                <div className="w-full max-w-none sm:max-w-5xl space-y-4 overflow-hidden">
 
                                     {/* ================= ROW 1 ================= */}
                                     <div className="overflow-hidden">
@@ -329,13 +329,13 @@ export default function Home() {
             </section>
 
             {/* Platform Ecosystem - SOW Features V3: Spotlight Zig-Zag (Alerts Prioritized) */}
-            <section className="w-full max-w-7xl mx-auto px-4 py-23 relative z-10 overflow-hidden">
+            <section className="w-full max-w-7xl mx-auto px-4 py-14 md:py-20 relative z-10 overflow-hidden">
                 {/* Background ambient lighting */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-primary/5 via-transparent to-transparent -z-10 pointer-events-none"></div>
 
-                <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-32">
-                    <div className="text-left max-w-4xl">
-                        <h2 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
+                <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12 md:mb-20">
+                    <div className="text-center md:text-left max-w-4xl mx-auto md:mx-0">
+                        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
                             The Infrastructure of <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/70 to-primary animate-gradient-x">Modern Trading</span>
                         </h2>
@@ -507,13 +507,13 @@ export default function Home() {
             </section>
 
             {/* Pricing Section */}
-            <section className="w-full max-w-7xl mx-auto px-4 py-32 relative z-10 overflow-hidden">
+            <section className="w-full max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10 overflow-hidden">
                 {/* Background ambient lighting */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-primary/5 via-transparent to-transparent -z-10 pointer-events-none"></div>
 
-                <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-32">
-                    <div className="text-left max-w-4xl">
-                        <h2 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
+                <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12 md:mb-20">
+                    <div className="text-center md:text-left max-w-4xl mx-auto md:mx-0">
+                        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
                             Choose your <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/70 to-primary animate-gradient-x">Trading Edge</span>
                         </h2>
@@ -605,13 +605,13 @@ export default function Home() {
             </section>
 
             {/* Testimonials - Social Proof */}
-            <section className="w-full max-w-7xl mx-auto px-4 py-19 relative z-10 overflow-hidden">
+            <section className="w-full max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10 overflow-hidden">
                 {/* Background ambient lighting */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-primary/5 via-transparent to-transparent -z-10 pointer-events-none"></div>
 
-                <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-32">
-                    <div className="text-left max-w-4xl">
-                        <h2 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
+                <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12 md:mb-20">
+                    <div className="text-center md:text-left max-w-4xl mx-auto md:mx-0">
+                        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
                             Trusted by <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/70 to-primary animate-gradient-x">10,000+ Traders</span>
                         </h2>
