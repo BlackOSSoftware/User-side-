@@ -79,7 +79,7 @@ export default function Home() {
                     {/* Existing glow */}
                     <div className="absolute top-0 left-0 right-0 h-[500px] w-full bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-40"></div>
                 </div>
-                
+
 
                 <div className="relative z-10 w-full max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 lg:gap-8 items-center lg:[grid-template-columns:minmax(0,1fr)_540px]">
 
@@ -171,81 +171,84 @@ export default function Home() {
                 <div className="relative z-10 w-full max-w-7xl mx-auto px-4 mt-8 lg:mt-0 flex flex-col items-center gap-10 text-center">
                     {/* High-Fidelity Dashboard Mockup (Flat & Premium) */}
                     {/* SIGNAL VALUE CANVAS */}
-<div className="relative w-full max-w-7xl mx-auto px-3 group mt-8">
+                    <div className="relative w-full max-w-7xl mx-auto px-3 group mt-8">
 
-    {/* soft glow */}
-    <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition duration-500"></div>
+                        {/* soft glow */}
+                        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition duration-500"></div>
 
-    <div className="relative rounded-xl border border-border bg-card shadow-xl overflow-hidden">
+                        <div className="relative rounded-xl border border-border bg-card shadow-xl overflow-hidden">
 
-        {/* background animated gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 animate-[pulse_8s_infinite]" />
+                            {/* background animated gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 animate-[pulse_8s_infinite]" />
 
-        <div className="relative p-10 lg:p-16 flex flex-col items-center text-center gap-10">
+                            <div className="relative p-10 lg:p-16 flex flex-col items-center text-center gap-10">
 
-            {/* MAIN QUOTE */}
-            <div className="max-w-3xl space-y-4">
-                <h3 className="text-2xl lg:text-3xl font-bold leading-tight">
-                    We deliver <span className="text-primary">high-probability signals</span>  
-                    designed for consistency, clarity and disciplined execution.
-                </h3>
+                                {/* MAIN QUOTE */}
+                                <div className="max-w-3xl space-y-4">
+                                    <h3 className="text-2xl lg:text-3xl font-bold leading-tight">
+                                        We deliver <span className="text-primary">high-probability signals</span>
+                                        designed for consistency, clarity and disciplined execution.
+                                    </h3>
 
-                <p className="text-muted-foreground text-sm lg:text-base">
-                    Our research-driven approach combines structure, liquidity and risk management  
-                    to provide traders with actionable insights — not noise.
-                </p>
-            </div>
+                                    <p className="text-muted-foreground text-sm lg:text-base">
+                                        Our research-driven approach combines structure, liquidity and risk management
+                                        to provide traders with actionable insights — not noise.
+                                    </p>
+                                </div>
 
-            {/* KEY VALUE WORDS */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 w-full max-w-4xl">
+                                {/* KEY VALUE WORDS */}
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-4xl">
 
-                {[
-                    "Precision",
-                    "Consistency",
-                    "Clarity",
-                    "Discipline",
-                    "Confidence",
-                    "Structure",
-                    "Performance",
-                    "Reliability",
-                    "Focus",
-                    "Edge"
-                ].map((word, i) => (
-                    <div
-                        key={i}
-                        className="px-4 py-3 rounded-xl bg-muted/40 border border-border text-sm font-semibold hover:-translate-y-1 hover:shadow-lg transition-all"
-                    >
-                        {word}
+                                    {[
+                                        { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
+                                        { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
+                                        { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
+                                        { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
+                                        { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
+                                        { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
+                                        { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
+                                        { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
+                                        { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
+                                        { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
+                                    ].map((item, i) => (
+                                        <div
+                                            key={i}
+                                            className={`relative px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color}
+            backdrop-blur border text-sm sm:text-base font-semibold
+            hover:-translate-y-1 hover:shadow-lg transition-all`}
+                                        >
+                                            <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity bg-gradient-to-r from-white/10 to-transparent rounded-xl" />
+                                            {item.label}
+                                        </div>
+                                    ))}
+
+                                </div>
+
+                                {/* TRUST STRIP */}
+                                <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground pt-4">
+
+                                    <span className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                        Institutional methodology
+                                    </span>
+
+                                    <span className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                        Multi-timeframe confluence
+                                    </span>
+
+                                    <span className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                        Strict risk framework
+                                    </span>
+
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                ))}
 
-            </div>
 
-            {/* TRUST STRIP */}
-            <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground pt-4">
-
-                <span className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    Institutional methodology
-                </span>
-
-                <span className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    Multi-timeframe confluence
-                </span>
-
-                <span className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    Strict risk framework
-                </span>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-
-               
 
 
                 </div>
