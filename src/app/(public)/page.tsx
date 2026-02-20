@@ -197,32 +197,106 @@ export default function Home() {
                                 </div>
 
                                 {/* KEY VALUE WORDS */}
-                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-4xl">
+                                <div className="w-full max-w-5xl space-y-4 overflow-hidden">
 
-                                    {[
-                                        { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
-                                        { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
-                                        { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
-                                        { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
-                                        { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
-                                        { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
-                                        { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
-                                        { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
-                                        { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
-                                        { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
-                                    ].map((item, i) => (
-                                        <div
-                                            key={i}
-                                            className={`relative px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color}
-            backdrop-blur border text-sm sm:text-base font-semibold
-            hover:-translate-y-1 hover:shadow-lg transition-all`}
-                                        >
-                                            <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity bg-gradient-to-r from-white/10 to-transparent rounded-xl" />
-                                            {item.label}
+                                    {/* ================= ROW 1 ================= */}
+                                    <div className="overflow-hidden">
+                                        <div className="flex w-max animate-[marquee-left_25s_linear_infinite]">
+
+                                            {/* GROUP 1 */}
+                                            <div className="flex gap-3 pr-3">
+                                                {[
+                                                    { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
+                                                    { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
+                                                    { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
+                                                    { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
+                                                    { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
+                                                    { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
+                                                    { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
+                                                    { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
+                                                    { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
+                                                    { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
+                                                ].map((item, i) => (
+                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                        {item.label}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* GROUP 2 (clone SAME order → seamless) */}
+                                            <div className="flex gap-3">
+                                                {[
+                                                    { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
+                                                    { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
+                                                    { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
+                                                    { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
+                                                    { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
+                                                    { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
+                                                    { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
+                                                    { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
+                                                    { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
+                                                    { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
+                                                ].map((item, i) => (
+                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                        {item.label}
+                                                    </div>
+                                                ))}
+                                            </div>
+
                                         </div>
-                                    ))}
+                                    </div>
+
+
+                                    {/* ================= ROW 2 ================= */}
+                                    <div className="overflow-hidden">
+                                        <div className="flex w-max animate-[marquee-right_28s_linear_infinite]">
+
+                                            {/* GROUP 1 */}
+                                            <div className="flex gap-3 pr-3">
+                                                {[
+                                                    { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
+                                                    { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
+                                                    { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
+                                                    { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
+                                                    { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
+                                                    { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
+                                                    { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
+                                                    { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
+                                                    { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
+                                                    { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
+                                                ].map((item, i) => (
+                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                        {item.label}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* GROUP 2 */}
+                                            <div className="flex gap-3">
+                                                {[
+                                                    { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
+                                                    { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
+                                                    { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
+                                                    { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
+                                                    { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
+                                                    { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
+                                                    { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
+                                                    { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
+                                                    { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
+                                                    { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
+                                                ].map((item, i) => (
+                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                        {item.label}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                        </div>
+                                    </div>
 
                                 </div>
+
+
 
                                 {/* TRUST STRIP */}
                                 <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground pt-4">
@@ -255,7 +329,7 @@ export default function Home() {
             </section>
 
             {/* Platform Ecosystem - SOW Features V3: Spotlight Zig-Zag (Alerts Prioritized) */}
-            <section className="w-full max-w-7xl mx-auto px-4 py-32 relative z-10 overflow-hidden">
+            <section className="w-full max-w-7xl mx-auto px-4 py-23 relative z-10 overflow-hidden">
                 {/* Background ambient lighting */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-primary/5 via-transparent to-transparent -z-10 pointer-events-none"></div>
 
@@ -263,7 +337,7 @@ export default function Home() {
                     <div className="text-left max-w-4xl">
                         <h2 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
                             The Infrastructure of <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary animate-gradient-x">Modern Trading</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/70 to-primary animate-gradient-x">Modern Trading</span>
                         </h2>
                     </div>
                     <div className="flex flex-col items-start md:items-end gap-6 w-full md:w-auto">
@@ -427,52 +501,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Feature Strip (Grid of 4) */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-12">
-                        {/* Strategy Engine - Demoted to Grid */}
-                        <div className="p-6 rounded-[2rem] bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-primary/30 transition-all hover:-translate-y-2 group/card">
-                            <Zap className="w-8 h-8 text-primary mb-4 group-hover/card:scale-110 transition-transform" />
-                            <h4 className="text-xl font-bold mb-2">Smart Strategy Engine</h4>
-                            <p className="text-sm text-muted-foreground mb-4">Run automated strategies in the cloud. Backtest against historical data.</p>
-                            <ul className="space-y-1">
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full"></div> Cloud Execution</li>
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-primary rounded-full"></div> 5-Year Backtesting</li>
-                            </ul>
-                        </div>
-
-                        {/* Latency */}
-                        <div className="p-6 rounded-[2rem] bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-blue-500/30 transition-all hover:-translate-y-2 group/card">
-                            <BarChart3 className="w-8 h-8 text-blue-500 mb-4 group-hover/card:scale-110 transition-transform" />
-                            <h4 className="text-xl font-bold mb-2">Ultra-Low Latency</h4>
-                            <p className="text-sm text-muted-foreground mb-4">Powered by institutional feeds (Polygon.io, DxFeed) for microsecond-level precision.</p>
-                            <ul className="space-y-1">
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-blue-500 rounded-full"></div> &lt; 1ms Tick Delivery</li>
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-blue-500 rounded-full"></div> Real-time Data</li>
-                            </ul>
-                        </div>
-
-                        {/* Security */}
-                        <div className="p-6 rounded-[2rem] bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-red-500/30 transition-all hover:-translate-y-2 group/card">
-                            <Lock className="w-8 h-8 text-red-500 mb-4 group-hover/card:scale-110 transition-transform" />
-                            <h4 className="text-xl font-bold mb-2">Enterprise Security</h4>
-                            <p className="text-sm text-muted-foreground mb-4">Your data and API keys are protected with bank-grade encryption and protocols.</p>
-                            <ul className="space-y-1">
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-red-500 rounded-full"></div> JWT & Refresh Tokens</li>
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-red-500 rounded-full"></div> Encrypted Storage</li>
-                            </ul>
-                        </div>
-
-                        {/* Mobile */}
-                        <div className="p-6 rounded-[2rem] bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-indigo-500/30 transition-all hover:-translate-y-2 group/card">
-                            <Clock className="w-8 h-8 text-indigo-500 mb-4 group-hover/card:scale-110 transition-transform" />
-                            <h4 className="text-xl font-bold mb-2">Frontend & Mobile</h4>
-                            <p className="text-sm text-muted-foreground mb-4">Seamless experience across Web and Mobile App (Flutter) with real-time sync.</p>
-                            <ul className="space-y-1">
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-indigo-500 rounded-full"></div> Next.js + Tailwind Web</li>
-                                <li className="text-xs text-foreground/70 flex items-center gap-2"><div className="w-1 h-1 bg-indigo-500 rounded-full"></div> Native iOS & Android</li>
-                            </ul>
-                        </div>
-                    </div>
+                    
 
                 </div>
             </section>
@@ -486,7 +515,7 @@ export default function Home() {
                     <div className="text-left max-w-4xl">
                         <h2 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
                             Choose your <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary animate-gradient-x">Trading Edge</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/70 to-primary animate-gradient-x">Trading Edge</span>
                         </h2>
                     </div>
                     <div className="flex flex-col items-start md:items-end gap-6 w-full md:w-auto">
@@ -576,7 +605,7 @@ export default function Home() {
             </section>
 
             {/* Testimonials - Social Proof */}
-            <section className="w-full max-w-7xl mx-auto px-4 py-32 relative z-10 overflow-hidden">
+            <section className="w-full max-w-7xl mx-auto px-4 py-19 relative z-10 overflow-hidden">
                 {/* Background ambient lighting */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-primary/5 via-transparent to-transparent -z-10 pointer-events-none"></div>
 
@@ -584,7 +613,7 @@ export default function Home() {
                     <div className="text-left max-w-4xl">
                         <h2 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter text-foreground leading-[1.1]">
                             Trusted by <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary animate-gradient-x">10,000+ Traders</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/70 to-primary animate-gradient-x">10,000+ Traders</span>
                         </h2>
                     </div>
                     <div className="flex flex-col items-start md:items-end gap-6 w-full md:w-auto">
