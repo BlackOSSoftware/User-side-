@@ -7,80 +7,80 @@
     --font-heading: 'Outfit', sans-serif;
     --font-primary: 'Outfit', sans-serif;
 
-    /* Trading Aurora Glass (default) */
-    --background: 210 46% 8%;
-    --foreground: 195 32% 95%;
+    /* MSPK Brand Glass */
+    --background: 218 40% 9%;
+    --foreground: 198 22% 95%;
 
-    --card: 209 36% 16% / 0.72;
-    --card-foreground: 195 32% 95%;
+    --card: 216 33% 14% / 0.76;
+    --card-foreground: 198 22% 95%;
 
-    --popover: 211 44% 11% / 0.94;
-    --popover-foreground: 195 32% 95%;
+    --popover: 216 36% 11% / 0.94;
+    --popover-foreground: 198 22% 95%;
 
-    --primary: 162 78% 52%;
-    --primary-foreground: 201 58% 10%;
+    --primary: 220 86% 52%;
+    --primary-foreground: 214 64% 10%;
 
-    --secondary: 211 28% 24% / 0.76;
-    --secondary-foreground: 198 24% 90%;
+    --secondary: 208 34% 23% / 0.78;
+    --secondary-foreground: 198 18% 90%;
 
-    --muted: 212 24% 20% / 0.74;
-    --muted-foreground: 201 16% 71%;
+    --muted: 212 24% 19% / 0.76;
+    --muted-foreground: 199 14% 72%;
 
-    --accent: 42 94% 58%;
-    --accent-foreground: 37 62% 15%;
+    --accent: 32 94% 55%;
+    --accent-foreground: 26 58% 17%;
 
     --destructive: 2 82% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 170 42% 58% / 0.27;
-    --input: 212 31% 18% / 0.76;
-    --ring: 162 78% 52%;
+    --border: 140 38% 53% / 0.24;
+    --input: 213 31% 17% / 0.8;
+    --ring: 220 86% 52%;
 
     --radius: 1rem;
   }
 
   .dark {
-    --background: 210 46% 8%;
-    --foreground: 195 32% 95%;
-    --card: 209 36% 16% / 0.72;
-    --card-foreground: 195 32% 95%;
-    --popover: 211 44% 11% / 0.94;
-    --popover-foreground: 195 32% 95%;
-    --primary: 162 78% 52%;
-    --primary-foreground: 201 58% 10%;
-    --secondary: 211 28% 24% / 0.76;
-    --secondary-foreground: 198 24% 90%;
-    --muted: 212 24% 20% / 0.74;
-    --muted-foreground: 201 16% 71%;
-    --accent: 42 94% 58%;
-    --accent-foreground: 37 62% 15%;
+    --background: 218 40% 9%;
+    --foreground: 198 22% 95%;
+    --card: 216 33% 14% / 0.76;
+    --card-foreground: 198 22% 95%;
+    --popover: 216 36% 11% / 0.94;
+    --popover-foreground: 198 22% 95%;
+    --primary: 220 86% 52%;
+    --primary-foreground: 214 64% 10%;
+    --secondary: 208 34% 23% / 0.78;
+    --secondary-foreground: 198 18% 90%;
+    --muted: 212 24% 19% / 0.76;
+    --muted-foreground: 199 14% 72%;
+    --accent: 32 94% 55%;
+    --accent-foreground: 26 58% 17%;
     --destructive: 2 82% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 170 42% 58% / 0.27;
-    --input: 212 31% 18% / 0.76;
-    --ring: 162 78% 52%;
+    --border: 140 38% 53% / 0.24;
+    --input: 213 31% 17% / 0.8;
+    --ring: 220 86% 52%;
   }
 
   .light {
-    --background: 186 38% 95%;
-    --foreground: 208 43% 15%;
-    --card: 0 0% 100% / 0.72;
-    --card-foreground: 208 43% 15%;
+    --background: 195 34% 96%;
+    --foreground: 216 45% 16%;
+    --card: 0 0% 100% / 0.8;
+    --card-foreground: 216 45% 16%;
     --popover: 0 0% 100% / 0.95;
-    --popover-foreground: 208 43% 15%;
-    --primary: 164 64% 34%;
-    --primary-foreground: 180 43% 96%;
-    --secondary: 188 30% 88% / 0.75;
-    --secondary-foreground: 205 34% 20%;
-    --muted: 190 25% 84% / 0.76;
-    --muted-foreground: 206 17% 37%;
-    --accent: 38 90% 52%;
-    --accent-foreground: 34 52% 16%;
+    --popover-foreground: 216 45% 16%;
+    --primary: 220 76% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 174 32% 88% / 0.78;
+    --secondary-foreground: 211 34% 22%;
+    --muted: 190 25% 86% / 0.8;
+    --muted-foreground: 209 18% 38%;
+    --accent: 31 95% 52%;
+    --accent-foreground: 27 60% 17%;
     --destructive: 2 78% 56%;
     --destructive-foreground: 0 0% 100%;
-    --border: 171 24% 57% / 0.35;
+    --border: 145 31% 48% / 0.3;
     --input: 0 0% 100% / 0.8;
-    --ring: 164 64% 34%;
+    --ring: 220 76% 43%;
     --radius: 1rem;
   }
 }
@@ -99,7 +99,7 @@
       radial-gradient(circle at 12% 12%, hsl(var(--primary) / 0.22), transparent 38%),
       radial-gradient(circle at 82% 14%, hsl(var(--accent) / 0.16), transparent 34%),
       radial-gradient(circle at 52% 94%, hsl(var(--primary) / 0.14), transparent 40%),
-      radial-gradient(circle at 90% 78%, hsl(153 82% 57% / 0.11), transparent 34%),
+      radial-gradient(circle at 90% 78%, hsl(139 70% 45% / 0.12), transparent 34%),
       linear-gradient(140deg, hsl(var(--background)), hsl(var(--background) / 0.96));
     background-attachment: fixed;
   }

@@ -17,10 +17,10 @@ export default function Home() {
         "https://images.unsplash.com/photo-1612461313144-fc1676a1bf17?q=80&w=1102&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
     const taglines = [
-        "Professional signals. Consistent results.",
-        "Verified setups. Clear entries.",
-        "Real-time alerts. Smarter trades.",
-        "Precision entries. Disciplined exits.",
+        "Institutional playbooks. Retail clarity.",
+        "Verified structure. Confident execution.",
+        "Live signals. Disciplined entries.",
+        "Precision in, protected out.",
     ];
 
     const [taglineIndex, setTaglineIndex] = useState(0);
@@ -90,13 +90,13 @@ export default function Home() {
                         {/* Social Proof Pill */}
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                            Trusted by 10,000+ Traders
+                            Trusted by serious market participants
                         </div>
 
                         {/* Main Heading */}
                         <div className="relative">
                             <h1 className="font-heading text-2xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
-                                <span className="color-cycle">MSPK Signals.</span>
+                                <span className="color-cycle">MSPK Signal Desk.</span>
                                 <br />
 
                                 <span className="flex flex-col lg:flex-row items-center lg:items-start gap-2 min-h-[1.5em] text-center lg:text-left lg:whitespace-nowrap">
@@ -120,8 +120,8 @@ export default function Home() {
 
                         {/* Subtext */}
                         <p className="max-w-[35rem] text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                            Institutional-grade signals delivered to your dashboard and mobile.
-                            <span className="text-foreground font-medium"> 85% Win Rate</span> verified.
+                            Institutional-grade market intelligence delivered with speed, structure, and accountability.
+                            <span className="text-foreground font-medium"> Performance-first execution</span> for disciplined traders.
                         </p>
 
                         {/* CTA Buttons */}
@@ -131,7 +131,7 @@ export default function Home() {
                                     size="lg"
                                     className="w-full sm:w-auto h-14 px-8 rounded-2xl bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-400 text-white font-bold shadow-[0_12px_40px_-16px_rgba(59,130,246,0.8)] hover:shadow-[0_18px_50px_-16px_rgba(59,130,246,0.9)] hover:scale-[1.02] transition-all"
                                 >
-                                    Start Free Trial
+                                    Start Premium Trial
                                 </Button>
                             </Link>
                             <Link href="/market" className="w-full sm:w-auto">
@@ -186,13 +186,13 @@ export default function Home() {
                                 {/* MAIN QUOTE */}
                                 <div className="max-w-3xl space-y-4">
                                     <h3 className="text-2xl lg:text-3xl font-bold leading-tight">
-                                        We deliver <span className="text-primary">high-probability signals</span>
-                                        designed for consistency, clarity and disciplined execution.
+                                        We deliver <span className="text-primary">high-probability signal frameworks</span>
+                                        designed for consistency, clarity, and disciplined execution.
                                     </h3>
 
                                     <p className="text-muted-foreground text-sm lg:text-base">
-                                        Our research-driven approach combines structure, liquidity and risk management
-                                        to provide traders with actionable insights — not noise.
+                                        Our research-led process blends structure, liquidity, and risk controls
+                                        to deliver actionable insights, not noise.
                                     </p>
                                 </div>
 
@@ -677,6 +677,7 @@ export default function Home() {
         </div>
     );
 }
+
 
 
 

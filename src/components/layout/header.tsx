@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import TickerMarquee from "./ticker-marquee";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "./brand-logo";
 
 interface HeaderProps {
     onMenuClick?: () => void;
@@ -40,6 +41,13 @@ export function Header({ onMenuClick }: HeaderProps) {
                 >
                     <Menu size={16} />
                 </button>
+                <div>
+                    <BrandLogo
+                        className="gap-2"
+                        imageClassName="h-5 w-5 rounded-md"
+                        showText={false}
+                    />
+                </div>
             </div>
 
             {/* Quick Ticker Inline - Floating (Fills remaining space) */}

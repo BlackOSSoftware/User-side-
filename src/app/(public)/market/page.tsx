@@ -10,11 +10,8 @@ import {
   Gem,
   Activity,
   BarChart2,
-  ArrowRight,
   Zap,
-  TrendingUp,
 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MOCK_SIGNALS } from "@/lib/mock";
 
@@ -37,28 +34,28 @@ export default function MarketPage() {
 
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-              Live Signal Intelligence
+              Institutional Signal Desk
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold leading-[1] tracking-tight">
-              Market Edge.
+              Real-Time Market
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
-                Execute Smarter.
+                Intelligence, Curated.
               </span>
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Real-time algorithmic signals across Forex, Crypto, Commodities and Indices.
-              Built for traders who demand precision.
+              Actionable opportunities across Forex, Crypto, Commodities, and Indices,
+              built for traders who execute with precision and risk discipline.
             </p>
 
             <div className="flex flex-wrap gap-4">
               <Button size="lg" className="rounded-full px-8">
-                View Live Signals
+                Access Live Signals
               </Button>
               <Button size="lg" variant="outline" className="rounded-full px-8">
-                Explore Plans
+                Compare Membership Plans
               </Button>
             </div>
 
@@ -85,7 +82,7 @@ export default function MarketPage() {
                     {item.icon}
                     {item.title}
                   </div>
-                  <p className="text-sm text-muted-foreground">Explore</p>
+                  <p className="text-sm text-muted-foreground">View opportunities</p>
                 </div>
               ))}
 
@@ -204,7 +201,7 @@ export default function MarketPage() {
 /* ================= Typing Animation ================= */
 
 function TypingBlock() {
-  const words = ["High Accuracy.", "Low Latency.", "Real Alpha."];
+  const words = ["Precision Entries.", "Disciplined Risk.", "Institutional Clarity."];
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
   const [reverse, setReverse] = useState(false);

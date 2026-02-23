@@ -6,22 +6,17 @@ import { cn } from "@/lib/utils";
 import {
     LayoutDashboard,
     BarChart2,
-    Signal,
-    CreditCard,
     MessageSquare,
     Settings,
-    X,
-    Menu,
     ChevronRight,
     ChevronLeft,
     Activity,
     Cpu,
-    Command,
     Megaphone,
-    User,
     PieChart
 } from "lucide-react";
 import React, { useState } from "react";
+import { BrandLogo } from "./brand-logo";
 
 const SidebarItem = ({ icon: Icon, label, href, collapsed }: { icon: any, label: string, href: string, collapsed: boolean }) => {
     const pathname = usePathname();
@@ -88,12 +83,13 @@ export function Sidebar({ className, collapsed, setCollapsed }: { className?: st
             {/* Header / Brand */}
             <div className={cn("h-8 flex items-center border-b border-border px-4 shrink-0 relative z-10", collapsed ? "justify-center px-0" : "justify-between")}>
                 <div className="flex items-center gap-2 overflow-hidden">
-                    <div className="w-5 h-5 rounded-md bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
-                        <Command size={10} className="text-black" />
-                    </div>
-                    <div className={cn("flex flex-col transition-all duration-300", collapsed ? "w-0 opacity-0 hidden" : "w-auto opacity-100 block")}>
-                        <span className="text-[10px] font-black tracking-tighter text-foreground leading-none">MSPK<span className="text-primary">TRADING</span></span>
-                    </div>
+                    <BrandLogo
+                        className={cn("gap-2", collapsed ? "justify-center" : "")}
+                        imageClassName={cn("h-5 w-5 rounded-md", collapsed ? "h-6 w-6" : "h-5 w-5")}
+                        showText={!collapsed}
+                        titleClassName="text-[10px]"
+                        subtitleClassName="text-[8px]"
+                    />
                 </div>
                 <div className={cn("transition-all duration-300", collapsed ? "hidden" : "block")}>
                     <span className="text-[8px] font-bold text-muted-foreground tracking-wider border border-white/10 bg-white/5 px-1 rounded-sm">USER_v1.0</span>

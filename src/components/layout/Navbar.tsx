@@ -3,10 +3,11 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { Zap, Home, TrendingUp, BadgeDollarSign, Info, Menu, X } from "lucide-react"
+import { Home, TrendingUp, BadgeDollarSign, Info, Menu, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { BrandLogo } from "@/components/layout/brand-logo"
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
@@ -27,19 +28,17 @@ export default function Navbar() {
             "fixed inset-x-0 top-0 z-50 flex justify-center w-full transition-all duration-500"
         )}>
             <header className={cn(
-                "w-full bg-background/80 backdrop-blur-2xl transition-all duration-500 border-b border-border"
+                "w-full border-b border-border/80 bg-background/78 backdrop-blur-2xl transition-all duration-500"
             )}>
                 <div className="flex h-16 items-center justify-between px-4 sm:px-6">
 
                     {/* Logo */}
                     <div className="flex items-center gap-2">
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="bg-primary/10 p-2 rounded-full group-hover:bg-primary/20 transition-colors">
-                                <Zap className="h-5 w-5 text-primary fill-current" />
-                            </div>
-                            <span className="font-heading text-lg font-bold tracking-tight text-foreground/90">
-                                MSPK
-                            </span>
+                            <BrandLogo
+                                imageClassName="transition-transform duration-300 group-hover:scale-105"
+                                titleClassName="text-base sm:text-lg"
+                            />
                         </Link>
                     </div>
 
@@ -83,7 +82,7 @@ export default function Navbar() {
                         </Link>
 
                         <Link href="/trial" className="hidden sm:block">
-                            <Button size="sm" className="relative overflow-hidden rounded-full bg-foreground text-background font-bold hover:bg-foreground/90 px-6 shadow-lg group/btn">
+                            <Button size="sm" className="relative overflow-hidden rounded-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 px-6 shadow-lg shadow-primary/25 group/btn">
                                 <span className="relative z-10">Get Started</span>
                                 <div className="absolute inset-0 -translate-x-[100%] group-hover/btn:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                             </Button>
@@ -141,7 +140,7 @@ export default function Navbar() {
                             </Link>
 
                             <Link href="/trial" className="w-1/2" onClick={() => setMobileOpen(false)}>
-                                <Button className="w-full rounded-xl bg-foreground text-background hover:bg-foreground/90">Get Started</Button>
+                                <Button className="w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">Get Started</Button>
                             </Link>
                         </div>
                     </div>

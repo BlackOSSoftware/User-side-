@@ -52,7 +52,7 @@ export default function TrialPage() {
                     {/* Left Content: Value Props */}
                     <div className="w-full lg:max-w-xl space-y-8 text-center lg:text-left animate-in fade-in slide-in-from-bottom-8 duration-700">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
-                            <Sparkles className="w-3 h-3 fill-current animate-pulse" /> Free Access
+                            <Sparkles className="w-3 h-3 fill-current animate-pulse" /> Premium Trial Access
                         </div>
                         <h1 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter leading-[0.9] text-slate-900 dark:text-white">
                             Start your <br />
@@ -60,15 +60,15 @@ export default function TrialPage() {
                             <span className="text-primary">.</span>
                         </h1>
                         <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Experience the power of institutional-grade signals.
-                            <span className="block mt-2 font-medium text-slate-900 dark:text-white">No credit card required. Instant activation.</span>
+                            Experience institutional-grade signal intelligence with guided onboarding.
+                            <span className="block mt-2 font-medium text-slate-900 dark:text-white">No credit card required. Fast activation.</span>
                         </p>
 
                         <div className="grid gap-6 pt-4">
                             {[
                                 { icon: Zap, title: "Real-time Signals", desc: "Receive alerts instantly via Telegram & Web." },
-                                { icon: Shield, title: "Verified Performance", desc: "Access our full history of calls and PnL." },
-                                { icon: Loader2, title: "24/7 Support", desc: "Priority onboarding assistance." }
+                                { icon: Shield, title: "Verified Performance", desc: "Access transparent signal outcomes and risk levels." },
+                                { icon: Loader2, title: "Priority Support", desc: "Rapid onboarding and execution guidance." }
                             ].map((item, i) => (
                                 <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/30 transition-colors">
                                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
@@ -91,9 +91,9 @@ export default function TrialPage() {
                                     <div className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                                         <Check className="w-10 h-10 stroke-[3]" />
                                     </div>
-                                    <h2 className="text-3xl font-bold font-heading">You're In!</h2>
+                                    <h2 className="text-3xl font-bold font-heading">You Are In!</h2>
                                     <p className="text-muted-foreground leading-relaxed">
-                                        Your request has been received. Our team will contact you shortly to activate your pro access.
+                                        Your request is confirmed. Our onboarding team will contact you shortly to activate premium access.
                                     </p>
                                     <Button onClick={() => setSuccess(false)} variant="outline" className="w-full h-12 rounded-xl mt-4">
                                         Request Another
@@ -107,8 +107,8 @@ export default function TrialPage() {
                             ) : (
                                 <CardContent className="p-8">
                                     <div className="mb-8">
-                                        <h2 className="text-2xl font-bold mb-2">Create Account</h2>
-                                        <p className="text-sm text-muted-foreground">Enter your details to get started.</p>
+                                        <h2 className="text-2xl font-bold mb-2">Create Your Access</h2>
+                                        <p className="text-sm text-muted-foreground">Share your details to unlock trial onboarding.</p>
                                     </div>
 
                                     <form onSubmit={onSubmit} className="space-y-6">
@@ -163,7 +163,7 @@ export default function TrialPage() {
                                             {loading ? (
                                                 <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Processing...</>
                                             ) : (
-                                                'Get Instant Access'
+                                                'Unlock Trial Access'
                                             )}
                                         </Button>
 

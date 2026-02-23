@@ -64,8 +64,8 @@ export default function LoginPage() {
                             <span className="text-primary">.</span>
                         </h1>
                         <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Access your terminal, manage your strategies, and monitor real-time performance.
-                            <span className="block mt-2 font-medium text-slate-900 dark:text-white">Institutional grade security.</span>
+                            Access your execution workspace, manage strategies, and track live performance.
+                            <span className="block mt-2 font-medium text-slate-900 dark:text-white">Institutional-grade security with premium controls.</span>
                         </p>
                     </div>
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
                             <CardContent className="p-8">
                                 <div className="mb-8">
                                     <h2 className="text-2xl font-bold mb-2">Sign In</h2>
-                                    <p className="text-sm text-muted-foreground">Enter your credentials to continue.</p>
+                                    <p className="text-sm text-muted-foreground">Enter your credentials to continue securely.</p>
                                 </div>
 
                                 <form onSubmit={onSubmit} className="space-y-5">
@@ -96,7 +96,7 @@ export default function LoginPage() {
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
                                             <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Password</Label>
-                                            <Link href="#" className="text-xs text-primary hover:text-primary/80 transition-colors">Forgot password?</Link>
+                                            <Link href="#" className="text-xs text-primary hover:text-primary/80 transition-colors">Need password help?</Link>
                                         </div>
                                         <div className="relative">
                                             <Lock className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
@@ -119,7 +119,7 @@ export default function LoginPage() {
                                         {loading ? (
                                             <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Authenticating...</>
                                         ) : (
-                                            'Sign In'
+                                            'Secure Sign In'
                                         )}
                                     </Button>
 
@@ -129,7 +129,7 @@ export default function LoginPage() {
                                         </div>
                                         <div className="relative flex justify-center text-xs uppercase">
                                             <span className="bg-white dark:bg-black px-2 text-muted-foreground">
-                                                Or continue with
+                                                Or continue using demo
                                             </span>
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@ export default function LoginPage() {
                                         className="w-full h-12 rounded-xl text-base font-bold border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
                                         onClick={() => router.push('/dashboard')}
                                     >
-                                        <LayoutDashboard className="w-4 h-4 mr-2" /> Mock Login (Demo User)
+                                        <LayoutDashboard className="w-4 h-4 mr-2" /> Demo Login
                                     </Button>
                                 </form>
                             </CardContent>
@@ -148,7 +148,7 @@ export default function LoginPage() {
                                 <p className="text-sm text-muted-foreground">
                                     Don't have an account?{' '}
                                     <Link href="/trial" className="font-bold text-primary hover:underline underline-offset-4">
-                                        Start 7-Day Trial
+                                        Start Premium Trial
                                     </Link>
                                 </p>
                             </div>

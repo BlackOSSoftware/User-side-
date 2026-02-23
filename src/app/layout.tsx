@@ -17,8 +17,16 @@ const geistMono = Geist_Mono({
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: "MSPK Trading | Premium Signals",
-  description: "Institutional grade trading signals for smart investors.",
+  title: {
+    default: "MSPK Trade Solutions",
+    template: "%s | MSPK Trade Solutions",
+  },
+  description: "Institutional-grade trading signals with disciplined risk and premium execution clarity.",
+  icons: {
+    icon: "/logo.jpg",
+    shortcut: "/logo.jpg",
+    apple: "/logo.jpg",
+  },
 };
 
 import { ThemeProvider } from "@/components/theme-provider";
