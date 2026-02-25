@@ -61,7 +61,7 @@ export function Sidebar({ className, collapsed, setCollapsed }: { className?: st
 
     const navigation = [
         { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'Strategies', path: '/dashboard/strategies', icon: Cpu },
+        { name: 'Signals', path: '/dashboard/strategies', icon: Cpu },
         { name: 'Alerts', path: '/dashboard/alerts', icon: Megaphone },
         { name: 'Reports', path: '/dashboard/reports', icon: PieChart },
         { name: 'Market', path: '/dashboard/market', icon: BarChart2 },

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { Home, TrendingUp, BadgeDollarSign, Info, Menu, X } from "lucide-react"
+import { Home, TrendingUp, BadgeDollarSign, Info, Menu, X, Mail } from "lucide-react"
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -49,6 +49,7 @@ export default function Navbar() {
                             { label: 'Market', href: '/market', icon: TrendingUp },
                             { label: 'Plans', href: '/plans', icon: BadgeDollarSign },
                             { label: 'About', href: '/about', icon: Info },
+                            { label: 'Contact', href: '/contact', icon: Mail },
                         ].map((item) => {
                             const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
                             const Icon = item.icon;
@@ -113,6 +114,7 @@ export default function Navbar() {
                             { label: 'Market', href: '/market', icon: TrendingUp },
                             { label: 'Plans', href: '/plans', icon: BadgeDollarSign },
                             { label: 'About', href: '/about', icon: Info },
+                            { label: 'Contact', href: '/contact', icon: Mail },
                         ].map((item) => {
                             const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
                             const Icon = item.icon;
