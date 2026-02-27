@@ -1,154 +1,160 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
-    LayoutDashboard,
-    BarChart2,
-    MessageSquare,
-    Settings,
-    ChevronRight,
+    House,
+    UserRound,
+    LifeBuoy,
+    CreditCard,
+    CandlestickChart,
+    Radio,
+    ListChecks,
     ChevronLeft,
-    Activity,
-    Cpu,
-    Megaphone,
-    PieChart
+    ChevronRight,
+    LogOut,
+    type LucideIcon,
 } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 import { BrandLogo } from "./brand-logo";
+import { useLogoutMutation } from "@/hooks/use-auth";
 
-const SidebarItem = ({ icon: Icon, label, href, collapsed }: { icon: any, label: string, href: string, collapsed: boolean }) => {
+type SidebarNavItem = {
+    name: string;
+    path: string;
+    icon: LucideIcon;
+};
+
+const navigation: SidebarNavItem[] = [
+    { name: "Dashboard", path: "/dashboard", icon: House },
+    { name: "Profile", path: "/dashboard/profile", icon: UserRound },
+    { name: "Watchlist", path: "/dashboard/watchlist", icon: ListChecks },
+    { name: "Signal", path: "/dashboard/signals", icon: Radio },
+    { name: "Chart", path: "/dashboard/market", icon: CandlestickChart },
+    { name: "Plans & Billing", path: "/dashboard/plans", icon: CreditCard },
+    { name: "Support", path: "/dashboard/support", icon: LifeBuoy },
+];
+
+const SidebarItem = ({ item, collapsed }: { item: SidebarNavItem; collapsed: boolean }) => {
     const pathname = usePathname();
-    const isActive = pathname === href || pathname.startsWith(`${href}/`);
+    const isActive =
+        item.path === "/dashboard"
+            ? pathname === "/dashboard"
+            : pathname === item.path || pathname.startsWith(`${item.path}/`);
+    const Icon = item.icon;
 
     return (
         <Link
-            href={href}
+            href={item.path}
+            title={collapsed ? item.name : undefined}
             className={cn(
-                "flex items-center gap-3 px-4 py-2.5 w-full border-b border-white/5 transition-all duration-300 group relative",
+                "group relative flex items-center rounded-xl transition-all duration-300",
+                collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2.5",
                 isActive
-                    ? "bg-primary/10 text-primary border-r-2 border-r-primary"
-                    : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    ? "bg-primary/15 text-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.35),0_12px_24px_-16px_hsl(var(--primary)/0.9)]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
             )}
         >
+            {!collapsed && (
+                <div className="absolute left-0 top-1/2 h-7 w-1 -translate-y-1/2 rounded-r-full bg-primary/80" />
+            )}
+
             <Icon
-                size={16}
+                size={18}
                 className={cn(
-                    "shrink-0 transition-all duration-300 z-10",
-                    isActive ? "text-primary drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" : "group-hover:text-white"
+                    "shrink-0 transition-transform duration-300",
+                    isActive ? "drop-shadow-[0_0_10px_hsl(var(--primary)/0.8)]" : "group-hover:scale-105"
                 )}
             />
 
-            <span className={cn(
-                "text-[11px] font-semibold tracking-tight transition-all duration-300 z-10 whitespace-nowrap",
-                collapsed ? "w-0 opacity-0 hidden" : "w-auto opacity-100 block"
-            )}>
-                {label}
-            </span>
-
-            {/* Subtle Glow on Hover */}
-            {!isActive && (
-                <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            {!collapsed && (
+                <span className="ml-3 text-xs sm:text-sm font-semibold tracking-tight">
+                    {item.name}
+                </span>
             )}
         </Link>
     );
 };
 
+export function Sidebar({ className, collapsed, setCollapsed }: { className?: string; collapsed: boolean; setCollapsed: (val: boolean) => void }) {
+    const router = useRouter();
+    const logoutMutation = useLogoutMutation();
 
-export function Sidebar({ className, collapsed, setCollapsed }: { className?: string, collapsed: boolean, setCollapsed: (val: boolean) => void }) {
-    const pathname = usePathname();
-
-    const navigation = [
-        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'Signals', path: '/dashboard/strategies', icon: Cpu },
-        { name: 'Alerts', path: '/dashboard/alerts', icon: Megaphone },
-        { name: 'Reports', path: '/dashboard/reports', icon: PieChart },
-        { name: 'Market', path: '/dashboard/market', icon: BarChart2 },
-        { name: 'Support', path: '/dashboard/support', icon: MessageSquare },
-        { name: 'Settings', path: '/dashboard/settings', icon: Settings },
-    ];
+    const handleLogout = async () => {
+        try {
+            await logoutMutation.mutateAsync();
+        } finally {
+            router.replace("/login");
+        }
+    };
 
     return (
-        <div
+        <aside
             className={cn(
-                "flex flex-col bg-card border-r border-border transition-all duration-300 ease-custom-bezier shadow-2xl md:shadow-none h-full relative",
-                collapsed ? "w-14" : "w-60",
+                "relative h-full bg-card/95 backdrop-blur-xl transition-all duration-300 ease-custom-bezier",
+                "",
+                collapsed ? "w-[4.25rem]" : "w-[16.25rem] sm:w-72",
                 className
             )}
         >
-            {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/2 via-transparent to-transparent pointer-events-none opacity-20" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,hsl(var(--primary)/0.24),transparent_40%),radial-gradient(circle_at_100%_100%,hsl(var(--accent)/0.18),transparent_44%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-cyber-grid opacity-25" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
 
-            {/* Header / Brand */}
-            <div className={cn("h-8 flex items-center border-b border-border px-4 shrink-0 relative z-10", collapsed ? "justify-center px-0" : "justify-between")}>
-                <div className="flex items-center gap-2 overflow-hidden">
-                    <BrandLogo
-                        className={cn("gap-2", collapsed ? "justify-center" : "")}
-                        imageClassName={cn("h-5 w-5 rounded-md", collapsed ? "h-6 w-6" : "h-5 w-5")}
-                        showText={!collapsed}
-                        titleClassName="text-[10px]"
-                        subtitleClassName="text-[8px]"
-                    />
+            <div className="relative z-10 flex h-full flex-col">
+                <div className={cn("flex h-14 sm:h-16 items-center", collapsed ? "justify-center px-1.5" : "justify-between px-3 sm:px-4")}>
+                    {!collapsed && (
+                        <BrandLogo
+                            className="gap-2"
+                            imageClassName="h-8 w-8 sm:h-9 sm:w-9 rounded-lg"
+                            showText
+                            titleClassName="text-sm sm:text-base"
+                            subtitleClassName="text-[10px] sm:text-xs"
+                        />
+                    )}
+
+                    <button
+                        type="button"
+                        onClick={() => setCollapsed(!collapsed)}
+                        className={cn(
+                            "flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-background/40 text-muted-foreground transition-all duration-300 hover:text-primary hover:shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.9)]",
+                            collapsed ? "mx-auto" : ""
+                        )}
+                        title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    >
+                        {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+                    </button>
                 </div>
-                <div className={cn("transition-all duration-300", collapsed ? "hidden" : "block")}>
-                    <span className="text-[8px] font-bold text-muted-foreground tracking-wider border border-white/10 bg-white/5 px-1 rounded-sm">USER_v1.0</span>
-                </div>
-            </div>
 
-            {/* Section Divider */}
-            {!collapsed && <div className="px-4 py-2 text-[8px] font-bold text-muted-foreground uppercase tracking-widest relative z-10 border-b border-white/5 opacity-50">Main Menu</div>}
-
-            {/* Navigation Items */}
-            <div className="flex-1 overflow-y-auto w-full relative z-10">
-                {navigation.map((item) => (
-                    <SidebarItem
-                        key={item.name}
-                        icon={item.icon}
-                        label={item.name}
-                        href={item.path}
-                        collapsed={collapsed}
-                    />
-                ))}
-            </div>
-
-            {/* Collapse Toggle */}
-            <button
-                onClick={() => setCollapsed(!collapsed)}
-                className="absolute -right-2 top-10 w-4 h-4 bg-card border border-primary/50 rounded-full flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-transform z-50 md:flex hidden"
-            >
-                {collapsed ? <ChevronRight size={10} /> : <ChevronLeft size={10} />}
-            </button>
-
-            {/* Footer / System Status */}
-            <div className="border-t border-white/5 bg-black/20 backdrop-blur-sm">
-                {(!collapsed) ? (
-                    <div className="px-4 py-3 space-y-3">
-                        <div className="space-y-2">
-                            {/* CPU Load Mock */}
-                            <div className="space-y-1">
-                                <div className="flex items-center justify-between text-[9px] text-muted-foreground">
-                                    <div className="flex items-center gap-2">
-                                        <Cpu size={10} />
-                                        <span>System Status</span>
-                                    </div>
-                                    <span className="text-xs font-mono text-emerald-500">OPTIMAL</span>
-                                </div>
-                                <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-gradient-to-r from-primary to-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.3)] w-[98%]"
-                                    ></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center gap-2 py-3">
-                        <Activity size={14} className="text-primary hover:animate-spin cursor-pointer" />
-                        <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"></div>
+                {!collapsed && (
+                    <div className="px-3 sm:px-4 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/80">
+                        Navigation
                     </div>
                 )}
+
+                <nav className={cn("flex-1 space-y-1.5 overflow-y-auto", collapsed ? "px-1.5 py-3" : "px-2.5 sm:px-3 py-2.5")}>
+                    {navigation.map((item) => (
+                        <SidebarItem key={item.name} item={item} collapsed={collapsed} />
+                    ))}
+                </nav>
+
+                <div className={cn(collapsed ? "p-1.5" : "p-2.5 sm:p-3")}>
+                    <button
+                        onClick={handleLogout}
+                        className={cn(
+                            "w-full rounded-xl border border-destructive/35 bg-destructive/10 text-destructive transition-all duration-300 hover:bg-destructive/20 hover:shadow-[0_10px_30px_-18px_hsl(var(--destructive)/0.9)]",
+                            collapsed ? "flex h-10 items-center justify-center" : "flex h-10 items-center justify-center gap-2 text-xs sm:text-sm font-semibold"
+                        )}
+                        title="Logout"
+                        disabled={logoutMutation.isPending}
+                    >
+                        <LogOut size={18} />
+                        {!collapsed && <span>Logout</span>}
+                    </button>
+                </div>
             </div>
-        </div>
+
+        </aside>
     );
 }

@@ -5,55 +5,44 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { MarketTicker } from '@/components/market-ticker';
-import { Loader2, Lock, Mail, ArrowRight, LayoutDashboard } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Lock, Mail, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
-// import { signIn } from 'next-auth/react'; // Standard for Next.js, uncomment when Auth logic is ready
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { useLoginMutation } from '@/hooks/use-auth';
 
 export default function LoginPage() {
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const loginMutation = useLoginMutation();
+    const [showPassword, setShowPassword] = useState(false);
+    const loading = loginMutation.isPending;
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setLoading(true);
 
         const formData = new FormData(e.currentTarget);
-        const email = formData.get('email');
-        const password = formData.get('password');
+        const email = String(formData.get('email') || '');
+        const password = String(formData.get('password') || '');
 
         try {
-            // Placeholder for actual authentication logic
-            // await signIn('credentials', { email, password, redirect: false });
-
-            // Simulating API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            console.log('Login attempt:', { email, password });
-            // On success:
-            router.push('/dashboard');
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
+            await loginMutation.mutateAsync({ email, password });
+            toast.success('Login successful');
+            router.replace('/dashboard');
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Login failed';
+            toast.error(message);
         }
     }
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300">
-
-            {/* <MarketTicker /> */}
-
-            {/* Background Grid & Spotlights */}
             <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-[0.2]"></div>
                 <div className="absolute top-0 left-0 right-0 h-[500px] w-full bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-40"></div>
             </div>
+
             <div className="w-full max-w-7xl mx-auto mt-10 px-6 py-12 md:py-24 relative z-10">
                 <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-16 lg:gap-8">
-
-                    {/* Left Content: Hero Text */}
                     <div className="w-full lg:max-w-xl space-y-8 text-center lg:text-left pt-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
                             <Lock className="w-3 h-3 fill-current animate-pulse" /> Secure Access
@@ -69,7 +58,6 @@ export default function LoginPage() {
                         </p>
                     </div>
 
-                    {/* Right Content: Login Form Card */}
                     <div className="w-full lg:max-w-md animate-in fade-in slide-in-from-right-8 duration-700 delay-150">
                         <Card className="border-0 shadow-2xl shadow-primary/5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-white/10 rounded-[2rem] overflow-hidden">
                             <CardContent className="p-8">
@@ -82,7 +70,7 @@ export default function LoginPage() {
                                     <div className="space-y-2">
                                         <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Email</Label>
                                         <div className="relative">
-                                            <Mail className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
+                                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-5 h-5 text-slate-700 dark:text-slate-200 pointer-events-none" />
                                             <Input
                                                 id="email"
                                                 name="email"
@@ -93,21 +81,30 @@ export default function LoginPage() {
                                             />
                                         </div>
                                     </div>
+
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
                                             <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Password</Label>
                                             <Link href="#" className="text-xs text-primary hover:text-primary/80 transition-colors">Need password help?</Link>
                                         </div>
                                         <div className="relative">
-                                            <Lock className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
+                                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-5 h-5 text-slate-700 dark:text-slate-200 pointer-events-none" />
                                             <Input
                                                 id="password"
                                                 name="password"
-                                                type="password"
+                                                type={showPassword ? "text" : "password"}
                                                 required
-                                                placeholder="••••••••"
-                                                className="h-12 rounded-xl pl-11 bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary"
+                                                placeholder="********"
+                                                className="h-12 rounded-xl pl-11 pr-11 bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary"
                                             />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword((prev) => !prev)}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500 dark:text-slate-300 hover:text-primary transition-colors"
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                            >
+                                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            </button>
                                         </div>
                                     </div>
 
@@ -146,7 +143,7 @@ export default function LoginPage() {
                             </CardContent>
                             <div className="p-6 bg-slate-50/50 dark:bg-white/5 border-t border-slate-200 dark:border-white/5 text-center">
                                 <p className="text-sm text-muted-foreground">
-                                    Don't have an account?{' '}
+                                    Don&apos;t have an account?{' '}
                                     <Link href="/trial" className="font-bold text-primary hover:underline underline-offset-4">
                                         Start Premium Trial
                                     </Link>

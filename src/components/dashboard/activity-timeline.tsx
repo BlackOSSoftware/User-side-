@@ -28,27 +28,27 @@ export function ActivityTimeline() {
             <div className="absolute inset-0 bg-cyber-grid opacity-20 pointer-events-none"></div>
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-            <div className="h-10 shrink-0 border-b border-white/5 px-3 flex items-center justify-between bg-white/[0.02]">
-                <h3 className="text-xs font-bold text-white/90 uppercase tracking-widest flex items-center gap-2">
-                    <Activity size={14} className="text-primary" /> System Logs
+            <div className="h-12 shrink-0 border-b border-white/5 px-4 flex items-center justify-between bg-white/[0.02]">
+                <h3 className="text-sm font-bold text-white/90 uppercase tracking-widest flex items-center gap-2">
+                    <Activity size={16} className="text-primary" /> System Logs
                 </h3>
                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
                 {logs.map((log) => {
                     const { icon: Icon, color } = getIcon(log.type);
                     return (
-                        <div key={log.id} className="group flex items-start gap-3 p-2 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/5 transition-all cursor-default">
+                        <div key={log.id} className="group flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/5 transition-all cursor-default">
                             <div className={`mt-0.5 shrink-0 ${color}`}>
-                                <Icon size={12} />
+                                <Icon size={14} />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-[11px] font-medium text-muted-foreground group-hover:text-white transition-colors truncate">
+                                <p className="text-sm font-medium text-muted-foreground group-hover:text-white transition-colors truncate">
                                     {log.msg}
                                 </p>
-                                <span className="text-[9px] text-muted-foreground/40 font-mono flex items-center gap-1">
-                                    <Clock size={8} /> {log.time}
+                                <span className="text-[11px] text-muted-foreground/50 font-mono flex items-center gap-1.5">
+                                    <Clock size={10} /> {log.time}
                                 </span>
                             </div>
                         </div>

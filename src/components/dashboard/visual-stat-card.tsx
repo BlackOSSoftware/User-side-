@@ -12,7 +12,7 @@ interface VisualStatCardProps {
     value: string | number;
     change: string;
     type?: 'area' | 'bar' | 'radial';
-    data?: any[];
+    data?: Array<{ value: number }>;
     color?: string;
     subtext?: string;
     onClick?: () => void;
@@ -82,25 +82,25 @@ export function VisualStatCard({ title, value, change, type = 'area', data, colo
             {/* Top Shine */}
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-            <div className="p-3 relative z-10 flex flex-col h-full justify-between">
+            <div className="p-4 relative z-10 flex flex-col h-full justify-between">
                 <div className="flex justify-between items-start">
                     <div>
-                        <h3 className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase mb-0.5 flex items-center gap-1.5">
-                            {type === 'area' && <Activity size={10} className="text-primary" />}
+                        <h3 className="text-muted-foreground text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-1.5">
+                            {type === 'area' && <Activity size={12} className="text-primary" />}
                             {title}
                         </h3>
-                        <p className="text-2xl font-bold text-foreground font-mono tracking-tighter tabular-nums" style={{ textShadow: `0 0 10px ${chartColor}40` }}>
+                        <p className="text-3xl font-bold text-foreground font-mono tracking-tighter tabular-nums" style={{ textShadow: `0 0 10px ${chartColor}40` }}>
                             {displayValue}
                         </p>
                     </div>
                     {change && (
                         <div className={cn(
-                            "flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-sm border",
+                            "flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md border",
                             isPositive
                                 ? "text-emerald-500 border-emerald-500/20 bg-emerald-500/5"
                                 : "text-red-500 border-red-500/20 bg-red-500/5"
                         )}>
-                            {isPositive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+                            {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
                             {change}
                         </div>
                     )}
@@ -109,7 +109,7 @@ export function VisualStatCard({ title, value, change, type = 'area', data, colo
                 {subtext && (
                     <div className="flex items-center gap-2 mt-1">
                         <div className="h-1 w-1 rounded-full bg-primary animate-pulse"></div>
-                        <p className="text-[9px] text-muted-foreground font-mono uppercase tracking-wider opacity-70">{subtext}</p>
+                        <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-wider opacity-80">{subtext}</p>
                     </div>
                 )}
             </div>

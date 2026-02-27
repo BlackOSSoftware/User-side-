@@ -3,10 +3,9 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Maximize2, ArrowUpRight } from 'lucide-react';
-import { cn } from "@/lib/utils";
 
 interface UserPerformanceGraphProps {
-    data?: any[];
+    data?: Array<{ time: string; profit: number }>;
     totalProfit?: number;
     growth?: number;
 }
@@ -27,27 +26,27 @@ export function UserPerformanceGraph({ data, totalProfit = 124500, growth = 15.2
             <div className="absolute inset-0 bg-cyber-grid opacity-20 pointer-events-none"></div>
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-            <div className="h-12 border-b border-white/5 flex items-center justify-between px-4 bg-white/[0.02]">
+            <div className="h-14 border-b border-white/5 flex items-center justify-between px-5 bg-white/[0.02]">
                 <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></div>
                     <div className="flex flex-col">
-                        <span className="text-sm font-bold tracking-tight text-white/90 flex items-center gap-2">
+                        <span className="text-base font-bold tracking-tight text-white/90 flex items-center gap-2">
                             STRATEGY PERFORMANCE
                         </span>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button className="p-1.5 text-muted-foreground hover:text-white transition-colors"><Maximize2 size={14} /></button>
+                    <button className="p-2 text-muted-foreground hover:text-white transition-colors"><Maximize2 size={16} /></button>
                 </div>
             </div>
 
-            <div className="absolute top-16 left-6 z-10 pointer-events-none">
+            <div className="absolute top-[4.25rem] left-6 z-10 pointer-events-none">
                 <div className="flex flex-col">
-                    <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">Portfolio Return</span>
+                    <span className="text-xs text-muted-foreground font-mono uppercase tracking-widest">Portfolio Return</span>
                     <span className="text-3xl font-bold text-white tracking-tight flex items-end gap-2">
-                        ₹{totalProfit.toLocaleString('en-IN')}
-                        <span className="text-sm font-medium text-emerald-500 mb-1.5 flex items-center gap-0.5">
-                            +{growth}% <ArrowUpRight size={12} />
+                        INR {totalProfit.toLocaleString('en-IN')}
+                        <span className="text-base font-medium text-emerald-500 mb-1 flex items-center gap-1">
+                            +{growth}% <ArrowUpRight size={14} />
                         </span>
                     </span>
                 </div>
@@ -67,13 +66,13 @@ export function UserPerformanceGraph({ data, totalProfit = 124500, growth = 15.2
                             dataKey="time"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: '#525252', fontSize: 10, fontFamily: 'monospace' }}
+                            tick={{ fill: '#6b7280', fontSize: 12, fontFamily: 'monospace' }}
                             dy={10}
                         />
                         <YAxis
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: '#525252', fontSize: 10, fontFamily: 'monospace' }}
+                            tick={{ fill: '#6b7280', fontSize: 12, fontFamily: 'monospace' }}
                         />
                         <Tooltip
                             contentStyle={{
@@ -82,9 +81,9 @@ export function UserPerformanceGraph({ data, totalProfit = 124500, growth = 15.2
                                 borderRadius: '8px',
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
                             }}
-                            itemStyle={{ fontSize: '11px', fontWeight: 'bold', color: '#10b981' }}
-                            labelStyle={{ color: '#a1a1aa', fontSize: '10px', marginBottom: '4px' }}
-                            formatter={(value: any) => [`₹${Number(value || 0).toLocaleString()}`, 'Profit']}
+                            itemStyle={{ fontSize: '12px', fontWeight: 'bold', color: '#10b981' }}
+                            labelStyle={{ color: '#a1a1aa', fontSize: '11px', marginBottom: '4px' }}
+                            formatter={(value: number) => [`INR ${Number(value || 0).toLocaleString()}`, 'Profit']}
                         />
                         <Area
                             type="monotone"

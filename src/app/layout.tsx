@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeSync } from "@/components/theme-sync";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 export default function RootLayout({
   children,
@@ -48,15 +49,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeSync />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster position="top-center" richColors />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem={false}
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster position="top-center" richColors />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

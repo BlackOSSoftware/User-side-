@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { CreditCard, Headphones, Settings, Wallet, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { CreditCard, Headphones, Settings, Wallet, ArrowUpRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export function QuickActions() {
@@ -20,19 +20,19 @@ export function QuickActions() {
             <div className="absolute inset-0 bg-cyber-grid opacity-20 pointer-events-none"></div>
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-            <div className="h-9 shrink-0 border-b border-white/5 px-3 flex items-center justify-between bg-white/[0.02]">
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Quick Actions</span>
+            <div className="h-11 shrink-0 border-b border-white/5 px-4 flex items-center justify-between bg-white/[0.02]">
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Quick Actions</span>
             </div>
 
-            <div className="p-2 grid grid-cols-3 gap-2 flex-1">
+            <div className="p-3 grid grid-cols-3 gap-2.5 flex-1">
                 {ACTION_BUTTONS.map((btn, idx) => (
                     <button
                         key={idx}
                         onClick={() => router.push(btn.path)}
-                        className={`flex flex-col items-center justify-center gap-1.5 rounded-lg border border-transparent bg-white/[0.03] transition-all duration-200 group ${btn.color}`}
+                        className={`flex flex-col items-center justify-center gap-2 rounded-lg border border-transparent bg-white/[0.03] transition-all duration-200 group ${btn.color}`}
                     >
-                        <btn.icon size={16} className="text-muted-foreground group-hover:scale-110 transition-transform" />
-                        <span className="text-[9px] font-medium text-muted-foreground/80 group-hover:text-inherit">{btn.label}</span>
+                        <btn.icon size={18} className="text-muted-foreground group-hover:scale-110 transition-transform" />
+                        <span className="text-[11px] font-medium text-muted-foreground/85 group-hover:text-inherit text-center px-1">{btn.label}</span>
                     </button>
                 ))}
             </div>

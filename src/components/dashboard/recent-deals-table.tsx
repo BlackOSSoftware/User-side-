@@ -23,7 +23,7 @@ const StatusBadge = ({ status }: { status: string }) => {
         Pending: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
     };
     return (
-        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border ${styles[status]}`}>
+        <span className={`px-2 py-1 rounded text-[11px] font-bold uppercase tracking-wider border ${styles[status]}`}>
             {status}
         </span>
     );
@@ -43,41 +43,41 @@ export function RecentDealsTable() {
             <div className="absolute inset-0 bg-cyber-grid opacity-20 pointer-events-none"></div>
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-            <div className="h-10 shrink-0 border-b border-white/5 px-4 flex items-center justify-between bg-white/[0.02]">
-                <h3 className="text-xs font-bold text-white/90 uppercase tracking-widest">Live Trade Alerts</h3>
-                <Link href="/dashboard/alerts" className="text-[10px] text-primary hover:underline flex items-center gap-1">View All <ArrowRight size={10} /></Link>
+            <div className="h-12 shrink-0 border-b border-white/5 px-4 flex items-center justify-between bg-white/[0.02]">
+                <h3 className="text-sm font-bold text-white/90 uppercase tracking-widest">Live Trade Alerts</h3>
+                <Link href="/dashboard/alerts" className="text-xs text-primary hover:underline flex items-center gap-1">View All <ArrowRight size={12} /></Link>
             </div>
 
             <div className="flex-1 overflow-auto">
                 <table className="w-full text-left border-collapse">
-                    <thead className="bg-white/[0.02] text-[10px] uppercase tracking-wider text-muted-foreground font-mono sticky top-0 z-10">
+                    <thead className="bg-white/[0.02] text-xs uppercase tracking-wider text-muted-foreground font-mono sticky top-0 z-10">
                         <tr>
-                            <th className="px-4 py-2 font-medium border-b border-white/5">Trigger</th>
-                            <th className="px-4 py-2 font-medium border-b border-white/5">Symbol</th>
-                            <th className="px-4 py-2 font-medium border-b border-white/5">Strategy</th>
-                            <th className="px-4 py-2 font-medium border-b border-white/5">Action</th>
-                            <th className="px-4 py-2 font-medium border-b border-white/5">Price</th>
-                            <th className="px-4 py-2 font-medium border-b border-white/5">Latency</th>
-                            <th className="px-4 py-2 font-medium border-b border-white/5">Status</th>
+                            <th className="px-4 py-3 font-medium border-b border-white/5">Trigger</th>
+                            <th className="px-4 py-3 font-medium border-b border-white/5">Symbol</th>
+                            <th className="px-4 py-3 font-medium border-b border-white/5">Strategy</th>
+                            <th className="px-4 py-3 font-medium border-b border-white/5">Action</th>
+                            <th className="px-4 py-3 font-medium border-b border-white/5">Price</th>
+                            <th className="px-4 py-3 font-medium border-b border-white/5">Latency</th>
+                            <th className="px-4 py-3 font-medium border-b border-white/5">Status</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                         {deals.map((deal) => (
                             <tr key={deal.id} className="hover:bg-white/[0.02] transition-colors group">
-                                <td className="px-4 py-2.5 text-[11px] font-mono text-muted-foreground group-hover:text-primary transition-colors">{deal.id}</td>
-                                <td className="px-4 py-2.5 text-xs font-bold text-white/90">{deal.symbol}</td>
-                                <td className="px-4 py-2.5 text-[11px] text-muted-foreground">{deal.strategy}</td>
-                                <td className="px-4 py-2.5 text-[10px]">
+                                <td className="px-4 py-3 text-sm font-mono text-muted-foreground group-hover:text-primary transition-colors">{deal.id}</td>
+                                <td className="px-4 py-3 text-sm font-bold text-white/90">{deal.symbol}</td>
+                                <td className="px-4 py-3 text-sm text-muted-foreground">{deal.strategy}</td>
+                                <td className="px-4 py-3 text-xs">
                                     <span className={`flex items-center gap-1 ${deal.type === 'Buy' ? 'text-emerald-500' : 'text-red-500'}`}>
-                                        {deal.type === 'Buy' ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
+                                        {deal.type === 'Buy' ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                                         {deal.type}
                                     </span>
                                 </td>
-                                <td className="px-4 py-2.5 text-[11px] font-mono font-medium text-white/80">{deal.price}</td>
-                                <td className={`px-4 py-2.5 text-[10px] font-mono font-medium text-muted-foreground`}>
+                                <td className="px-4 py-3 text-sm font-mono font-medium text-white/80">{deal.price}</td>
+                                <td className={`px-4 py-3 text-xs font-mono font-medium text-muted-foreground`}>
                                     {deal.latency}
                                 </td>
-                                <td className="px-4 py-2.5"><StatusBadge status={deal.status} /></td>
+                                <td className="px-4 py-3"><StatusBadge status={deal.status} /></td>
                             </tr>
                         ))}
                     </tbody>
