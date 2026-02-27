@@ -217,7 +217,7 @@ export default function Home() {
                                                     { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
                                                     { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
                                                 ].map((item, i) => (
-                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                    <div key={i} className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
                                                         {item.label}
                                                     </div>
                                                 ))}
@@ -237,7 +237,7 @@ export default function Home() {
                                                     { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
                                                     { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
                                                 ].map((item, i) => (
-                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                    <div key={i} className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
                                                         {item.label}
                                                     </div>
                                                 ))}
@@ -265,7 +265,7 @@ export default function Home() {
                                                     { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
                                                     { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
                                                 ].map((item, i) => (
-                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
                                                         {item.label}
                                                     </div>
                                                 ))}
@@ -285,7 +285,7 @@ export default function Home() {
                                                     { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
                                                     { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
                                                 ].map((item, i) => (
-                                                    <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-sm sm:text-base font-semibold whitespace-nowrap`}>
+                                                    <div key={i} className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
                                                         {item.label}
                                                     </div>
                                                 ))}
