@@ -5,6 +5,15 @@ export type LoginPayload = {
 
 export type LoginApiResponse = Record<string, unknown>;
 
+export type RegisterPayload = {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+};
+
+export type RegisterApiResponse = Record<string, unknown>;
+
 export type UserProfile = {
   avatar?: string;
   address?: string;

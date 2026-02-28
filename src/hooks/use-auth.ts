@@ -1,5 +1,6 @@
 export {
   useLoginMutation,
+  useRegisterMutation,
   useMeQuery,
   useUpdateMeMutation,
   useLogoutMutation,

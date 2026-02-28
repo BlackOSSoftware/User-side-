@@ -6,27 +6,26 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Check, Loader2, Sparkles, Zap, Shield, ArrowRight } from 'lucide-react';
-import api from '@/lib/api';
+import { useRegisterMutation } from '@/hooks/use-auth';
 import Link from 'next/link';
 
 export default function TrialPage() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const registerMutation = useRegisterMutation();
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);
 
         const formData = new FormData(e.currentTarget);
-        const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            city: formData.get('city'),
-            phone: formData.get('phone')
-        };
+        const name = String(formData.get('name') || '').trim();
+        const email = String(formData.get('email') || '').trim();
+        const phone = String(formData.get('phone') || '').trim();
+        const password = String(formData.get('password') || '123456').trim();
 
         try {
-            await api.post('/leads', data); // Assuming the API endpoint exists and works
+            await registerMutation.mutateAsync({ name, email, phone, password });
             // Simulate delay only if API is fast, for UX effect (optional, removed for production speed)
             await new Promise(resolve => setTimeout(resolve, 1000));
             setSuccess(true);

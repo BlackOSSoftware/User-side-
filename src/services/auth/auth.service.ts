@@ -4,11 +4,18 @@ import type {
   LoginApiResponse,
   LoginPayload,
   MeResponse,
+  RegisterApiResponse,
+  RegisterPayload,
   UpdateMePayload,
 } from "./auth.types";
 
 export async function login(payload: LoginPayload): Promise<LoginApiResponse> {
   const response = await apiClient.post<LoginApiResponse>("/auth/login", payload);
+  return response.data;
+}
+
+export async function register(payload: RegisterPayload): Promise<RegisterApiResponse> {
+  const response = await apiClient.post<RegisterApiResponse>("/auth/register", payload);
   return response.data;
 }
 
