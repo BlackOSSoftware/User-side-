@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,10 +13,20 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MOCK_SIGNALS } from "@/lib/mock";
+import { useSignalsQuery } from "@/services/signals/signal.hooks";
+import { useMarketSegmentsQuery } from "@/services/market/market.hooks";
 
 export default function MarketPage() {
-  const segments = ["All", "Equity", "Crypto", "Commodity"];
+  const { data: marketSegments = [] } = useMarketSegmentsQuery();
+  const segments = useMemo(
+    () => ["All", ...marketSegments.map((seg) => seg.segment || seg.name || "").filter(Boolean)],
+    [marketSegments]
+  );
+  const [activeSegment, setActiveSegment] = useState("All");
+  const signalsQuery = useSignalsQuery(
+    activeSegment && activeSegment !== "All" ? { segment: activeSegment.toUpperCase(), limit: 12 } : { limit: 12 }
+  );
+  const signals = signalsQuery.data?.results ?? [];
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground relative overflow-hidden">
@@ -93,7 +103,7 @@ export default function MarketPage() {
 
         {/* ================= SIGNAL TABS ================= */}
 
-        <Tabs defaultValue="All" className="w-full space-y-12">
+        <Tabs defaultValue="All" className="w-full space-y-12" onValueChange={setActiveSegment}>
 
           <TabsList className="bg-transparent p-0 gap-3 flex-wrap">
             {segments.map((seg) => (
@@ -112,12 +122,12 @@ export default function MarketPage() {
 
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 
-                {MOCK_SIGNALS.filter(
-                  (s) => seg === "All" || s.segment === seg
+                {signals.filter(
+                  (s) => seg === "All" || (s.segment || "").toUpperCase() === seg.toUpperCase()
                 ).map((signal) => (
 
                   <Card
-                    key={signal.id}
+                    key={signal._id}
                     className="rounded-[2rem] bg-white dark:bg-zinc-900/50 border border-border hover:-translate-y-1 transition-all duration-300"
                   >
 
@@ -125,27 +135,27 @@ export default function MarketPage() {
 
                       <div>
                         <Badge variant="secondary" className="mb-3">
-                          {signal.segment}
+                          {signal.segment || "Segment"}
                         </Badge>
 
                         <CardTitle className="text-2xl font-bold">
-                          {signal.symbol}
+                          {signal.symbol || "Symbol"}
                         </CardTitle>
                       </div>
 
                       <div
                         className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
-                          signal.type === "BUY"
+                          (signal.type || "BUY") === "BUY"
                             ? "bg-green-500/10 text-green-500"
                             : "bg-red-500/10 text-red-500"
                         }`}
                       >
-                        {signal.type === "BUY" ? (
+                        {(signal.type || "BUY") === "BUY" ? (
                           <ArrowUpRight className="w-3 h-3" />
                         ) : (
                           <ArrowDownRight className="w-3 h-3" />
                         )}
-                        {signal.type}
+                        {signal.type || "BUY"}
                       </div>
 
                     </CardHeader>
@@ -157,7 +167,7 @@ export default function MarketPage() {
                           Entry Price
                         </div>
                         <div className="text-3xl font-bold">
-                          {signal.entry.toLocaleString()}
+                          {signal.entry?.toLocaleString?.() ?? "-"}
                         </div>
                       </div>
 
@@ -167,7 +177,7 @@ export default function MarketPage() {
                             Stop Loss
                           </div>
                           <div className="font-bold">
-                            {signal.stopLoss.toLocaleString()}
+                            {signal.stopLoss?.toLocaleString?.() ?? "-"}
                           </div>
                         </div>
 
@@ -176,7 +186,7 @@ export default function MarketPage() {
                             Target
                           </div>
                           <div className="font-bold">
-                            {signal.targets[0].toLocaleString()}
+                            {signal.targets?.[0]?.toLocaleString?.() ?? "-"}
                           </div>
                         </div>
                       </div>

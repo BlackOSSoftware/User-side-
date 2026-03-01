@@ -13,8 +13,11 @@ interface HeaderProps {
 export function Header({ onMenuClick }: HeaderProps) {
     const { resolvedTheme, setTheme } = useTheme();
     const { data } = useNotificationsQuery();
-    const notifications = Array.isArray(data) ? data : [];
-    const unreadCount = notifications.filter((item) => !item.isRead).length;
+    const notifications = Array.isArray(data) ? data : data?.results ?? [];
+    const unreadCount =
+        typeof data === "object" && data && "unreadCount" in data && typeof data.unreadCount === "number"
+            ? data.unreadCount
+            : notifications.filter((item) => !item.isRead).length;
     const isDark = resolvedTheme === "dark";
     const meQuery = useMeQuery();
     const name = meQuery.data?.name?.trim() || "Test User";

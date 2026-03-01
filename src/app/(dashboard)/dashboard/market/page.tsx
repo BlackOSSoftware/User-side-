@@ -6,6 +6,19 @@ import {
     TrendingUp, Activity, Layers, Settings, ChevronDown, BarChart2, Search, Grid, Monitor, BarChart, Settings as SettingsIcon
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import {
+    useMarketAnalysisQuery,
+    useMarketHistoryQuery,
+    useMarketLoginKiteMutation,
+    useMarketLoginKiteQuery,
+    useMarketLoginKiteUrlQuery,
+    useMarketNewsQuery,
+    useMarketSearchQuery,
+    useMarketSentimentQuery,
+    useMarketStatsQuery,
+    useMarketSymbolsQuery,
+    useMarketTickersQuery,
+} from '@/services/market/market.hooks';
 
 // --- Theme ---
 const getThemeColors = () => {
@@ -77,6 +90,8 @@ export default function MarketPage() {
     const [chartType, setChartType] = useState('Candle');
     const [timeFrame, setTimeFrame] = useState('5m');
     const [chartSettings, setChartSettings] = useState({ showGrid: true, showWatermark: true, showLegend: true });
+    const [providerCode, setProviderCode] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [sidebarWidth, setSidebarWidth] = useState(380);
     const [detailsHeight, setDetailsHeight] = useState(400);
@@ -85,6 +100,28 @@ export default function MarketPage() {
     const chartRef = useRef<any>(null);
     const seriesRef = useRef<any>({});
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const statsQuery = useMarketStatsQuery();
+    const tickersQuery = useMarketTickersQuery();
+    const sentimentQuery = useMarketSentimentQuery();
+    const analysisQuery = useMarketAnalysisQuery(selectedSymbol?.symbol ?? "", Boolean(selectedSymbol?.symbol));
+    const newsQuery = useMarketNewsQuery(selectedSymbol?.symbol ?? "", Boolean(selectedSymbol?.symbol));
+    const symbolsQuery = useMarketSymbolsQuery(selectedSymbol?.market ? { segment: selectedSymbol.market } : undefined, Boolean(selectedSymbol?.market));
+    const searchResultQuery = useMarketSearchQuery({ q: searchQuery }, Boolean(searchQuery));
+    const historyQuery = useMarketHistoryQuery(
+        selectedSymbol?.symbol
+            ? {
+                symbol: selectedSymbol.symbol,
+                resolution: 5,
+                from: Math.floor(Date.now() / 1000) - 3600,
+                to: Math.floor(Date.now() / 1000),
+            }
+            : { symbol: "" },
+        Boolean(selectedSymbol?.symbol)
+    );
+    const kiteUrlQuery = useMarketLoginKiteUrlQuery();
+    const kiteStatusQuery = useMarketLoginKiteQuery();
+    const kiteMutation = useMarketLoginKiteMutation();
 
     // --- Resizing ---
     const startResizing = (dim: 'w' | 'h') => (e: React.MouseEvent) => {
@@ -139,90 +176,138 @@ export default function MarketPage() {
     }, [selectedSymbol, chartType, timeFrame]);
 
     return (
-        <div ref={containerRef} className="h-[calc(100vh-3rem)] flex flex-col gap-4 relative overflow-hidden text-foreground">
-            <div className="flex-1 min-h-0 bg-background flex flex-row border border-border rounded-lg overflow-hidden shadow-xl">
-                <div className="flex-1 flex flex-col min-w-0">
-                    <div className="h-10 border-b border-border bg-card flex items-center px-4 gap-2 shrink-0">
-                        <span className="font-bold text-sm text-foreground">{selectedSymbol?.symbol}</span>
-                        <div className="h-4 w-[1px] bg-border mx-2" />
-                        <div className="flex bg-muted/10 rounded p-0.5">
-                            {TIMEFRAMES.map(tf => <button key={tf.val} onClick={() => setTimeFrame(tf.val)} className={clsx("px-2 py-0.5 text-[10px] rounded transition-colors", timeFrame === tf.val ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")}>{tf.label}</button>)}
-                        </div>
+        <div ref={containerRef} className="flex flex-col gap-6 relative overflow-hidden text-foreground">
+            <div className="rounded-[2.5rem] bg-[linear-gradient(135deg,rgba(255,255,255,0.85)_0%,rgba(255,255,255,0.65)_40%,rgba(240,245,255,0.8)_100%)] dark:bg-[linear-gradient(135deg,rgba(9,12,18,0.85)_0%,rgba(15,23,42,0.7)_45%,rgba(30,41,59,0.8)_100%)] p-6 sm:p-8 relative overflow-hidden">
+                <div className="absolute -right-32 -top-28 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
+                <div className="absolute -left-32 -bottom-28 h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
+                <div className="relative space-y-3">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-primary/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+                        Market Intelligence
                     </div>
-                    <div className="flex-1 w-full relative bg-background">
-                        <div ref={chartContainerRef} className="absolute inset-0 w-full h-full" />
-                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Market Command Deck</h2>
+                    <p className="text-sm text-muted-foreground max-w-2xl">
+                        Live infrastructure signals, watchlist symbols, and execution provider status in one place.
+                    </p>
                 </div>
+            </div>
 
-                <div onMouseDown={startResizing('w')} className="w-1 hover:w-1.5 bg-border hover:bg-primary cursor-col-resize z-30 shrink-0 transition-all flex items-center justify-center">
-                    <div className="h-8 w-0.5 bg-muted-foreground/20 rounded-full" />
-                </div>
+            <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+                <div className="rounded-[2rem] bg-card/70 backdrop-blur-xl p-4 space-y-4 ring-1 ring-border/30 shadow-[0_22px_60px_-40px_rgba(15,23,42,0.45)]">
+                    <h3 className="text-sm font-semibold text-foreground">Market Insights</h3>
 
-                <div style={{ width: sidebarWidth }} className="bg-card flex flex-col min-w-[250px] max-w-[50vw] border-l border-border">
-                    <div className="p-2 border-b border-border bg-muted/5 flex items-center justify-between shrink-0">
-                        <span className="text-sm font-semibold pl-2">Market Watch</span>
-                        <Search size={14} className="text-muted-foreground mr-2" />
-                    </div>
-
-                    <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-                        {Object.entries(MARKET_DATA).map(([cat, syms]: any) => (
-                            <div key={cat}>
-                                <div className="px-3 py-1 bg-muted/5 border-b border-border text-[10px] font-bold uppercase text-muted-foreground sticky top-0 z-10 backdrop-blur-sm">{cat}</div>
-                                {syms.map((m: any) => (
-                                    <div key={m.symbol} onClick={() => setSelectedSymbol(m)} className={clsx("grid grid-cols-[1.5fr_1fr_1fr] items-center px-3 py-2 cursor-pointer hover:bg-muted/5 border-b border-border transition-colors", selectedSymbol?.symbol === m.symbol && "bg-primary/5 border-l-2 border-l-primary")}>
-                                        <span className="text-xs font-semibold text-muted-foreground">{m.symbol}</span>
-                                        <span className="text-xs text-right">{m.price}</span>
-                                        <span className={clsx("text-xs text-right", m.isUp ? "text-emerald-500" : "text-red-500")}>{m.changePercent}</span>
-                                    </div>
-                                ))}
+                    <div className="grid gap-3 sm:grid-cols-3">
+                        {[
+                            { label: "Stats", data: statsQuery.data },
+                            { label: "Tickers", data: tickersQuery.data },
+                            { label: "Sentiment", data: sentimentQuery.data },
+                        ].map((block) => (
+                            <div key={block.label} className="rounded-2xl bg-gradient-to-br from-background/90 via-background/60 to-primary/10 p-4 ring-1 ring-border/20">
+                                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{block.label}</div>
+                                <div className="mt-2 grid gap-1 text-xs text-foreground">
+                                    {block.data && Object.keys(block.data).length > 0 ? (
+                                        Object.entries(block.data).slice(0, 6).map(([key, value]) => (
+                                            <div key={key} className="flex items-center justify-between gap-2">
+                                                <span className="text-muted-foreground truncate">{key}</span>
+                                                <span className="truncate text-right">
+                                                    {typeof value === "object" ? "—" : String(value)}
+                                                </span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-xs text-muted-foreground">No data</div>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>
 
-                    <div onMouseDown={startResizing('h')} className="h-1 hover:h-1.5 bg-border hover:bg-primary cursor-row-resize z-30 shrink-0 transition-all flex items-center justify-center">
-                        <div className="w-8 h-0.5 bg-muted-foreground/20 rounded-full" />
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-2xl bg-gradient-to-br from-background/90 via-background/60 to-accent/10 p-4 ring-1 ring-border/20">
+                            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Symbols</div>
+                            <div className="mt-2 space-y-2 text-xs text-foreground">
+                                {Array.isArray(symbolsQuery.data) && symbolsQuery.data.length > 0 ? (
+                                    symbolsQuery.data.slice(0, 6).map((symbol, index) => (
+                                        <div key={symbol.symbol || index} className="flex items-center justify-between">
+                                            <span className="font-semibold">{symbol.symbol}</span>
+                                            <span className="text-muted-foreground">{symbol.exchange || symbol.segment}</span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-xs text-muted-foreground">No symbols</div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="rounded-2xl bg-gradient-to-br from-background/90 via-background/60 to-primary/10 p-4 ring-1 ring-border/20">
+                            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">History</div>
+                            <div className="mt-2 text-xs text-muted-foreground">
+                                {historyQuery.isLoading ? "Loading..." : "History loaded"}
+                            </div>
+                        </div>
                     </div>
 
-                    <div style={{ height: detailsHeight }} className="shrink-0 overflow-y-auto custom-scrollbar bg-card border-t border-border p-4 flex flex-col gap-6 scroll-smooth pb-10">
-                        {selectedSymbol && (
-                            <>
-                                <div>
-                                    <div className="text-xl font-bold mb-1">{selectedSymbol.symbol}</div>
-                                    <div className="text-xs text-muted-foreground">{selectedSymbol.description}</div>
-                                    <div className="flex items-baseline gap-2 mt-2">
-                                        <span className="text-3xl font-bold">{selectedSymbol.price}</span>
-                                        <span className={clsx("text-sm font-bold ml-auto", selectedSymbol.isUp ? "text-emerald-500" : "text-red-500")}>{selectedSymbol.changePercent}</span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className="text-xs font-bold mb-3 uppercase tracking-wider text-muted-foreground">Admin Strategy</h3>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div className="bg-muted/5 border border-border rounded p-3 text-center">
-                                            <div className="text-[9px] text-muted-foreground uppercase">Supertrend</div>
-                                            <div className="text-sm font-bold text-emerald-500 flex items-center justify-center gap-1"><TrendingUp size={14} /> UP</div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-2xl bg-gradient-to-br from-background/90 via-background/60 to-primary/10 p-4 ring-1 ring-border/20">
+                            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Analysis</div>
+                            <div className="mt-2 text-xs text-muted-foreground">
+                                {analysisQuery.isLoading ? "Loading..." : "Analysis ready"}
+                            </div>
+                        </div>
+                        <div className="rounded-2xl bg-gradient-to-br from-background/90 via-background/60 to-accent/10 p-4 ring-1 ring-border/20">
+                            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">News</div>
+                            <div className="mt-2 space-y-2 text-xs">
+                                {Array.isArray(newsQuery.data) && newsQuery.data.length > 0 ? (
+                                    newsQuery.data.slice(0, 3).map((item) => (
+                                        <div key={item.url} className="space-y-1">
+                                            <div className="text-foreground font-semibold line-clamp-2">{item.title}</div>
+                                            <div className="text-[10px] text-muted-foreground">
+                                                {item.publisher || item.site} • {item.publishedDate}
+                                            </div>
                                         </div>
-                                        <div className="bg-muted/5 border border-border rounded p-3 text-center">
-                                            <div className="text-[9px] text-muted-foreground uppercase">Structure</div>
-                                            <div className="text-sm font-bold text-primary">BULLISH</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className="text-xs font-bold mb-3 uppercase tracking-wider text-muted-foreground">Performance</h3>
-                                    <div className="grid grid-cols-3 gap-2">
-                                        {Object.entries(selectedSymbol.perf).map(([l, v]: any) => <PerformanceCard key={l} label={l} value={v} />)}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className="text-xs font-bold mb-3 uppercase tracking-wider text-muted-foreground">Technicals</h3>
-                                    <div className="bg-muted/5 border border-border rounded-lg p-6 py-8"><Gauge value={selectedSymbol.tech} /></div>
-                                </div>
-                            </>
-                        )}
+                                    ))
+                                ) : (
+                                    <div className="text-xs text-muted-foreground">No news yet</div>
+                                )}
+                            </div>
+                        </div>
                     </div>
+
+                    <div className="rounded-2xl bg-gradient-to-br from-background/90 via-background/60 to-primary/10 p-4 ring-1 ring-border/20 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Search Market</div>
+                        <input
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="h-9 w-full rounded-lg bg-background/70 px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            placeholder="Search symbol"
+                        />
+                        <div className="text-[10px] text-muted-foreground truncate">
+                            {searchResultQuery.isLoading ? "Searching..." : "Results updated"}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="rounded-[2rem] bg-card/70 backdrop-blur-xl p-4 space-y-4 ring-1 ring-border/30 shadow-[0_22px_60px_-40px_rgba(15,23,42,0.45)]">
+                    <h3 className="text-sm font-semibold text-foreground">Market Provider Login</h3>
+                    <div className="text-xs text-muted-foreground space-y-2">
+                        <div className="break-all">Login URL: {kiteUrlQuery.data?.url || "Not available"}</div>
+                        <div>Status: {kiteStatusQuery.data ? "Connected" : "Not connected"}</div>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-muted-foreground">Provider Code</label>
+                        <input
+                            value={providerCode}
+                            onChange={(e) => setProviderCode(e.target.value)}
+                            className="h-10 w-full rounded-xl bg-background/70 px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            placeholder="Enter provider code"
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => kiteMutation.mutate({ code: providerCode })}
+                        className="h-10 w-full rounded-xl bg-primary text-primary-foreground text-sm font-semibold"
+                        disabled={kiteMutation.isPending}
+                    >
+                        {kiteMutation.isPending ? "Connecting..." : "Connect Provider"}
+                    </button>
                 </div>
             </div>
         </div>

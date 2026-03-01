@@ -5,6 +5,7 @@ import { Loader2, Mail, Phone, Send, Ticket } from "lucide-react";
 import { useMeQuery } from "@/hooks/use-auth";
 import { useCreateTicketMutation, useTicketsQuery } from "@/hooks/use-tickets";
 import type { TicketItem } from "@/services/tickets/ticket.types";
+import { useCreateDashboardTicketMutation, useDashboardTicketsQuery } from "@/services/dashboard-tickets/dashboard-ticket.hooks";
 
 type TicketFormState = {
   subject: string;
@@ -60,6 +61,7 @@ export default function SupportPage() {
   const meQuery = useMeQuery(true);
   const ticketsQuery = useTicketsQuery(true);
   const createTicketMutation = useCreateTicketMutation();
+  const createDashboardTicketMutation = useCreateDashboardTicketMutation();
 
   const tickets = useMemo(() => normalizeTickets(ticketsQuery.data), [ticketsQuery.data]);
 
@@ -101,6 +103,32 @@ export default function SupportPage() {
       }));
     } catch {
       setFormError("Unable to submit ticket. Please check data and try again.");
+    }
+  };
+
+  const onSubmitDashboardTicket = async () => {
+    setFormError(null);
+    setSubmitSuccess(null);
+
+    const resolvedEmail = (form.contactEmail || meQuery.data?.email || "").trim();
+    const resolvedNumber = (form.contactNumber || meQuery.data?.phone || "").trim();
+
+    if (!form.subject.trim() || !form.description.trim() || !resolvedEmail || !resolvedNumber) {
+      setFormError("Please fill subject, description, email and contact number.");
+      return;
+    }
+
+    try {
+      await createDashboardTicketMutation.mutateAsync({
+        subject: form.subject.trim(),
+        ticketType: form.ticketType.trim() || DEFAULT_TICKET_TYPE,
+        description: form.description.trim(),
+        contactEmail: resolvedEmail,
+        contactNumber: resolvedNumber,
+      });
+      setSubmitSuccess("Dashboard ticket submitted successfully.");
+    } catch {
+      setFormError("Unable to submit dashboard ticket. Please try again.");
     }
   };
 
@@ -213,6 +241,16 @@ export default function SupportPage() {
               {createTicketMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
               Submit Ticket
             </button>
+
+            <button
+              type="button"
+              onClick={onSubmitDashboardTicket}
+              disabled={createDashboardTicketMutation.isPending}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-background/50 px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/40 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {createDashboardTicketMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+              Submit Dashboard Ticket
+            </button>
           </form>
         </section>
 
@@ -253,6 +291,7 @@ export default function SupportPage() {
             </div>
           )}
         </section>
+
       </div>
     </div>
   );

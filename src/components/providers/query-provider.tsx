@@ -7,11 +7,6 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        logger: {
-          log: console.log,
-          warn: console.warn,
-          error: () => {},
-        },
         defaultOptions: {
           queries: {
             retry: 1,

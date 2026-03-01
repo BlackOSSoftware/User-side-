@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Zap, Target, Shield, Users, Trophy, ArrowRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { useCmsFaqsQuery, useCmsPageQuery } from "@/services/cms/cms.hooks";
 
 export default function AboutPage() {
   const words = ["Institutional Precision.", "Transparent Execution.", "Disciplined Growth."];
@@ -67,6 +68,8 @@ export default function AboutPage() {
       </div>
 
       <div className="w-full max-w-7xl mx-auto mt-10 px-6 py-24 relative z-10">
+        {/* CMS Content */}
+        <CmsSection />
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-28">
           <div className="space-y-8 max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
@@ -160,6 +163,37 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function CmsSection() {
+  const cmsPageQuery = useCmsPageQuery("about");
+  const faqsQuery = useCmsFaqsQuery();
+
+  return (
+    <div className="mb-20 space-y-10">
+      {cmsPageQuery.data?.content ? (
+        <div className="rounded-[2rem] border border-border bg-white/70 dark:bg-white/5 backdrop-blur-xl p-8">
+          <h2 className="text-2xl font-bold mb-4">{cmsPageQuery.data.title || "About"}</h2>
+          <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+            {cmsPageQuery.data.content}
+          </p>
+        </div>
+      ) : null}
+
+      {Array.isArray(faqsQuery.data) && faqsQuery.data.length > 0 ? (
+        <div className="grid gap-6 md:grid-cols-2">
+          {faqsQuery.data.map((faq) => (
+            <Card key={faq._id} className="bg-white dark:bg-black/50 border border-border rounded-[2rem] p-6">
+              <CardContent className="p-0 space-y-3">
+                <h3 className="text-lg font-semibold text-foreground">{faq.question}</h3>
+                <p className="text-sm text-muted-foreground">{faq.answer}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

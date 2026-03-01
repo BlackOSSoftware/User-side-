@@ -13,3 +13,8 @@ export type NotificationItem = {
 export type RegisterFcmTokenPayload = {
   token: string;
 };
+
+export type NotificationListResponse = {
+  results?: NotificationItem[];
+  unreadCount?: number;
+};

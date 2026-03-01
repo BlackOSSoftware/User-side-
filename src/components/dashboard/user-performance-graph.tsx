@@ -83,7 +83,7 @@ export function UserPerformanceGraph({ data, totalProfit = 124500, growth = 15.2
                             }}
                             itemStyle={{ fontSize: '12px', fontWeight: 'bold', color: '#10b981' }}
                             labelStyle={{ color: '#a1a1aa', fontSize: '11px', marginBottom: '4px' }}
-                            formatter={(value: number) => [`INR ${Number(value || 0).toLocaleString()}`, 'Profit']}
+                            formatter={(value) => [`INR ${Number(value ?? 0).toLocaleString()}`, 'Profit']}
                         />
                         <Area
                             type="monotone"

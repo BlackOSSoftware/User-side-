@@ -1,8 +1,8 @@
 import { apiClient } from "@/services/http/client";
-import type { NotificationItem, RegisterFcmTokenPayload } from "./notification.types";
+import type { NotificationItem, NotificationListResponse, RegisterFcmTokenPayload } from "./notification.types";
 
-export async function getNotifications(): Promise<NotificationItem[]> {
-  const response = await apiClient.get<NotificationItem[]>("/notifications");
+export async function getNotifications(): Promise<NotificationListResponse | NotificationItem[]> {
+  const response = await apiClient.get<NotificationListResponse | NotificationItem[]>("/notifications");
   return response.data;
 }
 

@@ -12,7 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Bell, CheckCircle2, Trash2 } from "lucide-react";
 
 export default function NotificationsPage() {
-  const { data: notifications = [], isLoading } = useNotificationsQuery();
+  const { data, isLoading } = useNotificationsQuery();
+  const notifications = Array.isArray(data) ? data : data?.results ?? [];
+  const unreadCount = Array.isArray(data)
+    ? notifications.filter((item) => !item.isRead).length
+    : data?.unreadCount ?? notifications.filter((item) => !item.isRead).length;
   const markAllMutation = useMarkAllNotificationsReadMutation();
   const markOneMutation = useMarkNotificationReadMutation();
   const deleteMutation = useDeleteNotificationMutation();
@@ -24,8 +28,6 @@ export default function NotificationsPage() {
       return bTime - aTime;
     });
   }, [notifications]);
-
-  const unreadCount = notifications.filter((item) => !item.isRead).length;
 
   return (
     <div className="flex-1 space-y-6 sm:space-y-8 py-2">
@@ -64,42 +66,49 @@ export default function NotificationsPage() {
           </Card>
         ) : (
           sortedNotifications.map((item) => (
-            <Card
-              key={item._id}
-              className={`border-border/60 rounded-[1.25rem] transition-all ${
-                item.isRead ? "bg-white/70 dark:bg-white/5" : "bg-primary/10 dark:bg-primary/15 border-primary/30"
-              }`}
-            >
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{item.title || "Notification"}</CardTitle>
-                <CardDescription>
-                  {item.createdAt ? new Date(item.createdAt).toLocaleString() : "Just now"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm text-muted-foreground">
-                <p className="text-sm text-foreground/80">{item.message || item.body || "Update received."}</p>
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant="outline"
-                    className="h-9 rounded-xl"
-                    onClick={() => markOneMutation.mutate(item._id)}
-                    disabled={markOneMutation.isPending || Boolean(item.isRead)}
-                  >
-                    <CheckCircle2 className="mr-2 h-4 w-4" />
-                    Mark read
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-9 rounded-xl text-destructive hover:text-destructive"
-                    onClick={() => deleteMutation.mutate(item._id)}
-                    disabled={deleteMutation.isPending}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <a key={item._id} href={`/dashboard/notifications/${item._id}`}>
+              <Card
+                className={`border-border/60 rounded-[1.25rem] transition-all ${
+                  item.isRead ? "bg-white/70 dark:bg-white/5" : "bg-primary/10 dark:bg-primary/15 border-primary/30"
+                }`}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">{item.title || "Notification"}</CardTitle>
+                  <CardDescription>
+                    {item.createdAt ? new Date(item.createdAt).toLocaleString() : "Just now"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm text-muted-foreground">
+                  <p className="text-sm text-foreground/80">{item.message || item.body || "Update received."}</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      className="h-9 rounded-xl"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        markOneMutation.mutate(item._id);
+                      }}
+                      disabled={markOneMutation.isPending || Boolean(item.isRead)}
+                    >
+                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                      Mark read
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="h-9 rounded-xl text-destructive hover:text-destructive"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        deleteMutation.mutate(item._id);
+                      }}
+                      disabled={deleteMutation.isPending}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
           ))
         )}
       </div>

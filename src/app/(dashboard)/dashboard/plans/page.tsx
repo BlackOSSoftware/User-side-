@@ -64,7 +64,11 @@ export default function PlansPage() {
                 : typeof (error as { response?: { data?: { message?: string; error?: string } } })?.response?.data?.error === 'string'
                     ? String((error as { response?: { data?: { error?: string } } })?.response?.data?.error)
                     : undefined;
-        return apiMessage || (error instanceof Error ? error.message : fallback);
+        const rawMessage = apiMessage || (error instanceof Error ? error.message : String(error ?? ""));
+        if (rawMessage && rawMessage.includes("ENOENT")) {
+            return "Server upload path missing. Please create the uploads/payments folder on backend.";
+        }
+        return rawMessage || fallback;
     };
 
     async function onPurchase() {
@@ -317,7 +321,7 @@ export default function PlansPage() {
                                             src={
                                                 paymentDetails.qrCodeUrl.startsWith("http")
                                                     ? paymentDetails.qrCodeUrl
-                                                    : `http://localhost:4000/${paymentDetails.qrCodeUrl.replace(/^\\/+/, "")}`
+                                                    : `http://localhost:4000/${paymentDetails.qrCodeUrl.replace(/^\/+/, "")}`
                                             }
                                             alt="Payment QR"
                                             className="mt-2 h-32 w-32 rounded-xl border border-border/60 object-cover"

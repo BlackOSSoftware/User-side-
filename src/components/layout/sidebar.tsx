@@ -11,6 +11,9 @@ import {
     CandlestickChart,
     Radio,
     ListChecks,
+    Bell,
+    CalendarDays,
+    Bot,
     ChevronLeft,
     ChevronRight,
     LogOut,
@@ -33,6 +36,9 @@ const navigation: SidebarNavItem[] = [
     { name: "Signal", path: "/dashboard/signals", icon: Radio },
     { name: "Chart", path: "/dashboard/market", icon: CandlestickChart },
     { name: "Plans & Billing", path: "/dashboard/plans", icon: CreditCard },
+    { name: "Notifications", path: "/dashboard/notifications", icon: Bell },
+    { name: "Calendar", path: "/dashboard/economic-calendar", icon: CalendarDays },
+    { name: "Bot Status", path: "/dashboard/bot-status", icon: Bot },
     { name: "Support", path: "/dashboard/support", icon: LifeBuoy },
 ];
 
