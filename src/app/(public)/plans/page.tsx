@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Star, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { usePlansQuery } from "@/services/plans/plan.hooks";
+import type { Plan } from "@/services/plans/plan.types";
 
 export default function PlansPage() {
   const words = ["Scale With Confidence.", "Execute With Precision.", "Grow With Structure."];
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
+  const { data: plans = [] } = usePlansQuery();
 
   useEffect(() => {
     if (subIndex === words[index].length + 1 && !reverse) {
@@ -31,41 +34,82 @@ export default function PlansPage() {
     return () => clearTimeout(timeout);
   }, [subIndex, index, reverse]);
 
-  const PLANS = [
-    {
-      id: "demo",
-      name: "Explorer Access",
-      description: "Built for evaluating workflow, signal quality, and speed",
-      price: "Free",
-      duration: "1 Day",
-      features: ["Core strategy feed", "Fast signal delivery", "Performance snapshots", "Guided onboarding support"],
-      buttonText: "Start 1-Day Access",
-      href: "/trial",
-      isPopular: false,
-    },
-    {
-      id: "pro",
-      name: "Professional Access",
-      description: "Designed for serious active traders and operators",
-      price: "INR 25,000",
-      duration: "Month",
-      features: ["Full multi-strategy coverage", "Sub-100ms signal routing", "Deep analytics and exports", "Priority response support"],
-      buttonText: "Activate Professional",
-      href: "/trial",
-      isPopular: true,
-    },
-    {
-      id: "enterprise",
-      name: "Institutional Suite",
-      description: "Tailored for desks, teams, and managed capital mandates",
-      price: "Custom",
-      duration: "Pricing",
-      features: ["Dedicated infrastructure", "White-label deployment", "FIX/API integrations", "Dedicated relationship manager"],
-      buttonText: "Schedule Consultation",
-      href: "/contact",
-      isPopular: false,
-    },
-  ];
+  const fallbackPlans = useMemo(
+    () => [
+      {
+        id: "demo",
+        name: "Explorer Access",
+        description: "Built for evaluating workflow, signal quality, and speed",
+        price: "Free",
+        duration: "1 Day",
+        features: ["Core strategy feed", "Fast signal delivery", "Performance snapshots", "Guided onboarding support"],
+        buttonText: "Start 1-Day Access",
+        href: "/trial",
+        isPopular: false,
+      },
+      {
+        id: "pro",
+        name: "Professional Access",
+        description: "Designed for serious active traders and operators",
+        price: "INR 25,000",
+        duration: "Month",
+        features: ["Full multi-strategy coverage", "Sub-100ms signal routing", "Deep analytics and exports", "Priority response support"],
+        buttonText: "Activate Professional",
+        href: "/trial",
+        isPopular: true,
+      },
+      {
+        id: "enterprise",
+        name: "Institutional Suite",
+        description: "Tailored for desks, teams, and managed capital mandates",
+        price: "Custom",
+        duration: "Pricing",
+        features: ["Dedicated infrastructure", "White-label deployment", "FIX/API integrations", "Dedicated relationship manager"],
+        buttonText: "Schedule Consultation",
+        href: "/contact",
+        isPopular: false,
+      },
+    ],
+    []
+  );
+
+  const formattedPlans = useMemo(() => {
+    if (!plans.length) return fallbackPlans;
+
+    const popularId = plans
+      .filter((plan) => !plan.isDemo)
+      .sort((a, b) => (b.price ?? 0) - (a.price ?? 0))[0]?._id;
+
+    const formatPrice = (price?: number, isDemo?: boolean) => {
+      if (!price || price <= 0 || isDemo) return "Free";
+      const value = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(price);
+      return `INR ${value}`;
+    };
+
+    const formatDuration = (durationDays?: number) => {
+      if (!durationDays) return "Flexible";
+      return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
+    };
+
+    return plans.map((plan: Plan) => {
+      const isPopular = plan._id === popularId;
+      const isDemo = Boolean(plan.isDemo);
+
+      return {
+        id: plan._id,
+        name: plan.name,
+        description: plan.description || "Premium access with execution-ready workflows.",
+        price: formatPrice(plan.price, isDemo),
+        duration: formatDuration(plan.durationDays),
+        features: plan.features?.length
+          ? plan.features
+          : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
+        buttonText: isDemo ? "Start Demo Access" : "Activate Plan",
+        href: `/trial?planId=${plan._id}`,
+        isPopular,
+      };
+    });
+  }, [fallbackPlans, plans]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300">
@@ -82,7 +126,7 @@ export default function PlansPage() {
               Premium Membership Architecture
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold leading-[1] tracking-tight text-foreground">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1] tracking-tight text-foreground">
               Choose the Plan
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
@@ -90,7 +134,7 @@ export default function PlansPage() {
               </span>
             </h1>
 
-            <div className="text-2xl md:text-3xl font-bold text-primary h-[40px]">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-primary h-[32px] sm:h-[40px]">
               {words[index].substring(0, subIndex)}
               <span className="animate-pulse">|</span>
             </div>
@@ -151,14 +195,14 @@ export default function PlansPage() {
           </div>
         </div>
 
-        <div className="grid gap-8 lg:gap-10 md:grid-cols-2 lg:grid-cols-3 items-start">
-          {PLANS.map((plan) => (
+        <div className="grid gap-8 lg:gap-10 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+          {formattedPlans.map((plan) => (
             <Card
               key={plan.id}
-              className={`relative overflow-hidden rounded-[2rem] transition-all duration-500 group
+              className={`relative overflow-hidden rounded-[2rem] transition-all duration-500 group flex h-full flex-col
                 ${plan.isPopular
-                  ? "bg-white dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-15px_rgba(245,158,11,0.15)] ring-1 ring-primary/20 scale-105 z-10"
-                  : "bg-white dark:bg-black/50 border-slate-100 dark:border-white/5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-none hover:border-primary/30 hover:-translate-y-1"
+                  ? "bg-white dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-15px_rgba(245,158,11,0.15)] ring-1 ring-primary/20 sm:scale-105 z-10"
+                  : "bg-white dark:bg-black/50 border-slate-100 dark:border-white/5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-none hover:border-primary/30 sm:hover:-translate-y-1"
                 }`}
             >
               {plan.isPopular && (
@@ -177,7 +221,7 @@ export default function PlansPage() {
                 <CardDescription>{plan.description}</CardDescription>
               </CardHeader>
 
-              <CardContent className="p-6 pt-6">
+              <CardContent className="p-6 pt-6 flex-1">
                 <div className="flex items-baseline gap-1 mb-6">
                   <span className="text-4xl font-bold tracking-tighter">{plan.price}</span>
                   <span className="text-muted-foreground text-sm ml-1">/ {plan.duration}</span>
@@ -198,7 +242,7 @@ export default function PlansPage() {
                 </div>
               </CardContent>
 
-              <CardFooter className="p-6 pt-0">
+              <CardFooter className="p-6 pt-0 mt-auto">
                 <Link href={plan.href} className="w-full">
                   <Button
                     size="lg"

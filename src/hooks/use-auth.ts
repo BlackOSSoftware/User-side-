@@ -1,6 +1,8 @@
 export {
   useLoginMutation,
   useRegisterMutation,
+  useSendOtpMutation,
+  useVerifyOtpMutation,
   useMeQuery,
   useUpdateMeMutation,
   useLogoutMutation,

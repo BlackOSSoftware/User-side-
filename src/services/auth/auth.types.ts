@@ -14,6 +14,21 @@ export type RegisterPayload = {
 
 export type RegisterApiResponse = Record<string, unknown>;
 
+export type OtpChannel = "email";
+
+export type SendOtpPayload = {
+  type: OtpChannel;
+  identifier: string;
+};
+
+export type VerifyOtpPayload = {
+  type: OtpChannel;
+  identifier: string;
+  otp: string;
+};
+
+export type VerifyOtpResponse = Record<string, unknown>;
+
 export type UserProfile = {
   avatar?: string;
   address?: string;

@@ -4,7 +4,7 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 
 const Footer = () => {
   return (
-    <footer className="relative w-full overflow-hidden border-t border-border/70 bg-card/60 backdrop-blur-xl">
+    <footer className="relative w-full overflow-hidden border-t bg-card/60 backdrop-blur-xl">
       {/* ambient bg */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,hsl(var(--primary)/0.12),transparent_38%),radial-gradient(circle_at_88%_10%,hsl(var(--accent)/0.12),transparent_34%)]" />
 
@@ -83,7 +83,7 @@ const Footer = () => {
       </div>
 
       {/* ⭐ BOTTOM */}
-      <div className="border-t border-border/70">
+      <div className="border-t ">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-2 px-5 py-4 text-center text-xs text-muted-foreground sm:flex-row sm:justify-between sm:text-left">
           <p>© 2026 MSPK Trade Solutions. All rights reserved.</p>
           <p>Market data is informational and not financial advice.</p>

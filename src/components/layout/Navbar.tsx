@@ -32,7 +32,7 @@ export default function Navbar() {
             "fixed inset-x-0 top-0 z-50 flex justify-center w-full transition-all duration-500"
         )}>
             <header className={cn(
-                "w-full border-b border-border/80 bg-background/78 backdrop-blur-2xl transition-all duration-500"
+                "w-full border-b bg-background/78 backdrop-blur-2xl transition-all duration-500"
             )}>
                 <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
 

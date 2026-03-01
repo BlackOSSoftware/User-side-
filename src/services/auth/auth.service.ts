@@ -6,7 +6,10 @@ import type {
   MeResponse,
   RegisterApiResponse,
   RegisterPayload,
+  SendOtpPayload,
   UpdateMePayload,
+  VerifyOtpPayload,
+  VerifyOtpResponse,
 } from "./auth.types";
 
 export async function login(payload: LoginPayload): Promise<LoginApiResponse> {
@@ -16,6 +19,15 @@ export async function login(payload: LoginPayload): Promise<LoginApiResponse> {
 
 export async function register(payload: RegisterPayload): Promise<RegisterApiResponse> {
   const response = await apiClient.post<RegisterApiResponse>("/auth/register", payload);
+  return response.data;
+}
+
+export async function sendOtp(payload: SendOtpPayload): Promise<void> {
+  await apiClient.post("/auth/send-otp", payload);
+}
+
+export async function verifyOtp(payload: VerifyOtpPayload): Promise<VerifyOtpResponse> {
+  const response = await apiClient.post<VerifyOtpResponse>("/auth/verify-otp", payload);
   return response.data;
 }
 

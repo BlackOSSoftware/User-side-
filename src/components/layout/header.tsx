@@ -3,6 +3,8 @@ import React from "react";
 import { Bell, Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useMeQuery } from "@/hooks/use-auth";
+import Link from "next/link";
+import { useNotificationsQuery } from "@/services/notifications/notification.hooks";
 
 interface HeaderProps {
     onMenuClick?: () => void;
@@ -10,7 +12,9 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
     const { resolvedTheme, setTheme } = useTheme();
-    const unreadCount = 3; // Mock unread count
+    const { data } = useNotificationsQuery();
+    const notifications = Array.isArray(data) ? data : [];
+    const unreadCount = notifications.filter((item) => !item.isRead).length;
     const isDark = resolvedTheme === "dark";
     const meQuery = useMeQuery();
     const name = meQuery.data?.name?.trim() || "Test User";
@@ -53,12 +57,16 @@ export function Header({ onMenuClick }: HeaderProps) {
                 </button>
 
                 <div className="relative">
-                    <button className="relative p-1.5 sm:p-2 text-muted-foreground hover:text-primary hover:bg-background/40 rounded-lg transition-all">
+                    <Link
+                        href="/dashboard/notifications"
+                        className="relative inline-flex p-1.5 sm:p-2 text-muted-foreground hover:text-primary hover:bg-background/40 rounded-lg transition-all"
+                        aria-label="Open notifications"
+                    >
                         <Bell size={16} />
                         {unreadCount > 0 && (
                             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full animate-pulse" />
                         )}
-                    </button>
+                    </Link>
                 </div>
 
                     <div className="flex items-center gap-2 pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1 bg-background/35 rounded-full">
