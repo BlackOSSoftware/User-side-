@@ -3,6 +3,7 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Maximize2, ArrowUpRight } from 'lucide-react';
+import { useTheme } from "next-themes";
 
 interface UserPerformanceGraphProps {
     data?: Array<{ time: string; profit: number }>;
@@ -11,6 +12,9 @@ interface UserPerformanceGraphProps {
 }
 
 export function UserPerformanceGraph({ data, totalProfit = 124500, growth = 15.2 }: UserPerformanceGraphProps) {
+    const { resolvedTheme } = useTheme();
+    const isLightTheme = resolvedTheme === "light";
+
     const chartData = data || [
         { time: '09:30', profit: 5000 },
         { time: '10:00', profit: 12000 },
@@ -79,7 +83,7 @@ export function UserPerformanceGraph({ data, totalProfit = 124500, growth = 15.2
                                 backgroundColor: '#09090b',
                                 borderColor: 'rgba(255,255,255,0.1)',
                                 borderRadius: '8px',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                                boxShadow: isLightTheme ? "none" : '0 4px 12px rgba(0,0,0,0.5)',
                             }}
                             itemStyle={{ fontSize: '12px', fontWeight: 'bold', color: '#10b981' }}
                             labelStyle={{ color: '#a1a1aa', fontSize: '11px', marginBottom: '4px' }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Mail, MapPin, Phone, Save, UserRound } from "lucide-react";
+import { Save } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -76,97 +76,129 @@ export default function EditProfilePage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-1 pb-4">
-      <div className="rounded-3xl bg-card/80 ring-1 ring-border/40 backdrop-blur-xl overflow-hidden">
-        <div className="px-4 sm:px-5 py-4 border-b border-border/40 relative">
-          <button
-            onClick={() => router.back()}
-            className="absolute left-3 top-3 h-8 w-8 rounded-full bg-background/60 inline-flex items-center justify-center text-foreground"
-          >
-            <ArrowLeft size={16} />
-          </button>
-          <h1 className="text-lg sm:text-xl font-semibold text-foreground text-center">Edit Profile</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground text-center mt-1">Update your account details.</p>
+    <div className="mx-auto w-full max-w-6xl px-3 sm:px-4 pb-10 pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Edit Profile</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">Update your account details and contact info.</p>
         </div>
+        <button
+          type="button"
+          onClick={() => router.push("/dashboard/profile")}
+          className="text-xs font-semibold text-muted-foreground hover:text-foreground"
+        >
+          Back to Profile
+        </button>
+      </div>
 
-        <div className="p-3 sm:p-5 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
-          <aside className="lg:col-span-4 rounded-2xl bg-background/35 ring-1 ring-border/40 p-4">
-            <div className="h-16 w-16 rounded-xl bg-gradient-to-tr from-primary/25 to-accent/20 ring-1 ring-border/50 flex items-center justify-center text-xl font-bold text-foreground">
-              {initials}
-            </div>
-            <p className="mt-3 text-base sm:text-lg font-semibold text-foreground">{profile.name || "User"}</p>
-            <p className="text-xs text-muted-foreground">{profile.username}</p>
-
-            <div className="mt-4 text-[11px] text-muted-foreground space-y-1.5">
-              <p className="inline-flex items-center gap-1.5"><Mail size={12} /> {profile.email}</p>
-              <p className="inline-flex items-center gap-1.5"><Phone size={12} /> {profile.phone || "N/A"}</p>
-              <p className="inline-flex items-center gap-1.5"><MapPin size={12} /> {profile.city || "N/A"}, {profile.state || "N/A"}</p>
-            </div>
-          </aside>
-
-          <section className="lg:col-span-8 rounded-2xl bg-background/35 ring-1 ring-border/40 p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="sm:col-span-2">
-                <label className="text-[11px] text-muted-foreground inline-flex items-center gap-1"><UserRound size={12} /> Full Name</label>
-                <input
-                  value={profile.name}
-                  onChange={(e) => setField("name", e.target.value)}
-                  className="mt-1.5 w-full h-10 rounded-xl border border-border/60 bg-secondary/20 px-3 text-sm focus:outline-none focus:border-primary/60"
-                />
+      <div className="mt-4 grid gap-4">
+        <aside className="space-y-4">
+          <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-4">
+            <div className="flex items-center gap-3">
+              <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-primary/30 to-amber-200/40 border border-black/10 dark:border-white/10 overflow-hidden flex items-center justify-center text-sm font-semibold text-foreground">
+                {initials}
               </div>
-              <div>
-                <label className="text-[11px] text-muted-foreground">City</label>
-                <input
-                  value={profile.city}
-                  onChange={(e) => setProfileField("city", e.target.value)}
-                  className="mt-1.5 w-full h-10 rounded-xl border border-border/60 bg-secondary/20 px-3 text-sm focus:outline-none focus:border-primary/60"
-                />
-              </div>
-              <div>
-                <label className="text-[11px] text-muted-foreground">State</label>
-                <input
-                  value={profile.state}
-                  onChange={(e) => setProfileField("state", e.target.value)}
-                  className="mt-1.5 w-full h-10 rounded-xl border border-border/60 bg-secondary/20 px-3 text-sm focus:outline-none focus:border-primary/60"
-                />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="text-[11px] text-muted-foreground">Address</label>
-                <input
-                  value={profile.address}
-                  onChange={(e) => setProfileField("address", e.target.value)}
-                  className="mt-1.5 w-full h-10 rounded-xl border border-border/60 bg-secondary/20 px-3 text-sm focus:outline-none focus:border-primary/60"
-                />
-              </div>
-              <div>
-                <label className="text-[11px] text-muted-foreground">Phone</label>
-                <input
-                  value={profile.phone}
-                  onChange={(e) => setField("phone", e.target.value)}
-                  className="mt-1.5 w-full h-10 rounded-xl border border-border/60 bg-secondary/20 px-3 text-sm focus:outline-none focus:border-primary/60"
-                />
-              </div>
-              <div>
-                <label className="text-[11px] text-muted-foreground">Email</label>
-                <input
-                  value={profile.email}
-                  disabled
-                  className="mt-1.5 w-full h-10 rounded-xl border border-border/50 bg-secondary/10 px-3 text-sm text-muted-foreground"
-                />
+              <div className="min-w-0">
+                <div className="text-base font-semibold text-foreground truncate">{profile.name || "User"}</div>
+                <div className="text-[11px] text-muted-foreground truncate">{profile.username}</div>
+                <div className="text-[11px] text-muted-foreground truncate">{profile.email}</div>
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-border/40 flex justify-end">
-              <button
-                onClick={saveProfile}
-                disabled={updateMeMutation.isPending}
-                className="h-10 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold inline-flex items-center gap-2 disabled:opacity-60"
-              >
-                <Save size={14} /> {updateMeMutation.isPending ? "Saving..." : "Save"}
-              </button>
+            <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+              <div className="rounded-xl bg-black/5 dark:bg-white/5 px-3 py-2">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Phone</div>
+                <div className="text-sm font-semibold text-foreground mt-1">{profile.phone || "N/A"}</div>
+              </div>
+              <div className="rounded-xl bg-black/5 dark:bg-white/5 px-3 py-2">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">City</div>
+                <div className="text-sm font-semibold text-foreground mt-1">{profile.city || "N/A"}</div>
+              </div>
+              <div className="rounded-xl bg-black/5 dark:bg-white/5 px-3 py-2">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">State</div>
+                <div className="text-sm font-semibold text-foreground mt-1">{profile.state || "N/A"}</div>
+              </div>
+              <div className="rounded-xl bg-black/5 dark:bg-white/5 px-3 py-2">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Address</div>
+                <div className="text-sm font-semibold text-foreground mt-1 truncate">{profile.address || "N/A"}</div>
+              </div>
             </div>
-          </section>
-        </div>
+          </div>
+
+          <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-3 text-xs text-muted-foreground">
+            Keep your profile updated for smoother support and billing.
+          </div>
+        </aside>
+
+        <section className="rounded-2xl border border-black/5 dark:border-white/10 bg-white/80 dark:bg-white/5 p-4 sm:p-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="sm:col-span-2">
+              <label className="text-[11px] text-muted-foreground">Full Name</label>
+              <input
+                value={profile.name}
+                onChange={(e) => setField("name", e.target.value)}
+                className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-muted-foreground">City</label>
+              <input
+                value={profile.city}
+                onChange={(e) => setProfileField("city", e.target.value)}
+                className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-muted-foreground">State</label>
+              <input
+                value={profile.state}
+                onChange={(e) => setProfileField("state", e.target.value)}
+                className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-[11px] text-muted-foreground">Address</label>
+              <input
+                value={profile.address}
+                onChange={(e) => setProfileField("address", e.target.value)}
+                className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-muted-foreground">Phone</label>
+              <input
+                value={profile.phone}
+                onChange={(e) => setField("phone", e.target.value)}
+                className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-muted-foreground">Email</label>
+              <input
+                value={profile.email}
+                disabled
+                className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 text-sm text-muted-foreground"
+              />
+            </div>
+          </div>
+
+          <div className="mt-5 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => router.push("/dashboard/profile")}
+              className="h-11 px-4 rounded-xl border border-black/10 dark:border-white/10 text-sm font-semibold text-muted-foreground hover:text-foreground"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={saveProfile}
+              disabled={updateMeMutation.isPending}
+              className="h-11 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold inline-flex items-center gap-2 disabled:opacity-60"
+            >
+              <Save size={14} /> {updateMeMutation.isPending ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );

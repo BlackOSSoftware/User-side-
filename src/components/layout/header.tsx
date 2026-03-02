@@ -35,9 +35,9 @@ export function Header({ onMenuClick }: HeaderProps) {
         .join("") || "T";
 
     return (
-        <header className="h-14 sm:h-16 bg-card/85 backdrop-blur-xl px-2.5 sm:px-4 md:px-6 sticky top-0 z-50 relative overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_left,hsl(var(--primary)/0.16),transparent_55%),radial-gradient(circle_at_right,hsl(var(--accent)/0.14),transparent_45%)]" />
+        <header className="h-14 sm:h-16 bg-white px-2.5 sm:px-4 md:px-6 sticky top-0 z-50 relative overflow-hidden border-b border-slate-900/[0.12] dark:border-white/5 dark:bg-card dark:backdrop-blur-xl">
+            <div className="absolute inset-x-0 top-0 hidden dark:block h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+            <div className="absolute inset-0 pointer-events-none hidden dark:block bg-[radial-gradient(circle_at_left,hsl(var(--primary)/0.16),transparent_55%),radial-gradient(circle_at_right,hsl(var(--accent)/0.14),transparent_45%)]" />
 
             <div className="relative h-full flex items-center justify-between gap-2 sm:gap-4">
                 <div className="flex items-center gap-3 shrink-0">
@@ -72,7 +72,11 @@ export function Header({ onMenuClick }: HeaderProps) {
                     </Link>
                 </div>
 
-                    <div className="flex items-center gap-2 pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1 bg-background/35 rounded-full">
+                    <Link
+                        href="/dashboard/profile"
+                        className="group flex items-center gap-2 rounded-full bg-foreground/[0.03] pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1 transition-colors hover:bg-foreground/[0.06] dark:bg-background/35 dark:hover:bg-background/50"
+                        aria-label="Open profile"
+                    >
                         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-primary-foreground font-semibold text-xs sm:text-sm overflow-hidden">
                             {avatarUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
@@ -85,7 +89,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                             <p className="text-xs sm:text-sm font-semibold text-foreground truncate">{name}</p>
                             <p className="text-[10px] sm:text-xs text-muted-foreground">Welcome back</p>
                         </div>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </header>

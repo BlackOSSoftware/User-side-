@@ -1,29 +1,66 @@
 "use client";
 
-import { ChevronRight, CircleHelp, LogOut, Mail, MapPin, Phone, ShieldCheck, UserRound } from "lucide-react";
+import {
+  AtSign,
+  BadgeCheck,
+  BadgePercent,
+  ChevronRight,
+  Copy,
+  Crown,
+  IdCard,
+  Mail,
+  MapPin,
+  Phone,
+  Share2,
+  ShieldCheck,
+  Sparkles,
+  UserRound,
+} from "lucide-react";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useLogoutMutation, useMeQuery } from "@/hooks/use-auth";
+import { toast } from "sonner";
+import { useMeQuery } from "@/hooks/use-auth";
+
+const numberFormatter = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
 
 export default function ProfilePage() {
   const router = useRouter();
   const meQuery = useMeQuery();
-  const logoutMutation = useLogoutMutation();
 
   const profile = useMemo(() => {
     const me = meQuery.data;
     const name = me?.name ?? "Test User";
     const email = me?.email ?? "test@example.com";
+    const walletCandidate =
+      typeof me?.walletBalance === "number"
+        ? me.walletBalance
+        : typeof me?.equity === "number"
+          ? me.equity
+          : undefined;
+    const wallet = typeof walletCandidate === "number" && walletCandidate > 0 ? walletCandidate : undefined;
+    const planLabel = me?.planName ? `${me.planName} Plan` : "Balance";
+    const phone = me?.phone ?? "N/A";
+    const city = me?.profile?.city ?? "N/A";
+    const state = me?.profile?.state ?? "N/A";
+    const status = me?.status ?? "N/A";
+    const referralCode = me?.referral?.code ?? "N/A";
+
+    const username = `@${email.split("@")[0] || "user"}`;
+    const userId = referralCode !== "N/A" ? referralCode : username;
 
     return {
+      userId,
       name,
-      username: `@${email.split("@")[0] || "user"}`,
+      username,
       email,
-      phone: me?.phone ?? "N/A",
-      city: me?.profile?.city ?? "N/A",
-      state: me?.profile?.state ?? "N/A",
-      status: me?.status ?? "Active",
-      referral: me?.referral?.code ?? "N/A",
+      wallet,
+      planLabel,
+      avatar: me?.profile?.avatar,
+      phone,
+      city,
+      state,
+      status,
+      referralCode,
     };
   }, [meQuery.data]);
 
@@ -35,106 +72,205 @@ export default function ProfilePage() {
       .map((part) => part[0]?.toUpperCase() ?? "")
       .join("") || "T";
 
-  const handleLogout = async () => {
+  const avatarUrl = profile.avatar
+    ? profile.avatar.startsWith("http://") || profile.avatar.startsWith("https://")
+      ? profile.avatar
+      : `http://localhost:4000/${profile.avatar.replace(/^\/+/, "")}`
+    : null;
+
+  const handleCopyUserId = async () => {
+    const valueToCopy = profile.userId || "-";
     try {
-      await logoutMutation.mutateAsync();
-    } finally {
-      router.replace("/login");
+      await navigator.clipboard.writeText(valueToCopy);
+      toast.success("User ID copied");
+    } catch {
+      toast.error("Unable to copy");
+    }
+  };
+
+  const handleShareApp = async () => {
+    const url = typeof window !== "undefined" ? window.location.origin : "";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "MSPK Trade Solutions", url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      toast.success("App link copied");
+    } catch {
+      toast.error("Unable to share");
     }
   };
 
   const actionRows = [
     {
       label: "Edit Profile",
-      onClick: () => router.push("/dashboard/profile/edit"),
-      danger: false,
       icon: UserRound,
+      onClick: () => router.push("/dashboard/profile/edit"),
     },
     {
       label: "Change Password",
-      onClick: () => router.push("/dashboard/profile/change-password"),
-      danger: false,
       icon: ShieldCheck,
+      onClick: () => router.push("/dashboard/profile/change-password"),
     },
     {
-      label: "Help & Support",
-      onClick: () => router.push("/dashboard/support"),
-      danger: false,
-      icon: CircleHelp,
-    },
-    {
-      label: "Log Out",
-      onClick: handleLogout,
-      danger: true,
-      icon: LogOut,
+      label: "Share App",
+      icon: Share2,
+      onClick: handleShareApp,
     },
   ];
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-1 pb-4">
-      <div className="rounded-3xl bg-card/80 ring-1 ring-border/40 backdrop-blur-xl overflow-hidden">
-        <div className="px-4 sm:px-5 py-4 border-b border-border/40">
-          <h1 className="text-lg sm:text-xl font-semibold text-foreground">Profile</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">View your account details and manage profile actions.</p>
+    <div className="mx-auto w-full max-w-6xl px-3 sm:px-4 pb-10 pt-4">
+      <div className="space-y-1 sm:space-y-2">
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Profile</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground">Manage your account details and preferences.</p>
+      </div>
+
+      <div className="mt-4 space-y-4">
+        <div className="space-y-4">
+          <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-primary/30 to-amber-200/40 border border-black/10 dark:border-white/10 overflow-hidden flex items-center justify-center text-sm font-semibold text-foreground">
+                  {avatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={avatarUrl} alt={profile.name} className="h-full w-full object-cover" />
+                  ) : (
+                    initials
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-base font-semibold text-foreground truncate">{profile.name}</div>
+                  {profile.username && (
+                    <div className="text-[11px] text-muted-foreground truncate inline-flex items-center gap-1.5">
+                      <AtSign size={12} className="text-muted-foreground/80" />
+                      <span className="truncate">{profile.username}</span>
+                    </div>
+                  )}
+                  <div className="text-[11px] text-muted-foreground truncate inline-flex items-center gap-1.5">
+                    <Mail size={12} className="text-muted-foreground/80" />
+                    <span className="truncate">{profile.email}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground inline-flex items-center justify-end gap-1.5">
+                  <Crown size={12} className="text-amber-500/80" />
+                  <span>{profile.planLabel}</span>
+                </div>
+                <div className="text-sm font-semibold text-amber-500">
+                  {typeof profile.wallet === "number" ? `INR ${numberFormatter.format(profile.wallet)}` : "--"}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-foreground/10 bg-foreground/5 flex items-center justify-center">
+                  <BadgeCheck size={16} className="text-primary" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Status</div>
+                  <div className="text-sm font-semibold text-foreground mt-1">{profile.status}</div>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-foreground/10 bg-foreground/5 flex items-center justify-center">
+                  <BadgePercent size={16} className="text-amber-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Referral</div>
+                  <div className="text-sm font-semibold text-foreground mt-1 truncate">{profile.referralCode}</div>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-foreground/10 bg-foreground/5 flex items-center justify-center">
+                  <Phone size={16} className="text-emerald-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Phone</div>
+                  <div className="text-sm font-semibold text-foreground mt-1">{profile.phone}</div>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-foreground/10 bg-foreground/5 flex items-center justify-center">
+                  <MapPin size={16} className="text-sky-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Location</div>
+                  <div className="text-sm font-semibold text-foreground mt-1 truncate">
+                    {profile.city}, {profile.state}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/plans")}
+            className="w-full rounded-2xl border border-black/10 dark:border-white/10 bg-gradient-to-br from-amber-50 via-white to-amber-100/60 dark:from-white/5 dark:via-white/5 dark:to-white/10 px-4 py-3 flex items-center justify-between"
+          >
+            <div className="flex items-center gap-2 text-left">
+              <div className="h-9 w-9 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
+                <Sparkles size={16} />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-foreground">Upgrade to VIP</div>
+                <div className="text-[11px] text-muted-foreground">Enjoy all benefits without restrictions</div>
+              </div>
+            </div>
+            <ChevronRight size={16} className="text-muted-foreground" />
+          </button>
+
+          <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 py-2 flex items-center gap-2">
+            <div className="h-9 w-9 rounded-full border border-foreground/10 bg-foreground/5 flex items-center justify-center">
+              <IdCard size={16} className="text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider">User ID</div>
+              <div className="text-xs font-medium text-foreground truncate">
+                {profile.userId || "-"}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyUserId}
+              className="h-9 w-9 rounded-full bg-amber-400/80 text-white flex items-center justify-center"
+              title="Copy User ID"
+            >
+              <Copy size={16} />
+            </button>
+          </div>
         </div>
 
-        <div className="p-3 sm:p-5 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
-          <section className="lg:col-span-4 rounded-2xl bg-background/35 ring-1 ring-border/40 p-4">
-            <div className="flex items-center gap-3">
-              <div className="h-14 w-14 rounded-xl bg-gradient-to-tr from-primary/25 to-accent/20 ring-1 ring-border/50 flex items-center justify-center text-xl font-bold text-foreground">
-                {initials}
-              </div>
-              <div className="min-w-0">
-                <p className="text-base sm:text-lg font-semibold text-foreground truncate">{profile.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{profile.username}</p>
-              </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <div className="rounded-xl bg-secondary/25 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Status</p>
-                <p className="text-sm font-semibold text-foreground mt-1">{profile.status}</p>
-              </div>
-              <div className="rounded-xl bg-secondary/25 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Referral</p>
-                <p className="text-sm font-semibold text-foreground mt-1 truncate">{profile.referral}</p>
-              </div>
-            </div>
-
-            <div className="mt-3 text-[11px] text-muted-foreground space-y-1.5">
-              <p className="inline-flex items-center gap-1.5"><Mail size={12} /> {profile.email}</p>
-              <p className="inline-flex items-center gap-1.5"><Phone size={12} /> {profile.phone}</p>
-              <p className="inline-flex items-center gap-1.5"><MapPin size={12} /> {profile.city}, {profile.state}</p>
-            </div>
-          </section>
-
-          <section className="lg:col-span-8 rounded-2xl bg-background/35 ring-1 ring-border/40 p-2 sm:p-3">
-            <div className="px-2 py-2">
-              <h2 className="text-sm sm:text-base font-semibold text-foreground">Account Actions</h2>
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">Open a section to continue.</p>
-            </div>
-
-            <div className="space-y-1.5">
-              {actionRows.map((row) => (
-                <button
-                  key={row.label}
-                  onClick={row.onClick}
-                  disabled={row.label === "Log Out" ? logoutMutation.isPending : false}
-                  className={`w-full h-11 sm:h-12 px-3 rounded-xl flex items-center justify-between transition-colors ${
-                    row.danger
-                      ? "text-destructive hover:bg-destructive/10"
-                      : "text-foreground hover:bg-background/45"
-                  }`}
-                >
-                  <span className="inline-flex items-center gap-2 text-sm font-medium">
-                    <row.icon size={15} className={row.danger ? "" : "text-muted-foreground"} />
-                    {row.label}
-                  </span>
-                  <ChevronRight size={16} className={row.danger ? "" : "text-muted-foreground"} />
-                </button>
-              ))}
-            </div>
-          </section>
+        <div className="space-y-2">
+          <div className="px-1 text-[10px] uppercase tracking-wider text-muted-foreground">Account Actions</div>
+          <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 divide-y divide-black/10 dark:divide-white/10">
+            {actionRows.map((row) => (
+              <button
+                key={row.label}
+                type="button"
+                onClick={row.onClick}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm text-foreground"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <row.icon size={16} className="text-muted-foreground" />
+                  {row.label}
+                </span>
+                <ChevronRight size={16} className="text-muted-foreground" />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

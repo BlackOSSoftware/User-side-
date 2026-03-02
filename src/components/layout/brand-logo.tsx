@@ -18,7 +18,7 @@ export function BrandLogo({
 }: BrandLogoProps) {
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <div className={cn("relative h-11 w-11 overflow-hidden rounded-xl border border-border/70 bg-background/70", imageClassName)}>
+      <div className={cn("relative h-11 w-11 overflow-hidden rounded-xl border border-border/70 bg-foreground/[0.03] dark:bg-background/70", imageClassName)}>
         <Image
           src="/logo.jpg"
           alt="MSPK Trade Solutions logo"

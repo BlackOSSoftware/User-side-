@@ -7,13 +7,13 @@ import {
     usePurchaseSubscriptionMutation,
     useSubscriptionStatusQuery,
 } from "@/services/subscriptions/subscription.hooks";
-import { usePaymentDetailsQuery, useVerifyPaymentMutation } from "@/services/payments/payment.hooks";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Star, ArrowRight, ShieldCheck } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Check, Star, ArrowLeft, ArrowRight, ShieldCheck, Crown, CalendarDays, Wallet, Sparkles } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { getHasAccess } from "@/services/subscriptions/subscription.service";
+import { useSwipeCards } from "@/hooks/use-swipe-cards";
 
 export default function PlansPage() {
     const { data: me } = useMeQuery();
@@ -22,21 +22,17 @@ export default function PlansPage() {
     const { data: plans = [] } = usePlansQuery();
     const { data: segments = [] } = useSegmentsQuery();
     const { data: subscriptionStatus } = useSubscriptionStatusQuery();
-    const { data: paymentDetails } = usePaymentDetailsQuery();
     const purchaseMutation = usePurchaseSubscriptionMutation();
-    const verifyPaymentMutation = useVerifyPaymentMutation();
     const [selectedSegments, setSelectedSegments] = useState<string[]>([]);
     const [planType, setPlanType] = useState("premium");
-    const [transactionId, setTransactionId] = useState("");
-    const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
     const [formError, setFormError] = useState("");
-    const [paymentError, setPaymentError] = useState("");
     const [purchaseNotice, setPurchaseNotice] = useState("");
-    const [paymentNotice, setPaymentNotice] = useState("");
+    const { containerRef, activeIndex, isDragging, bind } = useSwipeCards(plans.length);
 
     const formatPrice = (price?: number, isDemo?: boolean) => {
-        if (!price || price <= 0 || isDemo) return "Free";
-        return `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(price)}`;
+        const numericPrice = typeof price === "number" ? price : Number(price);
+        if (!numericPrice || numericPrice <= 0 || isDemo) return "Free";
+        return `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(numericPrice)}`;
     };
 
     const formatDuration = (durationDays?: number) => {
@@ -90,26 +86,24 @@ export default function PlansPage() {
         }
     }
 
-    async function onVerifyPayment() {
-        setPaymentError("");
-        setPaymentNotice("");
-        if (!transactionId.trim() || !screenshotFile) {
-            setPaymentError("Transaction ID and screenshot are required.");
-            return;
-        }
-        try {
-            const response = await verifyPaymentMutation.mutateAsync({
-                segmentCodes: selectedSegments.length ? selectedSegments : segments.map((seg) => seg.segment_code),
-                transactionId: transactionId.trim(),
-                screenshot: screenshotFile,
-            });
-            setPaymentNotice(response?.message || "Payment submitted for verification.");
-            setTransactionId("");
-            setScreenshotFile(null);
-        } catch (error) {
-            setPaymentError(getErrorMessage(error, "Payment verification failed."));
-        }
-    }
+    const scrollToIndex = useCallback((targetIndex: number, behavior: ScrollBehavior = "smooth") => {
+        const container = containerRef.current;
+        if (!container) return;
+        const children = Array.from(container.children) as HTMLElement[];
+        if (!children.length) return;
+        const wrappedIndex = ((targetIndex % children.length) + children.length) % children.length;
+        const target = children[wrappedIndex];
+        if (!target) return;
+        const left = target.offsetLeft - (container.clientWidth - target.offsetWidth) / 2;
+        container.scrollTo({ left, behavior });
+    }, [containerRef]);
+
+    const showArrows = plans.length > 1;
+    const getCircularDistance = (index: number, current: number, total: number) => {
+        if (total <= 1) return 0;
+        const delta = Math.abs(index - current);
+        return Math.min(delta, total - delta);
+    };
 
     return (
         <div className="flex-1 space-y-6 sm:space-y-8 py-2">
@@ -119,86 +113,174 @@ export default function PlansPage() {
             </div>
 
             {currentPlan ? (
-                <Card className="border-border/60 bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-[1.5rem] shadow-[0_12px_40px_-18px_rgba(0,0,0,0.35)]">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-base">Current Plan</CardTitle>
-                        <CardDescription>Active subscription details</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-3 text-sm text-muted-foreground">
-                        <div className="text-lg font-semibold text-foreground">{currentPlan.name}</div>
-                        <div>{currentPlan.description}</div>
-                        <div>Duration: {formatDuration(currentPlan.durationDays)}</div>
-                        <div>Price: {formatPrice(currentPlan.price, currentPlan.isDemo)}</div>
+                <Card className="plan-glow relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_18px_55px_-30px_rgba(15,23,42,0.25)] transition-all duration-300 hover:-translate-y-0.5 dark:border-border/70 dark:bg-gradient-to-br dark:from-white/6 dark:via-white/5 dark:to-white/10 dark:shadow-[0_16px_48px_-20px_rgba(15,23,42,0.35)]">
+                    <div className="pointer-events-none absolute left-0 top-0 z-20 select-none">
+                        <div className="-translate-x-12 translate-y-5 rotate-[-45deg]">
+                            <div className="relative">
+                                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 px-14 py-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-white shadow-[0_22px_50px_-18px_rgba(0,0,0,0.6)]">
+                                    {currentPlan.isDemo || (typeof currentPlan.price === "number" && currentPlan.price <= 0) ? "Free" : "Best Choice"}
+                                </div>
+                                <div className="absolute inset-0 -z-10 bg-black/30 blur-[10px] translate-y-2" />
+                                <div className="absolute inset-0 -z-20 bg-black/25 blur-[18px] translate-y-4 scale-[0.9]" />
+                                <div className="absolute left-0 top-full h-0 w-0 border-l-[14px] border-l-amber-600 border-t-[10px] border-t-transparent" />
+                                <div className="absolute right-0 top-full h-0 w-0 border-r-[14px] border-r-rose-600 border-t-[10px] border-t-transparent" />
+                                <div className="absolute inset-0 rounded-[2px] ring-1 ring-white/30" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="pointer-events-none absolute -top-24 -right-10 h-48 w-48 rounded-full bg-primary/15 blur-3xl" />
+                    <div className="pointer-events-none absolute -bottom-24 -left-16 h-52 w-52 rounded-full bg-amber-400/20 blur-3xl" />
+                    <CardContent className="relative z-10 grid gap-6 p-6 sm:p-7 md:grid-cols-[1.2fr_0.8fr] md:items-center">
+                        <div className="space-y-4">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/70 px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-slate-700 dark:border-foreground/10 dark:bg-foreground/5 dark:text-muted-foreground">
+                                <Sparkles className="h-3.5 w-3.5 text-primary" />
+                                Current Plan
+                            </div>
+                            <div className="space-y-2">
+                                <div className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-foreground flex items-center gap-2">
+                                    <Crown className="h-5 w-5 text-amber-500" />
+                                    {currentPlan.name}
+                                </div>
+                                <div className="text-sm text-slate-700 dark:text-muted-foreground">
+                                    {currentPlan.description}
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/70 px-3 py-1 text-xs text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground">
+                                    <CalendarDays className="h-3.5 w-3.5 text-primary" />
+                                    {formatDuration(currentPlan.durationDays)}
+                                </span>
+                                <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/70 px-3 py-1 text-xs text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground">
+                                    <Wallet className="h-3.5 w-3.5 text-emerald-500" />
+                                    {formatPrice(currentPlan.price, currentPlan.isDemo)}
+                                </span>
+                                <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-500">
+                                    <ShieldCheck className="h-3.5 w-3.5" />
+                                    {subscriptionStatus?.hasActiveSubscription ? "Active" : "Inactive"}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-start md:items-end gap-3">
+                            <div className="text-[11px] uppercase tracking-[0.2em] text-slate-600 dark:text-muted-foreground">
+                                Billing summary
+                            </div>
+                            <div className="rounded-2xl border border-slate-200 bg-slate-100/70 px-4 py-3 text-sm text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground w-full md:w-auto">
+                                <div className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-muted-foreground">Plan Price</div>
+                                <div className="mt-1 text-lg font-semibold">{formatPrice(currentPlan.price, currentPlan.isDemo)}</div>
+                            </div>
+                            <div className="rounded-2xl border border-slate-200 bg-slate-100/70 px-4 py-3 text-sm text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground w-full md:w-auto">
+                                <div className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-muted-foreground">Duration</div>
+                                <div className="mt-1 text-lg font-semibold">{formatDuration(currentPlan.durationDays)}</div>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             ) : null}
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 items-stretch">
-                {plans.map((plan) => {
-                    const isPopular = plan._id === popularId;
-                    return (
-                        <Card
-                            key={plan._id}
-                            className={`relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex h-full flex-col
-                                ${isPopular
-                                    ? "bg-white dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-15px_rgba(245,158,11,0.15)] ring-1 ring-primary/20 sm:scale-[1.02] z-10"
-                                    : "bg-white dark:bg-black/50 border-slate-100 dark:border-white/5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-none hover:border-primary/30 sm:hover:-translate-y-1"
-                                }`}
-                        >
-                            {isPopular ? (
-                                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
-                            ) : null}
-
-                            <CardHeader className="p-6 pb-0">
+            <div className="relative mx-auto w-full max-w-[1180px]">
+                <div
+                    ref={containerRef}
+                    {...bind}
+                    className={`no-scrollbar flex gap-3 sm:gap-6 overflow-x-auto pb-5 px-1.5 sm:px-8 md:px-14 snap-x snap-mandatory scroll-smooth touch-pan-y items-stretch select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+                >
+                    {plans.map((plan, index) => {
+                        const isPopular = plan._id === popularId;
+                        const isActive = index === activeIndex;
+                        const distance = getCircularDistance(index, activeIndex, plans.length);
+                        const depthClass = isActive
+                            ? "scale-100 opacity-100 z-20"
+                            : distance === 1
+                                ? "scale-100 opacity-100 z-10 md:scale-[0.94] md:opacity-90"
+                                : "scale-100 opacity-100 z-0 md:scale-[0.9] md:opacity-70";
+                        return (
+                            <Card
+                                key={plan._id}
+                                className={`plan-swipe-card plan-swap relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex h-[500px] sm:h-[560px] lg:h-[600px] flex-col snap-center shrink-0 w-[94%] sm:w-[78%] md:w-[430px] lg:w-[460px]
+                                    ${isActive ? "plan-swipe-active" : ""}
+                                    ${depthClass}
+                                    ${isPopular
+                                        ? "bg-white dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-15px_rgba(245,158,11,0.15)] ring-1 ring-primary/20"
+                                        : "bg-white dark:bg-black/50 border-slate-100 dark:border-white/5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-none hover:border-primary/30 sm:hover:-translate-y-1"
+                                    }`}
+                            >
                                 {isPopular ? (
-                                    <div className="mb-3">
-                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-primary/25">
-                                            <Star className="w-3 h-3 fill-white" /> Most Popular
-                                        </span>
-                                    </div>
+                                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
                                 ) : null}
-                                <CardTitle className="text-xl font-bold mb-2">{plan.name}</CardTitle>
-                                <CardDescription>{plan.description}</CardDescription>
-                            </CardHeader>
 
-                            <CardContent className="p-6 pt-6 flex-1">
-                                <div className="flex items-baseline gap-1 mb-6">
-                                    <span className="text-3xl font-bold tracking-tighter">{formatPrice(plan.price, plan.isDemo)}</span>
-                                    <span className="text-muted-foreground text-sm ml-1">/ {formatDuration(plan.durationDays)}</span>
-                                </div>
-
-                                <div className="space-y-4 mb-8">
-                                    {(plan.features?.length
-                                        ? plan.features
-                                        : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"]
-                                    ).map((feature, index) => (
-                                        <div key={index} className="flex items-start gap-3">
-                                            <div
-                                                className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0
-                                                    ${isPopular ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
-                                            >
-                                                <Check className="w-2.5 h-2.5 stroke-[3]" />
-                                            </div>
-                                            <span className="text-sm leading-relaxed">{feature}</span>
+                                <CardHeader className="p-6 pb-0">
+                                    {isPopular ? (
+                                        <div className="mb-3">
+                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-primary/25">
+                                                <Star className="w-3 h-3 fill-white" /> Most Popular
+                                            </span>
                                         </div>
-                                    ))}
-                                </div>
-                            </CardContent>
+                                    ) : null}
+                                    <CardTitle className="text-xl font-bold mb-2">{plan.name}</CardTitle>
+                                    <CardDescription className="line-clamp-2">{plan.description}</CardDescription>
+                                </CardHeader>
 
-                            <CardFooter className="p-6 pt-0 mt-auto">
-                                <Button
-                                    size="lg"
-                                    className={`w-full h-12 rounded-xl text-sm font-bold transition-all duration-300
+                                <CardContent className="p-6 pt-6 flex-1">
+                                    <div className="flex items-baseline gap-1 mb-6">
+                                        <span className="text-3xl font-bold tracking-tighter">{formatPrice(plan.price, plan.isDemo)}</span>
+                                        <span className="text-muted-foreground text-sm ml-1">/ {formatDuration(plan.durationDays)}</span>
+                                    </div>
+
+                                    <div className="space-y-4 mb-8">
+                                        {(plan.features?.length
+                                            ? plan.features
+                                            : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"]
+                                        )
+                                            .slice(0, 4)
+                                            .map((feature, index) => (
+                                                <div key={index} className="flex items-start gap-3">
+                                                    <div
+                                                        className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0
+                                                    ${isPopular ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
+                                                    >
+                                                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                                                    </div>
+                                                    <span className="text-sm leading-relaxed line-clamp-2">{feature}</span>
+                                                </div>
+                                            ))}
+                                    </div>
+                                </CardContent>
+
+                                <CardFooter className="p-6 pt-0 mt-auto">
+                                    <Button
+                                        size="lg"
+                                        className={`w-full h-12 rounded-xl text-sm font-bold transition-all duration-300
                                         ${isPopular
-                                            ? "bg-primary text-black hover:bg-primary/90 shadow-xl shadow-primary/20 hover:scale-[1.02]"
-                                            : "bg-foreground text-background hover:opacity-90"}`}
-                                >
-                                    Choose Plan <ArrowRight className="w-4 h-4 ml-2" />
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    );
-                })}
+                                                ? "bg-primary text-black hover:bg-primary/90 shadow-xl shadow-primary/20 hover:scale-[1.02]"
+                                                : "bg-foreground text-background hover:opacity-90"}`}
+                                    >
+                                        Choose Plan <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        );
+                    })}
+                </div>
+
+                {showArrows ? (
+                    <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-30 flex items-center justify-between">
+                        <button
+                            type="button"
+                            onClick={() => scrollToIndex(activeIndex - 1)}
+                            aria-label="Previous plan"
+                            className="pointer-events-auto relative z-40 ml-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
+                        >
+                            <ArrowLeft className="mx-auto h-5 w-5" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => scrollToIndex(activeIndex + 1)}
+                            aria-label="Next plan"
+                            className="pointer-events-auto relative z-40 mr-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
+                        >
+                            <ArrowRight className="mx-auto h-5 w-5" />
+                        </button>
+                    </div>
+                ) : null}
             </div>
 
             <div className="space-y-4">
@@ -217,7 +299,13 @@ export default function PlansPage() {
                                 </CardHeader>
                                 <CardContent className="text-sm text-muted-foreground space-y-2">
                                     <div>
-                                        Base Price: {segment.base_price ? `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(segment.base_price)}` : "Contact sales"}
+                                        {(() => {
+                                            const basePrice = typeof segment.base_price === "number" ? segment.base_price : Number(segment.base_price);
+                                            const hasBasePrice = Number.isFinite(basePrice) && basePrice > 0;
+                                            return hasBasePrice
+                                                ? `Base Price: INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(basePrice)}`
+                                                : "Contact sales";
+                                        })()}
                                     </div>
                                     <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs">
                                         <ShieldCheck className="h-3.5 w-3.5 text-primary" />
@@ -299,70 +387,6 @@ export default function PlansPage() {
 
                         <Button className="h-11 rounded-xl" onClick={onPurchase} disabled={purchaseMutation.isPending}>
                             {purchaseMutation.isPending ? "Processing..." : "Buy Subscription"}
-                        </Button>
-                    </CardContent>
-                </Card>
-
-                <Card className="border-border/60 bg-white/80 dark:bg-white/5 backdrop-blur-xl rounded-[1.5rem]">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-base">Payment Verification</CardTitle>
-                        <CardDescription>Upload proof and submit for approval.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4 text-sm text-muted-foreground">
-                        {paymentDetails ? (
-                            <div className="rounded-2xl border border-border/50 bg-muted/40 px-4 py-3 text-xs text-muted-foreground space-y-1">
-                                <div>UPI ID: {paymentDetails.upiId || "Not available"}</div>
-                                <div>Account Holder: {paymentDetails.accountHolderName || "Not available"}</div>
-                                {paymentDetails.qrCodeUrl ? (
-                                    <div className="pt-2">
-                                        <div className="text-xs uppercase tracking-wider text-muted-foreground">QR Code</div>
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img
-                                            src={
-                                                paymentDetails.qrCodeUrl.startsWith("http")
-                                                    ? paymentDetails.qrCodeUrl
-                                                    : `http://localhost:4000/${paymentDetails.qrCodeUrl.replace(/^\/+/, "")}`
-                                            }
-                                            alt="Payment QR"
-                                            className="mt-2 h-32 w-32 rounded-xl border border-border/60 object-cover"
-                                        />
-                                    </div>
-                                ) : null}
-                            </div>
-                        ) : null}
-
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Transaction ID</label>
-                            <input
-                                value={transactionId}
-                                onChange={(e) => setTransactionId(e.target.value)}
-                                className="h-11 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                                placeholder="Enter transaction reference"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Upload Payment Screenshot</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => setScreenshotFile(e.target.files?.[0] ?? null)}
-                                className="w-full text-xs text-muted-foreground file:mr-3 file:rounded-xl file:border-0 file:bg-muted file:px-4 file:py-2 file:text-xs file:font-semibold file:text-foreground hover:file:bg-muted/70"
-                            />
-                        </div>
-
-                        {paymentError ? (
-                            <div className="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-3 text-xs text-rose-700 dark:text-rose-100">
-                                {paymentError}
-                            </div>
-                        ) : null}
-                        {paymentNotice ? (
-                            <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-700 dark:text-emerald-100">
-                                {paymentNotice}
-                            </div>
-                        ) : null}
-
-                        <Button className="h-11 rounded-xl" onClick={onVerifyPayment} disabled={verifyPaymentMutation.isPending}>
-                            {verifyPaymentMutation.isPending ? "Submitting..." : "Submit Payment Proof"}
                         </Button>
                     </CardContent>
                 </Card>

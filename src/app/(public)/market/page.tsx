@@ -186,7 +186,10 @@ export default function MarketPage() {
                             Target
                           </div>
                           <div className="font-bold">
-                            {signal.targets?.[0]?.toLocaleString?.() ?? "-"}
+                            {(Array.isArray(signal.targets)
+                              ? signal.targets[0]
+                              : signal.targets?.target1 ?? signal.targets?.t1
+                            )?.toLocaleString?.() ?? "-"}
                           </div>
                         </div>
                       </div>

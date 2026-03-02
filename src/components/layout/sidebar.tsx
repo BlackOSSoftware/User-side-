@@ -11,9 +11,7 @@ import {
     CandlestickChart,
     Radio,
     ListChecks,
-    Bell,
     CalendarDays,
-    Bot,
     ChevronLeft,
     ChevronRight,
     LogOut,
@@ -36,9 +34,7 @@ const navigation: SidebarNavItem[] = [
     { name: "Signal", path: "/dashboard/signals", icon: Radio },
     { name: "Chart", path: "/dashboard/market", icon: CandlestickChart },
     { name: "Plans & Billing", path: "/dashboard/plans", icon: CreditCard },
-    { name: "Notifications", path: "/dashboard/notifications", icon: Bell },
     { name: "Calendar", path: "/dashboard/economic-calendar", icon: CalendarDays },
-    { name: "Bot Status", path: "/dashboard/bot-status", icon: Bot },
     { name: "Support", path: "/dashboard/support", icon: LifeBuoy },
 ];
 
@@ -58,19 +54,15 @@ const SidebarItem = ({ item, collapsed }: { item: SidebarNavItem; collapsed: boo
                 "group relative flex items-center rounded-xl transition-all duration-300",
                 collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2.5",
                 isActive
-                    ? "bg-primary/15 text-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.35),0_12px_24px_-16px_hsl(var(--primary)/0.9)]"
+                    ? "bg-primary/10 text-primary dark:bg-primary/15 dark:shadow-[0_0_0_1px_hsl(var(--primary)/0.35),0_12px_24px_-16px_hsl(var(--primary)/0.9)]"
                     : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
             )}
         >
-            {!collapsed && (
-                <div className="absolute left-0 top-1/2 h-7 w-1 -translate-y-1/2 rounded-r-full bg-primary/80" />
-            )}
-
             <Icon
                 size={18}
                 className={cn(
                     "shrink-0 transition-transform duration-300",
-                    isActive ? "drop-shadow-[0_0_10px_hsl(var(--primary)/0.8)]" : "group-hover:scale-105"
+                    isActive ? "dark:drop-shadow-[0_0_10px_hsl(var(--primary)/0.8)]" : "group-hover:scale-105"
                 )}
             />
 
@@ -98,15 +90,14 @@ export function Sidebar({ className, collapsed, setCollapsed }: { className?: st
     return (
         <aside
             className={cn(
-                "relative h-full bg-card/95 backdrop-blur-xl transition-all duration-300 ease-custom-bezier",
-                "",
+                "relative h-full border-r border-slate-900/[0.12] bg-white text-foreground transition-all duration-300 ease-custom-bezier dark:border-white/5 dark:bg-card dark:backdrop-blur-xl",
                 collapsed ? "w-[4.25rem]" : "w-[16.25rem] sm:w-72",
                 className
             )}
         >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,hsl(var(--primary)/0.24),transparent_40%),radial-gradient(circle_at_100%_100%,hsl(var(--accent)/0.18),transparent_44%)]" />
-            <div className="pointer-events-none absolute inset-0 bg-cyber-grid opacity-25" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 hidden dark:block bg-[radial-gradient(circle_at_0%_0%,hsl(var(--primary)/0.24),transparent_40%),radial-gradient(circle_at_100%_100%,hsl(var(--accent)/0.18),transparent_44%)]" />
+            <div className="pointer-events-none absolute inset-0 hidden dark:block bg-cyber-grid opacity-25" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 hidden dark:block h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
 
             <div className="relative z-10 flex h-full flex-col">
                 <div className={cn("flex h-14 sm:h-16 items-center", collapsed ? "justify-center px-1.5" : "justify-between px-3 sm:px-4")}>
@@ -124,7 +115,7 @@ export function Sidebar({ className, collapsed, setCollapsed }: { className?: st
                         type="button"
                         onClick={() => setCollapsed(!collapsed)}
                         className={cn(
-                            "flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-background/40 text-muted-foreground transition-all duration-300 hover:text-primary hover:shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.9)]",
+                            "flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-background/40 text-muted-foreground transition-all duration-300 hover:text-primary dark:hover:shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.9)]",
                             collapsed ? "mx-auto" : ""
                         )}
                         title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -149,7 +140,7 @@ export function Sidebar({ className, collapsed, setCollapsed }: { className?: st
                     <button
                         onClick={handleLogout}
                         className={cn(
-                            "w-full rounded-xl border border-destructive/35 bg-destructive/10 text-destructive transition-all duration-300 hover:bg-destructive/20 hover:shadow-[0_10px_30px_-18px_hsl(var(--destructive)/0.9)]",
+                            "w-full rounded-xl border border-destructive/35 bg-destructive/10 text-destructive transition-all duration-300 hover:bg-destructive/20 dark:hover:shadow-[0_10px_30px_-18px_hsl(var(--destructive)/0.9)]",
                             collapsed ? "flex h-10 items-center justify-center" : "flex h-10 items-center justify-center gap-2 text-xs sm:text-sm font-semibold"
                         )}
                         title="Logout"

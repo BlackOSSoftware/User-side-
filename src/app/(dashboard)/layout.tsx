@@ -15,7 +15,7 @@ export default function DashboardLayout({
     const [collapsed, setCollapsed] = useState(false);
 
     return (
-        <div className="flex h-screen bg-background overflow-hidden font-sans">
+        <div className="flex h-screen bg-white dark:bg-background overflow-hidden font-sans">
             <AuthSessionGuard />
             {/* Desktop Sidebar - Fixed/Collapsible */}
             <div className="hidden md:block h-full z-40 transition-all duration-300">
@@ -32,7 +32,7 @@ export default function DashboardLayout({
 
             {/* Mobile Sidebar */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                <SheetContent side="left" className="w-[min(90vw,17rem)] p-0 border-r border-border/30 bg-card text-foreground">
+                <SheetContent side="left" className="w-[min(90vw,17rem)] p-0 border-r border-slate-900/[0.12] bg-white text-foreground dark:border-white/5 dark:bg-card">
                     <Sidebar collapsed={false} setCollapsed={() => { }} />
                 </SheetContent>
             </Sheet>
