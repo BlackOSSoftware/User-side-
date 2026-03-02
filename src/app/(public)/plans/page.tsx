@@ -336,22 +336,17 @@ const scrollByStep = useCallback(
               return (
                 <Card
                   key={`${plan.id}-${index}`}
-                  className={`plan-swipe-card relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex h-[500px] sm:h-[540px] lg:h-[600px] flex-col snap-center shrink-0 w-[88%] sm:w-[70%] md:w-[48%] lg:w-[32%] min-w-[250px]
+                  className={`plan-swipe-card relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex h-[500px] sm:h-[540px] lg:h-[580px] flex-col snap-center shrink-0 w-[88%] sm:w-[70%] md:w-[48%] lg:w-[32%] min-w-[250px]
                     ${isActive ? "plan-swipe-active" : ""}
                     ${depthClass}
                     ${plan.isPopular
-                      ? "bg-[linear-gradient(145deg,rgba(255,255,255,0.92),rgba(226,248,255,0.85))] dark:bg-[linear-gradient(145deg,rgba(9,9,11,0.96),rgba(12,17,25,0.92))] border-primary/40 shadow-[0_28px_80px_-30px_rgba(56,189,248,0.6)] ring-1 ring-primary/40"
-                      : "bg-[linear-gradient(145deg,rgba(255,255,255,0.9),rgba(255,255,255,0.75))] dark:bg-[linear-gradient(145deg,rgba(7,7,9,0.9),rgba(12,12,15,0.85))] border-white/10 shadow-[0_12px_50px_-20px_rgba(15,23,42,0.35)] hover:shadow-[0_30px_80px_-30px_rgba(15,23,42,0.4)] hover:border-primary/30"
+                      ? "bg-white/90 dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-18px_rgba(56,189,248,0.35)] ring-1 ring-primary/30"
+                      : "bg-white/85 dark:bg-black/50 border-white/10 shadow-[0_10px_45px_-15px_rgba(15,23,42,0.2)] hover:shadow-[0_26px_60px_-18px_rgba(15,23,42,0.25)] dark:shadow-none hover:border-primary/30"
                     }`}
                 >
                 {plan.isPopular && (
-                  <div className="absolute top-0 right-0 z-30 pointer-events-none">
-                    <div className="relative">
-                      <div className="bg-primary text-black text-[10px] font-extrabold uppercase tracking-[0.35em] px-4 py-2 pr-7 shadow-[0_12px_30px_-15px_rgba(56,189,248,0.8)]">
-                        Premium
-                      </div>
-                      <div className="absolute top-full right-0 w-0 h-0 border-t-[10px] border-t-primary border-l-[10px] border-l-transparent" />
-                    </div>
+                  <div className="absolute top-4 right-4 z-20 rounded-full bg-primary px-4 py-1 text-[10px] font-bold uppercase tracking-[0.35em] text-black shadow-lg shadow-primary/30">
+                    Premium
                   </div>
                 )}
 
