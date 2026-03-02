@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Star, Zap, ArrowLeft, ArrowRight } from "lucide-react";
@@ -30,7 +30,7 @@ export default function PlansPage() {
 
     const timeout = setTimeout(() => {
       setSubIndex((prev) => prev + (reverse ? -1 : 1));
-    }, reverse ? 40 : 70);
+    }, reverse ? 90 : 130);
 
     return () => clearTimeout(timeout);
   }, [subIndex, index, reverse]);
@@ -112,18 +112,23 @@ export default function PlansPage() {
     });
   }, [fallbackPlans, plans]);
 
-  const { containerRef, activeIndex, isDragging, bind } = useSwipeCards(formattedPlans.length);
+  const loopedPlans = useMemo(() => {
+    if (!formattedPlans.length) return [];
+    if (formattedPlans.length === 1) return formattedPlans;
+    return [...formattedPlans, ...formattedPlans, ...formattedPlans];
+  }, [formattedPlans]);
 
-  const scrollToIndex = useCallback((targetIndex: number, behavior: ScrollBehavior = "smooth") => {
+  const { containerRef, activeIndex, isDragging, bind } = useSwipeCards(loopedPlans.length);
+  const isResettingRef = useRef(false);
+
+  const scrollByStep = useCallback((direction: 1 | -1, behavior: ScrollBehavior = "smooth") => {
     const container = containerRef.current;
     if (!container) return;
     const children = Array.from(container.children) as HTMLElement[];
-    if (!children.length) return;
-    const wrappedIndex = ((targetIndex % children.length) + children.length) % children.length;
-    const target = children[wrappedIndex];
-    if (!target) return;
-    const left = target.offsetLeft - (container.clientWidth - target.offsetWidth) / 2;
-    container.scrollTo({ left, behavior });
+    if (children.length < 2) return;
+    const step = children[1].offsetLeft - children[0].offsetLeft;
+    if (!step) return;
+    container.scrollTo({ left: container.scrollLeft + step * direction, behavior });
   }, [containerRef]);
 
   const showArrows = formattedPlans.length > 1;
@@ -133,86 +138,133 @@ export default function PlansPage() {
     return Math.min(delta, total - delta);
   };
 
+  useEffect(() => {
+    if (formattedPlans.length <= 1) return;
+    const raf = window.requestAnimationFrame(() => {
+      const container = containerRef.current;
+      if (!container) return;
+      const segmentWidth = container.scrollWidth / 3;
+      container.scrollTo({ left: segmentWidth, behavior: "auto" });
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [formattedPlans.length, containerRef]);
+
+  useEffect(() => {
+    if (formattedPlans.length <= 1) return;
+    if (isDragging) return;
+    const interval = window.setInterval(() => {
+      scrollByStep(1);
+    }, 3200);
+    return () => window.clearInterval(interval);
+  }, [formattedPlans.length, isDragging, scrollByStep]);
+
+  useEffect(() => {
+    if (formattedPlans.length <= 1) return;
+    const container = containerRef.current;
+    if (!container) return;
+    const onScroll = () => {
+      if (isResettingRef.current) return;
+      const segmentWidth = container.scrollWidth / 3;
+      if (!segmentWidth) return;
+      const left = container.scrollLeft;
+      if (left <= segmentWidth * 0.4) {
+        isResettingRef.current = true;
+        container.scrollTo({ left: left + segmentWidth, behavior: "auto" });
+        requestAnimationFrame(() => {
+          isResettingRef.current = false;
+        });
+      } else if (left >= segmentWidth * 1.6) {
+        isResettingRef.current = true;
+        container.scrollTo({ left: left - segmentWidth, behavior: "auto" });
+        requestAnimationFrame(() => {
+          isResettingRef.current = false;
+        });
+      }
+    };
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
+  }, [formattedPlans.length, containerRef]);
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300">
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:24px_24px] opacity-[0.15]" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/10 blur-[120px] rounded-full" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(56,189,248,0.18),transparent_35%),radial-gradient(circle_at_82%_8%,rgba(34,197,94,0.16),transparent_36%),radial-gradient(circle_at_50%_88%,rgba(250,204,21,0.14),transparent_38%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:28px_28px] opacity-[0.12]" />
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[780px] h-[360px] bg-primary/10 blur-[140px] rounded-full" />
       </div>
 
-      <div className="w-full max-w-7xl mx-auto mt-10 px-6 py-16 md:py-24 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-28">
+      <div className="w-full max-w-7xl mx-auto mt-10 px-5 sm:px-6 py-14 md:py-24 relative z-10">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-14 items-center mb-20 md:mb-28">
           <div className="space-y-8 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-[11px] font-semibold uppercase tracking-[0.3em]">
               <Zap className="w-3 h-3 animate-pulse" />
-              Premium Membership Architecture
+              Membership Engine
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1] tracking-tight text-foreground">
-              Choose the Plan
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.03] tracking-tight text-foreground font-space">
+              A plan system that
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
-                Aligned to Your Ambition.
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-sky-300 to-emerald-300">
+                scales with your desk.
               </span>
             </h1>
 
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-primary h-[32px] sm:h-[40px]">
+            <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-primary h-[32px] sm:h-[40px]">
               {words[index].substring(0, subIndex)}
               <span className="animate-pulse">|</span>
             </div>
 
-            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Premium signal intelligence with transparent pricing and execution-grade reliability.
-              Built for traders who value consistency, control, and accountability.
+            <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
+              Choose a membership that matches your execution speed, risk cadence, and operational depth.
+              Every tier is designed for measurable outcomes and consistent delivery.
             </p>
 
-            <div className="flex flex-wrap gap-10 pt-4">
-              <div>
-                <div className="text-3xl font-bold">10,000+</div>
-                <div className="text-sm text-muted-foreground">Active Members</div>
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 pt-2">
+              <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-4 sm:px-4">
+                <div className="text-xl sm:text-2xl font-bold">10k+</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground uppercase tracking-wide">Active Members</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold">99.9%</div>
-                <div className="text-sm text-muted-foreground">Service Uptime</div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-4 sm:px-4">
+                <div className="text-xl sm:text-2xl font-bold">99.9%</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground uppercase tracking-wide">Uptime</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold">85%</div>
-                <div className="text-sm text-muted-foreground">Signal Confidence Band</div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-4 sm:px-4">
+                <div className="text-xl sm:text-2xl font-bold">85%</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground uppercase tracking-wide">Signal Band</div>
               </div>
             </div>
           </div>
 
           <div className="hidden lg:block">
-            <div className="bg-white/70 dark:bg-white/5 backdrop-blur-xl p-10 rounded-[2rem] border border-black/5 dark:border-white/10 shadow-2xl">
-              <div className="space-y-6">
-                <div className="text-xl font-bold">Why Professionals Choose This Tier</div>
+            <div className="metallic-surface rounded-[2rem] p-10 space-y-6">
+              <div className="text-xs uppercase tracking-[0.3em] text-primary">Operational Blueprint</div>
+              <div className="text-2xl font-semibold">What you unlock at scale</div>
 
-                <div className="space-y-4 text-sm text-muted-foreground">
-                  <div className="flex items-start gap-3">
-                    <Check className="w-4 h-4 text-primary mt-1" />
-                    Multi-strategy execution architecture
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Check className="w-4 h-4 text-primary mt-1" />
-                    Real-time institutional-grade data flow
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Check className="w-4 h-4 text-primary mt-1" />
-                    Direct webhook and API connectivity
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Check className="w-4 h-4 text-primary mt-1" />
-                    Priority advisory and support desk
-                  </div>
+              <div className="space-y-4 text-sm text-muted-foreground">
+                <div className="flex items-start gap-3">
+                  <Check className="w-4 h-4 text-primary mt-1" />
+                  Multi-strategy routing with live desk health metrics
                 </div>
 
-                <Button className="w-full mt-6 rounded-xl">
-                  Move to Professional <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                <div className="flex items-start gap-3">
+                  <Check className="w-4 h-4 text-primary mt-1" />
+                  Tiered SLA response with dedicated advisory coverage
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Check className="w-4 h-4 text-primary mt-1" />
+                  Smart alerts for volatility, latency, and signal drift
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Check className="w-4 h-4 text-primary mt-1" />
+                  API-ready automation and instrumentation packages
+                </div>
               </div>
+
+              <Button className="w-full mt-6 rounded-xl">
+                Explore Professional <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </div>
           </div>
         </div>
@@ -221,25 +273,25 @@ export default function PlansPage() {
           <div
             ref={containerRef}
             {...bind}
-            className={`no-scrollbar flex gap-3 sm:gap-6 overflow-x-auto pb-5 px-1.5 sm:px-8 md:px-14 snap-x snap-mandatory scroll-smooth touch-pan-y md:gap-8 lg:gap-10 items-stretch select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+            className={`no-scrollbar mask-linear-fade flex gap-4 sm:gap-6 overflow-x-auto pb-8 px-2 sm:px-6 md:px-10 snap-x snap-mandatory scroll-smooth touch-pan-y items-stretch select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
           >
-            {formattedPlans.map((plan, index) => {
+            {loopedPlans.map((plan, index) => {
               const isActive = index === activeIndex;
-              const distance = getCircularDistance(index, activeIndex, formattedPlans.length);
+              const distance = getCircularDistance(index, activeIndex, loopedPlans.length);
               const depthClass = isActive
                 ? "scale-100 opacity-100 z-20"
                 : distance === 1
-                  ? "scale-100 opacity-100 z-10 md:scale-[0.94] md:opacity-90"
-                  : "scale-100 opacity-100 z-0 md:scale-[0.9] md:opacity-70";
+                  ? "scale-[0.98] opacity-90 z-10"
+                  : "scale-[0.96] opacity-75 z-0";
               return (
                 <Card
-                  key={plan.id}
-                  className={`plan-swipe-card relative overflow-hidden rounded-[2rem] transition-all duration-500 group flex h-[500px] sm:h-[560px] lg:h-[600px] flex-col snap-center shrink-0 w-[94%] sm:w-[78%] md:w-[430px] lg:w-[460px]
+                  key={`${plan.id}-${index}`}
+                  className={`plan-swipe-card relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex h-[500px] sm:h-[540px] lg:h-[580px] flex-col snap-center shrink-0 w-[88%] sm:w-[70%] md:w-[48%] lg:w-[32%] min-w-[250px]
                     ${isActive ? "plan-swipe-active" : ""}
                     ${depthClass}
                     ${plan.isPopular
-                      ? "bg-white dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-15px_rgba(245,158,11,0.15)] ring-1 ring-primary/20"
-                      : "bg-white dark:bg-black/50 border-slate-100 dark:border-white/5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-none hover:border-primary/30 sm:hover:-translate-y-1"
+                      ? "bg-white/90 dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-18px_rgba(56,189,248,0.35)] ring-1 ring-primary/30"
+                      : "bg-white/85 dark:bg-black/50 border-white/10 shadow-[0_10px_45px_-15px_rgba(15,23,42,0.2)] hover:shadow-[0_26px_60px_-18px_rgba(15,23,42,0.25)] dark:shadow-none hover:border-primary/30"
                     }`}
                 >
                 {plan.isPopular && (
@@ -249,7 +301,7 @@ export default function PlansPage() {
                 <CardHeader className="p-6 pb-0">
                   {plan.isPopular && (
                     <div className="mb-3">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-black text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-primary/25">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-black text-[10px] font-bold uppercase tracking-[0.25em] shadow-lg shadow-primary/25">
                         <Star className="w-3 h-3 fill-black" /> Most Popular
                       </span>
                     </div>
@@ -301,17 +353,17 @@ export default function PlansPage() {
             <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-30 flex items-center justify-between">
               <button
                 type="button"
-                onClick={() => scrollToIndex(activeIndex - 1)}
+                onClick={() => scrollByStep(-1)}
                 aria-label="Previous plan"
-                className="pointer-events-auto relative z-40 ml-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
+                className="pointer-events-auto relative z-40 ml-1 sm:ml-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
               >
                 <ArrowLeft className="mx-auto h-5 w-5" />
               </button>
               <button
                 type="button"
-                onClick={() => scrollToIndex(activeIndex + 1)}
+                onClick={() => scrollByStep(1)}
                 aria-label="Next plan"
-                className="pointer-events-auto relative z-40 mr-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
+                className="pointer-events-auto relative z-40 mr-1 sm:mr-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
               >
                 <ArrowRight className="mx-auto h-5 w-5" />
               </button>
