@@ -120,18 +120,64 @@ export default function PlansPage() {
 
   const { containerRef, activeIndex, isDragging, bind } = useSwipeCards(loopedPlans.length);
   const isResettingRef = useRef(false);
+  const [snapDisabled, setSnapDisabled] = useState(false);
+  const [autoDirection, setAutoDirection] = useState<1 | -1>(1);
+const getStep = (container: HTMLDivElement) => {
+  const children = Array.from(container.children) as HTMLElement[];
+  if (children.length < 2) return 0;
+  return children[1].offsetLeft - children[0].offsetLeft;
+};
 
-  const scrollByStep = useCallback((direction: 1 | -1, behavior: ScrollBehavior = "smooth") => {
+const getSegmentWidth = (container: HTMLDivElement) => container.scrollWidth / 3;
+
+const instantJump = (container: HTMLDivElement, nextLeft: number) => {
+  const prev = container.style.scrollBehavior;
+  container.style.scrollBehavior = "auto";
+  container.scrollLeft = nextLeft;
+  container.style.scrollBehavior = prev;
+};
+
+const wrapToMiddleIfNeeded = (container: HTMLDivElement) => {
+  const segmentWidth = container.scrollWidth / 3;
+  if (!segmentWidth) return;
+
+  const left = container.scrollLeft;
+
+  const leftThreshold = segmentWidth * 0.5;
+  const rightThreshold = segmentWidth * 1.5;
+
+  if (left < leftThreshold) {
+    setSnapDisabled(true);
+    instantJump(container, left + segmentWidth);
+    requestAnimationFrame(() => setSnapDisabled(false));
+  } else if (left > rightThreshold) {
+    setSnapDisabled(true);
+    instantJump(container, left - segmentWidth);
+    requestAnimationFrame(() => setSnapDisabled(false));
+  }
+};
+const scrollByStep = useCallback(
+  (direction: 1 | -1, behavior: ScrollBehavior = "smooth") => {
     const container = containerRef.current;
     if (!container) return;
+
+    wrapToMiddleIfNeeded(container);
+
     const children = Array.from(container.children) as HTMLElement[];
     if (children.length < 2) return;
+
     const step = children[1].offsetLeft - children[0].offsetLeft;
     if (!step) return;
-    container.scrollTo({ left: container.scrollLeft + step * direction, behavior });
-  }, [containerRef]);
 
+    container.scrollTo({ left: container.scrollLeft + step * direction, behavior });
+  },
+  [containerRef]
+);
   const showArrows = formattedPlans.length > 1;
+  const getVirtualIndex = (idx: number, total: number) => {
+    if (total <= 0) return 0;
+    return ((idx % total) + total) % total;
+  };
   const getCircularDistance = (idx: number, current: number, total: number) => {
     if (total <= 1) return 0;
     const delta = Math.abs(idx - current);
@@ -153,37 +199,41 @@ export default function PlansPage() {
     if (formattedPlans.length <= 1) return;
     if (isDragging) return;
     const interval = window.setInterval(() => {
-      scrollByStep(1);
+      scrollByStep(autoDirection);
     }, 3200);
     return () => window.clearInterval(interval);
-  }, [formattedPlans.length, isDragging, scrollByStep]);
+  }, [formattedPlans.length, isDragging, scrollByStep, autoDirection]);
 
   useEffect(() => {
     if (formattedPlans.length <= 1) return;
-    const container = containerRef.current;
-    if (!container) return;
-    const onScroll = () => {
-      if (isResettingRef.current) return;
-      const segmentWidth = container.scrollWidth / 3;
-      if (!segmentWidth) return;
-      const left = container.scrollLeft;
-      if (left <= segmentWidth * 0.4) {
-        isResettingRef.current = true;
-        container.scrollTo({ left: left + segmentWidth, behavior: "auto" });
-        requestAnimationFrame(() => {
-          isResettingRef.current = false;
-        });
-      } else if (left >= segmentWidth * 1.6) {
-        isResettingRef.current = true;
-        container.scrollTo({ left: left - segmentWidth, behavior: "auto" });
-        requestAnimationFrame(() => {
-          isResettingRef.current = false;
-        });
-      }
-    };
-    container.addEventListener("scroll", onScroll, { passive: true });
-    return () => container.removeEventListener("scroll", onScroll);
-  }, [formattedPlans.length, containerRef]);
+    const virtualIndex = getVirtualIndex(activeIndex, formattedPlans.length);
+    if (autoDirection === 1 && virtualIndex === formattedPlans.length - 1) {
+      setAutoDirection(-1);
+    } else if (autoDirection === -1 && virtualIndex === 0) {
+      setAutoDirection(1);
+    }
+  }, [activeIndex, autoDirection, formattedPlans.length]);
+
+  useEffect(() => {
+  if (formattedPlans.length <= 1) return;
+
+  const container = containerRef.current;
+  if (!container) return;
+
+  const onScroll = () => {
+    if (isResettingRef.current) return;
+
+    isResettingRef.current = true;
+    wrapToMiddleIfNeeded(container);
+
+    requestAnimationFrame(() => {
+      isResettingRef.current = false;
+    });
+  };
+
+  container.addEventListener("scroll", onScroll, { passive: true });
+  return () => container.removeEventListener("scroll", onScroll);
+}, [formattedPlans.length, containerRef]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300">
@@ -273,11 +323,11 @@ export default function PlansPage() {
           <div
             ref={containerRef}
             {...bind}
-            className={`no-scrollbar mask-linear-fade flex gap-4 sm:gap-6 overflow-x-auto pb-8 px-2 sm:px-6 md:px-10 snap-x snap-mandatory scroll-smooth touch-pan-y items-stretch select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+            className={`no-scrollbar mask-linear-fade flex gap-4 sm:gap-6 overflow-x-auto pb-8 px-2 sm:px-6 md:px-10 scroll-smooth touch-pan-y items-stretch select-none ${snapDisabled ? "snap-none" : "snap-x snap-mandatory"} ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
           >
             {loopedPlans.map((plan, index) => {
               const isActive = index === activeIndex;
-              const distance = getCircularDistance(index, activeIndex, loopedPlans.length);
+              const distance = getCircularDistance(index, activeIndex, loopedPlans.length + 1);
               const depthClass = isActive
                 ? "scale-100 opacity-100 z-20"
                 : distance === 1

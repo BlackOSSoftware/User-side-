@@ -69,6 +69,9 @@ export default function Home() {
 
                 {/* BACKGROUND SYSTEM */}
                 <div className="absolute inset-0 z-0 bg-background">
+                    {/* Light theme wash */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-white dark:hidden" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(59,130,246,0.18),transparent_45%),radial-gradient(circle_at_80%_16%,rgba(14,165,233,0.16),transparent_44%),radial-gradient(circle_at_50%_90%,rgba(250,204,21,0.12),transparent_48%)] dark:hidden" />
 
                     {/* MOBILE TOP IMAGE */}
                     <div className="hidden lg:block ..."></div>
@@ -138,7 +141,7 @@ export default function Home() {
                                 <Button
                                     variant="outline"
                                     size="lg"
-                                    className="w-full sm:w-auto h-14 px-8 rounded-2xl border border-primary/30 bg-white/5 text-foreground/90 backdrop-blur-md hover:bg-primary/10 hover:border-primary/60 font-semibold group transition-all"
+                                    className="w-full sm:w-auto h-14 px-8 rounded-2xl border border-slate-200 bg-white/80 text-slate-800 hover:bg-slate-50 hover:border-slate-300 font-semibold group transition-all dark:border-primary/30 dark:bg-white/5 dark:text-foreground/90 dark:hover:bg-primary/10 dark:hover:border-primary/60"
                                 >
                                     View Performance <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </Button>
@@ -153,7 +156,7 @@ export default function Home() {
 
                     {/* Right Column Image (DESKTOP ONLY — UNCHANGED) */}
                     <div
-                        className="relative hidden lg:block h-[600px] w-[200%] ml-auto -mr-[1rem] -translate-x-[24vw] overflow-hidden bg-cover bg-center brightness-[1.22] contrast-[0.96] saturate-[1.08] after:absolute after:inset-0 after:bg-gradient-to-l after:from-primary/20 after:via-transparent after:to-transparent after:content-[''] pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-background)]"
+                        className="relative hidden lg:block h-[600px] w-[200%] ml-auto -mr-[1rem] -translate-x-[24vw] overflow-hidden bg-cover bg-center brightness-[1.05] contrast-[1.02] saturate-[1.05] dark:brightness-[1.22] dark:contrast-[0.96] dark:saturate-[1.08] after:absolute after:inset-0 after:bg-gradient-to-l after:from-primary/20 after:via-transparent after:to-transparent after:content-[''] pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-background)]"
                         style={{
                             backgroundImage: `url("${heroRightImage}")`,
                             backgroundPosition: "20% center",
