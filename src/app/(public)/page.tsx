@@ -6,12 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ArrowRight, Activity, TrendingUp, Lock, Zap, Shield, BarChart3, Clock, CheckCircle2, Wallet, Users } from "lucide-react";
 import { MOCK_SIGNALS, MOCK_STATS } from "@/lib/mock";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { usePlansQuery } from "@/services/plans/plan.hooks";
+import type { Plan } from "@/services/plans/plan.types";
 
 
 
 export default function Home() {
     const signals = MOCK_SIGNALS.slice(0, 3);
+    const { data: plans = [] } = usePlansQuery();
 
     const heroRightImage =
         "https://images.unsplash.com/photo-1612461313144-fc1676a1bf17?q=80&w=1102&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -59,6 +62,83 @@ export default function Home() {
 
         return () => clearTimeout(timeout);
     }, [charIndex, isDeleting, taglineIndex]);
+
+    const fallbackPlans = useMemo(
+        () => [
+            {
+                id: "demo",
+                name: "Demo Access",
+                description: "Perfect for testing the waters",
+                price: "Free",
+                duration: "1 Day",
+                features: ["Unlimited Strategies", "< 100ms Latency", "Deep Analytics & Export", "Priority 24/7 Support"],
+                buttonText: "Start 1-Day Trial",
+                href: "/trial",
+                isPopular: false,
+            },
+            {
+                id: "pro",
+                name: "Pro Access",
+                description: "For serious algorithmic traders",
+                price: "INR 25,000",
+                duration: "Month",
+                features: ["Unlimited Strategies", "< 100ms Latency", "Deep Analytics & Export", "Priority 24/7 Support"],
+                buttonText: "Get Started",
+                href: "/pricing",
+                isPopular: true,
+            },
+            {
+                id: "enterprise",
+                name: "Enterprise",
+                description: "For Prop Desks & Funds",
+                price: "Custom",
+                duration: "Pricing",
+                features: ["Dedicated Infrastructure", "White Label Solution", "FIX API Access", "Dedicated Account Manager"],
+                buttonText: "Contact Sales",
+                href: "/contact",
+                isPopular: false,
+            },
+        ],
+        []
+    );
+
+    const formattedPlans = useMemo(() => {
+        if (!plans.length) return fallbackPlans;
+
+        const popularId = plans
+            .filter((plan) => !plan.isDemo)
+            .sort((a, b) => (b.price ?? 0) - (a.price ?? 0))[0]?._id;
+
+        const formatPrice = (price?: number, isDemo?: boolean) => {
+            if (!price || price <= 0 || isDemo) return "Free";
+            const value = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(price);
+            return `INR ${value}`;
+        };
+
+        const formatDuration = (durationDays?: number) => {
+            if (!durationDays) return "Flexible";
+            return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
+        };
+
+        return plans.map((plan: Plan) => {
+            const isPopular = plan._id === popularId;
+            const isDemo = Boolean(plan.isDemo);
+
+            return {
+                id: plan._id,
+                name: plan.name,
+                description: plan.description || "Premium access built for disciplined execution.",
+                price: formatPrice(plan.price, isDemo),
+                duration: formatDuration(plan.durationDays),
+                features: plan.features?.length
+                    ? plan.features
+                    : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
+                buttonText: isDemo ? "Start Demo Access" : "Activate Plan",
+                href: `/trial?planId=${plan._id}`,
+                isPopular,
+            };
+        });
+    }, [fallbackPlans, plans]);
 
 
 
@@ -533,79 +613,60 @@ export default function Home() {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch">
-                    {/* Demo Plan */}
-                    <div className="relative p-8 rounded-3xl border border-white/10 bg-white dark:bg-white/5 shadow-xl flex flex-col items-center text-center hover:translate-y-[-4px] transition-transform duration-300">
-                        <div className="mb-6">
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Demo Access</h3>
-                            <p className="text-sm text-slate-500 dark:text-white/60">Perfect for testing the waters</p>
-                        </div>
-                        <div className="mb-8">
-                            <span className="text-4xl font-bold text-slate-900 dark:text-white">Free</span>
-                            <span className="text-sm text-slate-500 dark:text-white/40"> / 1 Day</span>
-                        </div>
-                        <ul className="space-y-4 mb-8 text-left w-full max-w-[240px] mx-auto">
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-green-500" /> Unlimited Strategies</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-green-500" /> &lt; 100ms Latency</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-green-500" /> Deep Analytics & Export</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-green-500" /> Priority 24/7 Support</li>
-                        </ul>
-                        <div className="mt-auto w-full">
-                            <Link href="/trial">
-                                <Button size="lg" variant="outline" className="w-full border-slate-200 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-900 dark:text-white">Start 1-Day Trial</Button>
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Pro Plan (Highlighted - Hero) */}
-                    <div className="relative p-8 rounded-3xl border border-blue-500/50 bg-slate-50 dark:bg-[#0a0a0a] shadow-2xl shadow-blue-500/20 flex flex-col items-center text-center ring-1 ring-blue-500/50 z-10 scale-105 transform">
-                        <div className="absolute top-0 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-sky-500 text-black font-bold px-4 py-1 rounded-full text-xs uppercase tracking-wider shadow-lg">
-                            Most Popular
-                        </div>
-                        <div className="mb-6">
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Pro Access</h3>
-                            <p className="text-sm text-slate-500 dark:text-white/60">For serious algorithmic traders</p>
-                        </div>
-                        <div className="mb-8">
-                            <span className="text-4xl font-bold text-slate-900 dark:text-white">₹25,000</span>
-                            <span className="text-sm text-slate-500 dark:text-white/40"> / Month</span>
-                        </div>
-                        <ul className="space-y-4 mb-8 text-left w-full max-w-[240px] mx-auto">
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-blue-500" /> Unlimited Strategies</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-blue-500" /> &lt; 100ms Latency</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-blue-500" /> Deep Analytics & Export</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-blue-500" /> Priority 24/7 Support</li>
-                        </ul>
-                        <div className="mt-auto w-full">
-                            <Link href="/pricing">
-                                <Button size="lg" className="w-full bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600 text-black font-bold shadow-lg shadow-blue-500/25">Get Started</Button>
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Enterprise Plan (New) */}
-                    <div className="relative p-8 rounded-3xl border border-white/10 bg-white dark:bg-white/5 shadow-xl flex flex-col items-center text-center hover:translate-y-[-4px] transition-transform duration-300">
-                        <div className="mb-6">
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Enterprise</h3>
-                            <p className="text-sm text-slate-500 dark:text-white/60">For Prop Desks & Funds</p>
-                        </div>
-                        <div className="mb-8">
-                            <span className="text-4xl font-bold text-slate-900 dark:text-white">Custom</span>
-                            <span className="text-sm text-slate-500 dark:text-white/40"> / Pricing</span>
-                        </div>
-                        <ul className="space-y-4 mb-8 text-left w-full max-w-[240px] mx-auto">
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><Shield className="w-4 h-4 text-indigo-500" /> Dedicated Infrastructure</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> White Label Solution</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> FIX API Access</li>
-                            <li className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> Dedicated Account Manager</li>
-                        </ul>
-                        <div className="mt-auto w-full">
-                            <Link href="/contact">
-                                <Button size="lg" variant="outline" className="w-full border-slate-200 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-900 dark:text-white">Contact Sales</Button>
-                            </Link>
-                        </div>
-                    </div>
+                    {formattedPlans.slice(0, 3).map((plan) => {
+                        const isPopular = plan.isPopular;
+                        return (
+                            <div
+                                key={plan.id}
+                                className={`relative p-8 rounded-3xl border shadow-xl flex flex-col items-center text-center hover:translate-y-[-4px] transition-transform duration-300 ${isPopular
+                                    ? "border-blue-500/50 bg-slate-50 dark:bg-[#0a0a0a] shadow-2xl shadow-blue-500/20 ring-1 ring-blue-500/50 z-10 scale-105 transform"
+                                    : "border-white/10 bg-white dark:bg-white/5"
+                                }`}
+                            >
+                                {isPopular && (
+                                    <div className="absolute top-0 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-sky-500 text-black font-bold px-4 py-1 rounded-full text-xs uppercase tracking-wider shadow-lg">
+                                        Most Popular
+                                    </div>
+                                )}
+                                <div className="mb-6">
+                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{plan.name}</h3>
+                                    <p className="text-sm text-slate-500 dark:text-white/60">{plan.description}</p>
+                                </div>
+                                <div className="mb-8">
+                                    <span className="text-4xl font-bold text-slate-900 dark:text-white">{plan.price}</span>
+                                    <span className="text-sm text-slate-500 dark:text-white/40"> / {plan.duration}</span>
+                                </div>
+                                <ul className="space-y-4 mb-8 text-left w-full max-w-[240px] mx-auto">
+                                    {plan.features.slice(0, 4).map((feature, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80">
+                                            {isPopular ? (
+                                                <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                                            ) : (
+                                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                            )}
+                                            {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className="mt-auto w-full">
+                                    <Link href={plan.href}>
+                                        <Button
+                                            size="lg"
+                                            variant={isPopular ? "default" : "outline"}
+                                            className={`w-full ${isPopular
+                                                ? "bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600 text-black font-bold shadow-lg shadow-blue-500/25"
+                                                : "border-slate-200 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-900 dark:text-white"
+                                            }`}
+                                        >
+                                            {plan.buttonText}
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-            </section>
+</section>
 
             {/* Testimonials - Social Proof */}
             <section className="w-full max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10 overflow-hidden">
