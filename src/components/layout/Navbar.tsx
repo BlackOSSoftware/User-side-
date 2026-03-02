@@ -37,7 +37,7 @@ export default function Navbar() {
                 <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
 
                     {/* Logo */}
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div id="navbar-brand-logo" className="flex items-center gap-2 flex-shrink-0">
                         <Link href="/" className="flex items-center gap-3 group" onClick={closeMobileMenu}>
                             <BrandLogo
                                 imageClassName="transition-transform duration-300 group-hover:scale-105 w-6 h-6 sm:w-7 sm:h-7"
