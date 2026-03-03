@@ -11,6 +11,7 @@ export type MarketSymbol = {
   exchange?: string;
   price?: number;
   change?: number;
+  provider?: string | null;
 };
 
 export type MarketTicker = {
@@ -24,6 +25,17 @@ export type MarketTicker = {
   isUp?: boolean;
   lotSize?: number;
   color?: string;
+  provider?: string | null;
+};
+
+export type MarketSearchItem = {
+  symbol?: string;
+  name?: string;
+  segment?: string;
+  exchange?: string;
+  provider?: string | null;
+  lotSize?: number;
+  tickSize?: number;
 };
 
 export type MarketStats = Record<string, unknown>;

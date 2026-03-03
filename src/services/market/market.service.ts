@@ -7,6 +7,7 @@ import type {
   MarketSentiment,
   MarketStats,
   MarketSymbol,
+  MarketSearchItem,
   MarketTickers,
 } from "./market.types";
 
@@ -25,8 +26,8 @@ export async function getMarketHistory(params: Record<string, string | number>):
   return response.data;
 }
 
-export async function searchMarket(params: Record<string, string | number>): Promise<Record<string, unknown>> {
-  const response = await apiClient.get<Record<string, unknown>>("/market/search", { params });
+export async function searchMarket(params: Record<string, string | number>): Promise<MarketSearchItem[]> {
+  const response = await apiClient.get<MarketSearchItem[]>("/market/search", { params });
   return response.data;
 }
 

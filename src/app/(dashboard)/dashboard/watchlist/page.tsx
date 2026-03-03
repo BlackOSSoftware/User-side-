@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { ArrowDownRight, ArrowUpRight, LineChart, RefreshCw, Search, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
-import { useMarketUserWatchlistAddMutation, useMarketUserWatchlistQuery, useMarketUserWatchlistRemoveMutation } from "@/services/market/market.hooks";
-import type { MarketTicker } from "@/services/market/market.types";
+import { useMarketSearchQuery, useMarketUserWatchlistAddMutation, useMarketUserWatchlistQuery, useMarketUserWatchlistRemoveMutation } from "@/services/market/market.hooks";
+import type { MarketSearchItem, MarketTicker } from "@/services/market/market.types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -47,12 +47,31 @@ function getSegmentTone(segment?: string) {
 export default function WatchlistPage() {
   const [search, setSearch] = useState("");
   const [symbolInput, setSymbolInput] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const { data, isLoading, isFetching, refetch, error } = useMarketUserWatchlistQuery(true, {
     refetchInterval: 12000,
   });
   const addMutation = useMarketUserWatchlistAddMutation();
   const removeMutation = useMarketUserWatchlistRemoveMutation();
+
+  useEffect(() => {
+    const handle = window.setTimeout(() => {
+      setDebouncedQuery(symbolInput.trim());
+    }, 300);
+    return () => window.clearTimeout(handle);
+  }, [symbolInput]);
+
+  const searchParams = useMemo(() => {
+    if (!debouncedQuery || debouncedQuery.length < 2) return null;
+    return { q: debouncedQuery };
+  }, [debouncedQuery]);
+
+  const searchQuery = useMarketSearchQuery(searchParams ?? { q: "" }, Boolean(searchParams));
+  const searchResults = useMemo<MarketSearchItem[]>(() => {
+    const data = searchQuery.data;
+    return Array.isArray(data) ? (data as MarketSearchItem[]) : [];
+  }, [searchQuery.data]);
 
   const tickers = useMemo(() => (Array.isArray(data) ? data : []), [data]);
   const filtered = useMemo(() => {
@@ -123,12 +142,14 @@ export default function WatchlistPage() {
     try {
       await addMutation.mutateAsync(clean);
       setSymbolInput("");
+      setDebouncedQuery("");
       await refetch();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to update watchlist.";
       setActionError(message);
     }
   };
+
 
   const handleRemove = async (symbol: string) => {
     const clean = symbol.trim();
@@ -177,6 +198,12 @@ export default function WatchlistPage() {
               <Input
                 value={symbolInput}
                 onChange={(event) => setSymbolInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    void handleAdd(symbolInput);
+                  }
+                }}
                 placeholder="Add symbol (e.g. NSE:TCS-EQ)"
                 className="h-9 w-[220px] rounded-full text-xs"
               />
@@ -189,6 +216,29 @@ export default function WatchlistPage() {
               >
                 {addMutation.isPending ? "Adding" : "Add"}
               </Button>
+              {searchResults.length > 0 && symbolInput.trim().length >= 2 ? (
+                <div className="absolute left-0 top-[46px] z-20 w-[360px] max-h-64 overflow-auto rounded-2xl border border-border/60 bg-background/95 p-2 shadow-xl backdrop-blur">
+                  {searchResults.slice(0, 8).map((item) => (
+                    <button
+                      type="button"
+                      key={`${item.symbol}-${item.exchange}`}
+                      onClick={() => handleAdd(item.symbol || "")}
+                      className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-xs hover:bg-foreground/5"
+                    >
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{item.name || "-"}</div>
+                        <div className="text-sm font-semibold text-foreground">{item.symbol || "-"}</div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1 text-[10px] text-muted-foreground">
+                        <span className="inline-flex items-center rounded-full border border-foreground/10 bg-foreground/5 px-2 py-0.5 text-[9px]">
+                          {item.segment || "-"}
+                        </span>
+                        <span>{item.exchange || item.provider || "-"}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
