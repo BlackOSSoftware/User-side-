@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useLoginMutation, useSendOtpMutation, useVerifyOtpMutation } from '@/hooks/use-auth';
 import { useRegisterFcmTokenMutation } from '@/services/notifications/notification.hooks';
+import { getFcmToken } from '@/lib/fcm';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -41,12 +42,14 @@ export default function LoginPage() {
             if (typeof window !== 'undefined') {
                 const storedToken =
                     window.localStorage.getItem('fcm_token') || window.localStorage.getItem('fcmToken');
-                const token = storedToken || `web_${crypto.randomUUID()}`;
-                if (!storedToken) {
+                const token = await getFcmToken();
+                if (token && token !== storedToken) {
                     window.localStorage.setItem('fcm_token', token);
                 }
-                console.log('FCM token:', token);
-                await registerFcmTokenMutation.mutateAsync({ token });
+                if (token) {
+                    console.log('FCM token:', token);
+                    await registerFcmTokenMutation.mutateAsync({ token });
+                }
             }
             toast.success('Login successful');
             router.replace('/dashboard');
@@ -96,12 +99,14 @@ export default function LoginPage() {
             if (typeof window !== 'undefined') {
                 const storedToken =
                     window.localStorage.getItem('fcm_token') || window.localStorage.getItem('fcmToken');
-                const token = storedToken || `web_${crypto.randomUUID()}`;
-                if (!storedToken) {
+                const token = await getFcmToken();
+                if (token && token !== storedToken) {
                     window.localStorage.setItem('fcm_token', token);
                 }
-                console.log('FCM token:', token);
-                await registerFcmTokenMutation.mutateAsync({ token });
+                if (token) {
+                    console.log('FCM token:', token);
+                    await registerFcmTokenMutation.mutateAsync({ token });
+                }
             }
             toast.success('Email verified');
             router.replace('/dashboard');
