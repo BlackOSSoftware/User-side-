@@ -1,12 +1,32 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { ArrowDownRight, ArrowUpRight, LineChart, RefreshCw, Search, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import { useMarketSearchQuery, useMarketUserWatchlistAddMutation, useMarketUserWatchlistQuery, useMarketUserWatchlistRemoveMutation } from "@/services/market/market.hooks";
 import type { MarketSearchItem, MarketTicker } from "@/services/market/market.types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getAuthToken } from "@/lib/auth/session";
+
+type LiveTick = {
+  symbol?: string;
+  price?: number;
+  last_price?: number;
+  open?: number;
+  high?: number;
+  low?: number;
+  change?: number;
+  changePercent?: number;
+  bid?: number;
+  ask?: number;
+  ohlc?: {
+    open?: number;
+    high?: number;
+    low?: number;
+    close?: number;
+  };
+};
 
 const numberFormatter = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 });
 
@@ -49,6 +69,10 @@ export default function WatchlistPage() {
   const [symbolInput, setSymbolInput] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
+  const [liveTicks, setLiveTicks] = useState<Record<string, LiveTick>>({});
+  const wsRef = useRef<WebSocket | null>(null);
+  const subscribedRef = useRef<Set<string>>(new Set());
+  const symbolsRef = useRef<string[]>([]);
   const { data, isLoading, isFetching, refetch, error } = useMarketUserWatchlistQuery(true, {
     refetchInterval: 12000,
   });
@@ -74,6 +98,10 @@ export default function WatchlistPage() {
   }, [searchQuery.data]);
 
   const tickers = useMemo(() => (Array.isArray(data) ? data : []), [data]);
+  const symbols = useMemo(() => tickers.map((t) => t.symbol).filter(Boolean) as string[], [tickers]);
+  useEffect(() => {
+    symbolsRef.current = symbols;
+  }, [symbols]);
   const filtered = useMemo(() => {
     if (!search.trim()) return tickers;
     const q = search.trim().toLowerCase();
@@ -163,6 +191,105 @@ export default function WatchlistPage() {
       const message = err instanceof Error ? err.message : "Unable to update watchlist.";
       setActionError(message);
     }
+  };
+
+  useEffect(() => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const token = getAuthToken();
+    if (!baseUrl || !token) return;
+
+    const wsUrl = baseUrl.replace(/^http/, "ws").replace(/\/v1\/?$/, "");
+    const socket = new WebSocket(`${wsUrl}?token=${encodeURIComponent(token)}`);
+    wsRef.current = socket;
+
+    socket.onopen = () => {
+      const current = subscribedRef.current;
+      symbolsRef.current.forEach((sym) => {
+        const key = sym.toLowerCase();
+        if (!current.has(key)) {
+          socket.send(JSON.stringify({ type: "subscribe", payload: sym }));
+          current.add(key);
+        }
+      });
+    };
+
+    socket.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data);
+        if (msg?.type === "tick" && msg?.payload?.symbol) {
+          const sym = String(msg.payload.symbol);
+          setLiveTicks((prev) => ({
+            ...prev,
+            [sym]: msg.payload,
+          }));
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    return () => {
+      socket.close();
+      wsRef.current = null;
+      subscribedRef.current.clear();
+    };
+  }, []);
+
+  useEffect(() => {
+    const socket = wsRef.current;
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+
+    const current = subscribedRef.current;
+    const next = new Set(symbols.map((s) => s.toLowerCase()));
+
+    symbols.forEach((sym) => {
+      const key = sym.toLowerCase();
+      if (!current.has(key)) {
+        socket.send(JSON.stringify({ type: "subscribe", payload: sym }));
+        current.add(key);
+      }
+    });
+
+    Array.from(current).forEach((sym) => {
+      if (!next.has(sym)) {
+        socket.send(JSON.stringify({ type: "unsubscribe", payload: sym }));
+        current.delete(sym);
+      }
+    });
+  }, [symbols]);
+
+  const resolveLive = (item: MarketTicker) => {
+    const tick = liveTicks[item.symbol];
+    if (!tick) return item;
+
+    const last = typeof tick.last_price === "number" ? tick.last_price : tick.price;
+    const price = typeof last === "number" ? last : item.price;
+    const open = typeof tick.open === "number" ? tick.open : tick.ohlc?.open;
+    const high = typeof tick.high === "number" ? tick.high : tick.ohlc?.high;
+    const low = typeof tick.low === "number" ? tick.low : tick.ohlc?.low;
+    const close = tick.ohlc?.close;
+    const prevClose = typeof close === "number" ? close : item.prevClose;
+    const changePercent =
+      typeof tick.changePercent === "number"
+        ? tick.changePercent
+        : typeof price === "number" && typeof prevClose === "number" && prevClose > 0
+        ? ((price - prevClose) / prevClose) * 100
+        : item.change;
+
+    return {
+      ...item,
+      price,
+      prevClose,
+      change: changePercent,
+      meta: {
+        bid: tick.bid,
+        ask: tick.ask,
+        open,
+        high,
+        low,
+        close,
+      },
+    } as MarketTicker & { meta?: Record<string, number | undefined> };
   };
 
   return (
@@ -320,18 +447,25 @@ export default function WatchlistPage() {
           </div>
         ) : (
           <>
-            <div className="hidden lg:grid grid-cols-[1.2fr_0.7fr_0.7fr_0.7fr_0.7fr_0.8fr_0.6fr] gap-3 px-4 sm:px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground border-b border-border/60">
+            <div className="hidden lg:grid grid-cols-[1.1fr_0.6fr_0.5fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr] gap-3 px-4 sm:px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground border-b border-border/60">
               <div>Symbol</div>
               <div>Segment</div>
               <div>Exchange</div>
               <div className="text-right">LTP</div>
               <div className="text-right">Change</div>
               <div className="text-right">Points</div>
+              <div className="text-right">Bid</div>
+              <div className="text-right">Ask</div>
+              <div className="text-right">High</div>
+              <div className="text-right">Low</div>
+              <div className="text-right">Close</div>
               <div className="text-right">Action</div>
             </div>
 
             <div className="hidden lg:block">
-              {filtered.map((item) => {
+              {filtered.map((row) => {
+                const item = resolveLive(row);
+                const meta = (item as MarketTicker & { meta?: Record<string, number | undefined> }).meta || {};
                 const change = typeof item.change === "number" ? item.change : 0;
                 const isUp = change >= 0;
                 const price = typeof item.price === "number" ? item.price : undefined;
@@ -342,7 +476,7 @@ export default function WatchlistPage() {
                 return (
                   <div
                     key={item.symbol}
-                    className="grid grid-cols-[1.2fr_0.7fr_0.7fr_0.7fr_0.7fr_0.8fr_0.6fr] gap-3 px-4 sm:px-6 py-3 text-xs border-b border-border/50 hover:bg-muted/20"
+                    className="grid grid-cols-[1.1fr_0.6fr_0.5fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr_0.6fr] gap-3 px-4 sm:px-6 py-3 text-xs border-b border-border/50 hover:bg-muted/20"
                   >
                     <div>
                       <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -375,6 +509,21 @@ export default function WatchlistPage() {
                     >
                       {formatPoints(points)}
                     </div>
+                    <div className="text-right font-semibold text-foreground tabular-nums">
+                      {formatPrice(meta.bid)}
+                    </div>
+                    <div className="text-right font-semibold text-foreground tabular-nums">
+                      {formatPrice(meta.ask)}
+                    </div>
+                    <div className="text-right font-semibold text-foreground tabular-nums">
+                      {formatPrice(meta.high)}
+                    </div>
+                    <div className="text-right font-semibold text-foreground tabular-nums">
+                      {formatPrice(meta.low)}
+                    </div>
+                    <div className="text-right font-semibold text-foreground tabular-nums">
+                      {formatPrice(meta.close)}
+                    </div>
                     <div className="text-right">
                       <Button
                         type="button"
@@ -392,7 +541,9 @@ export default function WatchlistPage() {
             </div>
 
             <div className="grid gap-3 p-4 lg:hidden">
-              {filtered.map((item) => {
+              {filtered.map((row) => {
+                const item = resolveLive(row);
+                const meta = (item as MarketTicker & { meta?: Record<string, number | undefined> }).meta || {};
                 const change = typeof item.change === "number" ? item.change : 0;
                 const isUp = change >= 0;
                 const price = typeof item.price === "number" ? item.price : undefined;
@@ -461,6 +612,28 @@ export default function WatchlistPage() {
                         <div className="mt-1 font-semibold text-foreground tabular-nums">
                           {item.lotSize ?? "-"}
                         </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
+                      <div className="rounded-xl border border-border/60 bg-foreground/5 p-2.5">
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Bid</div>
+                        <div className="mt-1 font-semibold text-foreground tabular-nums">{formatPrice(meta.bid)}</div>
+                      </div>
+                      <div className="rounded-xl border border-border/60 bg-foreground/5 p-2.5">
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Ask</div>
+                        <div className="mt-1 font-semibold text-foreground tabular-nums">{formatPrice(meta.ask)}</div>
+                      </div>
+                      <div className="rounded-xl border border-border/60 bg-foreground/5 p-2.5">
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">High</div>
+                        <div className="mt-1 font-semibold text-foreground tabular-nums">{formatPrice(meta.high)}</div>
+                      </div>
+                      <div className="rounded-xl border border-border/60 bg-foreground/5 p-2.5">
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Low</div>
+                        <div className="mt-1 font-semibold text-foreground tabular-nums">{formatPrice(meta.low)}</div>
+                      </div>
+                      <div className="rounded-xl border border-border/60 bg-foreground/5 p-2.5 col-span-2">
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Close</div>
+                        <div className="mt-1 font-semibold text-foreground tabular-nums">{formatPrice(meta.close)}</div>
                       </div>
                     </div>
                     <Button
