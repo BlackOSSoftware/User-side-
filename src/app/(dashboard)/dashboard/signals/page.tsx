@@ -529,7 +529,7 @@ export default function SignalsPage() {
                     <div className="pointer-events-none absolute inset-0 z-20 rounded-2xl border border-slate-300/80 bg-[linear-gradient(165deg,rgba(255,255,255,0.98),rgba(226,232,240,0.95))] shadow-[0_16px_34px_-20px_rgba(15,23,42,0.6)] dark:border-primary/40 dark:bg-[linear-gradient(165deg,rgba(23,37,84,0.94),rgba(15,23,42,0.96))] [transform-origin:left_center] [transform:perspective(1200px)_rotateY(0deg)] group-hover:[transform:perspective(1200px)_rotateY(-82deg)] group-active:[transform:perspective(1200px)_rotateY(-82deg)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]">
                       <div className="absolute left-0 top-0 h-full w-4 rounded-l-2xl bg-[linear-gradient(180deg,rgba(148,163,184,0.55),rgba(71,85,105,0.5))] dark:bg-[linear-gradient(180deg,rgba(96,165,250,0.4),rgba(30,58,138,0.45))]" />
                       <div className="relative h-full px-5 py-4">
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-600 dark:text-slate-300">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-700 dark:text-slate-200">
                           Signal Cover
                         </div>
                         <div className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
@@ -557,7 +557,7 @@ export default function SignalsPage() {
                             <div className="text-base font-semibold text-slate-900 dark:text-foreground">
                               {signal.symbol || "Signal"}
                             </div>
-                            <div className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+                            <div className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-slate-700 dark:text-slate-300">
                               <CalendarClock className="h-3.5 w-3.5" />
                               {signal.timeframe || "-"}
                             </div>
@@ -577,7 +577,7 @@ export default function SignalsPage() {
 
                       <div className="grid grid-cols-2 gap-3 text-xs">
                         <div className="rounded-xl border border-slate-300/65 bg-white/80 p-2.5 dark:border-primary/30 dark:bg-slate-900/70">
-                          <div className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-300 inline-flex items-center gap-1">
+                          <div className="text-[10px] uppercase tracking-wider text-slate-700 dark:text-slate-200 inline-flex items-center gap-1">
                             <TrendingUp className="h-3.5 w-3.5 text-cyan-700 dark:text-cyan-200" />
                             Entry
                           </div>
@@ -586,7 +586,7 @@ export default function SignalsPage() {
                           </div>
                         </div>
                         <div className="rounded-xl border border-slate-300/65 bg-white/80 p-2.5 dark:border-primary/30 dark:bg-slate-900/70">
-                          <div className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-300 inline-flex items-center gap-1">
+                          <div className="text-[10px] uppercase tracking-wider text-slate-700 dark:text-slate-200 inline-flex items-center gap-1">
                             <Target className="h-3.5 w-3.5 text-amber-700 dark:text-amber-200" />
                             Stop
                           </div>
@@ -595,7 +595,7 @@ export default function SignalsPage() {
                           </div>
                         </div>
                         <div className="rounded-xl border border-slate-300/65 bg-white/80 p-2.5 col-span-2 dark:border-primary/30 dark:bg-slate-900/70">
-                          <div className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-300 inline-flex items-center gap-1">
+                          <div className="text-[10px] uppercase tracking-wider text-slate-700 dark:text-slate-200 inline-flex items-center gap-1">
                             <BadgeCheck className="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-200" />
                             Targets
                           </div>
@@ -620,7 +620,7 @@ export default function SignalsPage() {
                         </div>
                       </div>
 
-                      <div className="text-[10px] text-slate-600 dark:text-slate-300 inline-flex items-center gap-1.5">
+                      <div className="text-[10px] text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5">
                         <Clock3 className="h-3.5 w-3.5 text-amber-700 dark:text-amber-100" />
                         {formatDate(signal.signalTime || signal.timestamp || signal.createdAt)}
                       </div>

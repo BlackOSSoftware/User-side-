@@ -1,5 +1,5 @@
 import { getApps, initializeApp } from 'firebase/app';
-import { getMessaging, getToken, isSupported, onMessage } from 'firebase/messaging';
+import { getMessaging, getToken, isSupported, onMessage, type MessagePayload } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -51,7 +51,7 @@ export async function getFcmToken() {
 }
 
 export async function listenForForegroundMessages(
-  onPayload: (payload: Record<string, unknown>) => void
+  onPayload: (payload: MessagePayload) => void
 ) {
   if (typeof window === 'undefined') return () => {};
   if (!('Notification' in window)) return () => {};
@@ -66,7 +66,7 @@ export async function listenForForegroundMessages(
 
   const messaging = getMessaging();
   const unsubscribe = onMessage(messaging, (payload) => {
-    onPayload(payload as Record<string, unknown>);
+    onPayload(payload);
   });
 
   return unsubscribe;
