@@ -13,8 +13,21 @@ export type MarketSymbol = {
   change?: number;
 };
 
+export type MarketTicker = {
+  symbol: string;
+  name?: string;
+  segment?: string;
+  exchange?: string;
+  price?: number;
+  prevClose?: number;
+  change?: number;
+  isUp?: boolean;
+  lotSize?: number;
+  color?: string;
+};
+
 export type MarketStats = Record<string, unknown>;
-export type MarketTickers = Record<string, unknown>;
+export type MarketTickers = MarketTicker[];
 export type MarketSentiment = Record<string, unknown>;
 export type MarketAnalysis = Record<string, unknown>;
 export type MarketNews = Record<string, unknown>;

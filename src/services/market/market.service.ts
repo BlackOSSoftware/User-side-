@@ -55,6 +55,21 @@ export async function getMarketTickers(): Promise<MarketTickers> {
   return response.data;
 }
 
+export async function getMarketUserWatchlist(): Promise<MarketTickers> {
+  const response = await apiClient.get<MarketTickers>("/market/watchlist");
+  return response.data;
+}
+
+export async function addMarketUserWatchlist(symbol: string): Promise<{ symbols: string[] }> {
+  const response = await apiClient.post<{ symbols: string[] }>("/market/watchlist/add", { symbol });
+  return response.data;
+}
+
+export async function removeMarketUserWatchlist(symbol: string): Promise<{ symbols: string[] }> {
+  const response = await apiClient.post<{ symbols: string[] }>("/market/watchlist/remove", { symbol });
+  return response.data;
+}
+
 export async function getMarketSentiment(): Promise<MarketSentiment> {
   const response = await apiClient.get<MarketSentiment>("/market/sentiment");
   return response.data;

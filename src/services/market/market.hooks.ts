@@ -10,8 +10,11 @@ import {
   getMarketStats,
   getMarketSymbols,
   getMarketTickers,
+  getMarketUserWatchlist,
+  addMarketUserWatchlist,
   postMarketLoginKite,
   searchMarket,
+  removeMarketUserWatchlist,
 } from "./market.service";
 
 export const MARKET_QUERY_KEY = ["market"] as const;
@@ -72,11 +75,47 @@ export function useMarketStatsQuery(enabled = true) {
   });
 }
 
-export function useMarketTickersQuery(enabled = true) {
+export function useMarketTickersQuery(
+  enabled = true,
+  options?: {
+    refetchInterval?: number;
+    staleTime?: number;
+  },
+) {
   return useQuery({
     queryKey: [...MARKET_QUERY_KEY, "tickers"],
     queryFn: getMarketTickers,
     enabled,
+    refetchInterval: options?.refetchInterval,
+    staleTime: options?.staleTime,
+  });
+}
+
+export function useMarketUserWatchlistQuery(
+  enabled = true,
+  options?: {
+    refetchInterval?: number;
+    staleTime?: number;
+  },
+) {
+  return useQuery({
+    queryKey: [...MARKET_QUERY_KEY, "user-watchlist"],
+    queryFn: getMarketUserWatchlist,
+    enabled,
+    refetchInterval: options?.refetchInterval,
+    staleTime: options?.staleTime,
+  });
+}
+
+export function useMarketUserWatchlistAddMutation() {
+  return useMutation({
+    mutationFn: (symbol: string) => addMarketUserWatchlist(symbol),
+  });
+}
+
+export function useMarketUserWatchlistRemoveMutation() {
+  return useMutation({
+    mutationFn: (symbol: string) => removeMarketUserWatchlist(symbol),
   });
 }
 
