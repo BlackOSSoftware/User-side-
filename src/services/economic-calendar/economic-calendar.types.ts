@@ -10,3 +10,15 @@ export type EconomicCalendarItem = {
   previous?: string;
   impact?: string;
 };
+
+export type EconomicCalendarListResponse = {
+  results?: EconomicCalendarItem[];
+  pagination?: {
+    page?: number;
+    limit?: number;
+    totalPages?: number;
+    totalResults?: number;
+    hasNextPage?: boolean;
+    hasPrevPage?: boolean;
+  };
+};

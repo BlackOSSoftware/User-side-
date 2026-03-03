@@ -159,14 +159,19 @@ export default function DashboardPage() {
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   }, [planExpiry]);
 
-  const planStatus = subscriptionStatusQuery.data?.subscription?.status
-    ? String(subscriptionStatusQuery.data.subscription.status)
-    : subscriptionStatusQuery.data?.hasActiveSubscription
-      ? "Active"
-      : "Inactive";
-
+  const subscriptionStatus = subscriptionStatusQuery.data?.subscription?.status;
+  const normalizedSubscriptionStatus =
+    typeof subscriptionStatus === "string" ? subscriptionStatus.toLowerCase() : "";
+  const isActiveFromSubscription =
+    subscriptionStatusQuery.data?.hasActiveSubscription === true ||
+    normalizedSubscriptionStatus === "active";
+  const isActiveFromExpiry = typeof remainingDays === "number" && remainingDays > 0;
+  const isActiveFromMeData =
+    Boolean(meQuery.data?.planId) ||
+    (Array.isArray(meQuery.data?.permissions) && meQuery.data.permissions.length > 0);
+  const planIsActive = isActiveFromSubscription || isActiveFromExpiry || isActiveFromMeData;
+  const planStatus = planIsActive ? "Active" : "Inactive";
   const planName = meQuery.data?.planName ?? "No active plan";
-  const planIsActive = planStatus.toLowerCase() === "active";
 
   const todayCount =
     todaySignalsQuery.data?.pagination?.totalResults ??

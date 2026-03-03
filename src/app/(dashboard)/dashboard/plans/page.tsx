@@ -2,18 +2,73 @@
 
 import { useMeQuery } from "@/hooks/use-auth";
 import { usePlanQuery, usePlansQuery } from "@/services/plans/plan.hooks";
+import type { Plan } from "@/services/plans/plan.types";
 import { useSegmentsQuery } from "@/services/segments/segment.hooks";
-import {
-    usePurchaseSubscriptionMutation,
-    useSubscriptionStatusQuery,
-} from "@/services/subscriptions/subscription.hooks";
+import type { Segment } from "@/services/segments/segment.types";
+import { useSubscriptionStatusQuery } from "@/services/subscriptions/subscription.hooks";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Star, ArrowLeft, ArrowRight, ShieldCheck, Crown, CalendarDays, Wallet, Sparkles } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, type MouseEvent } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { getHasAccess } from "@/services/subscriptions/subscription.service";
 import { useSwipeCards } from "@/hooks/use-swipe-cards";
+
+const SEGMENT_CARD_THEMES = [
+    {
+        ribbon: "from-emerald-500 via-teal-500 to-cyan-500",
+        glow: "bg-emerald-500/20 dark:bg-emerald-400/20",
+        chipTone: "border-emerald-500/35 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+        priceTone: "text-emerald-700 dark:text-emerald-300",
+    },
+    {
+        ribbon: "from-sky-500 via-blue-500 to-indigo-500",
+        glow: "bg-blue-500/20 dark:bg-sky-400/20",
+        chipTone: "border-blue-500/35 bg-blue-500/10 text-blue-700 dark:text-blue-300",
+        priceTone: "text-blue-700 dark:text-blue-300",
+    },
+    {
+        ribbon: "from-orange-500 via-amber-500 to-yellow-500",
+        glow: "bg-amber-500/20 dark:bg-amber-400/20",
+        chipTone: "border-amber-500/35 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+        priceTone: "text-amber-700 dark:text-amber-300",
+    },
+] as const;
+
+const PLAN_CARD_THEMES = [
+    {
+        surface: "from-card via-card/95 to-sky-500/10",
+        glow: "bg-sky-500/22",
+        tint: "bg-sky-500/14 text-sky-200 border-sky-400/35",
+        bullet: "bg-sky-500/24 text-sky-200",
+        button: "bg-[linear-gradient(135deg,#facc15_0%,#f59e0b_56%,#f97316_100%)] text-slate-950 shadow-[0_18px_38px_-16px_rgba(245,158,11,0.95)] ring-1 ring-amber-100/60 hover:shadow-[0_24px_44px_-14px_rgba(245,158,11,1)]",
+    },
+    {
+        surface: "from-card via-card/95 to-emerald-500/10",
+        glow: "bg-emerald-500/22",
+        tint: "bg-emerald-500/14 text-emerald-200 border-emerald-400/35",
+        bullet: "bg-emerald-500/24 text-emerald-200",
+        button: "bg-[linear-gradient(135deg,#facc15_0%,#f59e0b_56%,#f97316_100%)] text-slate-950 shadow-[0_18px_38px_-16px_rgba(245,158,11,0.95)] ring-1 ring-amber-100/60 hover:shadow-[0_24px_44px_-14px_rgba(245,158,11,1)]",
+    },
+    {
+        surface: "from-card via-card/95 to-rose-500/10",
+        glow: "bg-rose-500/22",
+        tint: "bg-rose-500/14 text-rose-200 border-rose-400/35",
+        bullet: "bg-rose-500/24 text-rose-200",
+        button: "bg-[linear-gradient(135deg,#facc15_0%,#f59e0b_56%,#f97316_100%)] text-slate-950 shadow-[0_18px_38px_-16px_rgba(245,158,11,0.95)] ring-1 ring-amber-100/60 hover:shadow-[0_24px_44px_-14px_rgba(245,158,11,1)]",
+    },
+] as const;
+
+function formatPriceLabel(price?: number, isDemo?: boolean) {
+    const numericPrice = typeof price === "number" ? price : Number(price);
+    if (!numericPrice || numericPrice <= 0 || isDemo) return "Free";
+    return `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(numericPrice)}`;
+}
+
+function formatDurationLabel(durationDays?: number) {
+    if (!durationDays) return "Flexible";
+    return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
+}
 
 export default function PlansPage() {
     const { data: me } = useMeQuery();
@@ -22,23 +77,18 @@ export default function PlansPage() {
     const { data: plans = [] } = usePlansQuery();
     const { data: segments = [] } = useSegmentsQuery();
     const { data: subscriptionStatus } = useSubscriptionStatusQuery();
-    const purchaseMutation = usePurchaseSubscriptionMutation();
-    const [selectedSegments, setSelectedSegments] = useState<string[]>([]);
-    const [planType, setPlanType] = useState("premium");
-    const [formError, setFormError] = useState("");
-    const [purchaseNotice, setPurchaseNotice] = useState("");
-    const { containerRef, activeIndex, isDragging, bind } = useSwipeCards(plans.length);
-
-    const formatPrice = (price?: number, isDemo?: boolean) => {
-        const numericPrice = typeof price === "number" ? price : Number(price);
-        if (!numericPrice || numericPrice <= 0 || isDemo) return "Free";
-        return `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(numericPrice)}`;
-    };
-
-    const formatDuration = (durationDays?: number) => {
-        if (!durationDays) return "Flexible";
-        return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
-    };
+    const loopedPlans = useMemo(
+        () =>
+            plans.length > 1
+                ? Array.from({ length: plans.length * 3 }, (_, index) => ({
+                    plan: plans[index % plans.length],
+                    planIndex: index % plans.length,
+                    virtualIndex: index,
+                }))
+                : plans.map((plan, index) => ({ plan, planIndex: index, virtualIndex: index })),
+        [plans]
+    );
+    const { containerRef, activeIndex: activeVirtualIndex, isDragging, bind } = useSwipeCards(loopedPlans.length);
 
     const popularId = plans
         .filter((plan) => !plan.isDemo)
@@ -53,57 +103,104 @@ export default function PlansPage() {
         })),
     });
 
-    const getErrorMessage = (error: unknown, fallback: string) => {
-        const apiMessage =
-            typeof (error as { response?: { data?: { message?: string; error?: string } } })?.response?.data?.message === 'string'
-                ? String((error as { response?: { data?: { message?: string } } })?.response?.data?.message)
-                : typeof (error as { response?: { data?: { message?: string; error?: string } } })?.response?.data?.error === 'string'
-                    ? String((error as { response?: { data?: { error?: string } } })?.response?.data?.error)
-                    : undefined;
-        const rawMessage = apiMessage || (error instanceof Error ? error.message : String(error ?? ""));
-        if (rawMessage && rawMessage.includes("ENOENT")) {
-            return "Server upload path missing. Please create the uploads/payments folder on backend.";
-        }
-        return rawMessage || fallback;
-    };
-
-    async function onPurchase() {
-        setFormError("");
-        setPurchaseNotice("");
-        if (selectedSegments.length === 0) {
-            setFormError("Select at least one segment.");
-            return;
-        }
-        try {
-            const response = await purchaseMutation.mutateAsync({ segments: selectedSegments, planType });
-            setPurchaseNotice(
-                response?.status
-                    ? `Subscription created. Status: ${response.status}`
-                    : "Subscription created successfully."
-            );
-        } catch (error) {
-            setFormError(getErrorMessage(error, "Unable to purchase subscription."));
-        }
-    }
-
     const scrollToIndex = useCallback((targetIndex: number, behavior: ScrollBehavior = "smooth") => {
         const container = containerRef.current;
         if (!container) return;
         const children = Array.from(container.children) as HTMLElement[];
         if (!children.length) return;
-        const wrappedIndex = ((targetIndex % children.length) + children.length) % children.length;
-        const target = children[wrappedIndex];
+        const boundedIndex = Math.max(0, Math.min(targetIndex, children.length - 1));
+        const target = children[boundedIndex];
         if (!target) return;
         const left = target.offsetLeft - (container.clientWidth - target.offsetWidth) / 2;
+        if (behavior === "auto") {
+            const previousScrollBehavior = container.style.scrollBehavior;
+            container.style.scrollBehavior = "auto";
+            container.scrollTo({ left });
+            container.style.scrollBehavior = previousScrollBehavior;
+            return;
+        }
         container.scrollTo({ left, behavior });
     }, [containerRef]);
 
     const showArrows = plans.length > 1;
-    const getCircularDistance = (index: number, current: number, total: number) => {
-        if (total <= 1) return 0;
-        const delta = Math.abs(index - current);
-        return Math.min(delta, total - delta);
-    };
+
+    useEffect(() => {
+        if (plans.length <= 1) return;
+        scrollToIndex(plans.length, "auto");
+    }, [plans.length, scrollToIndex]);
+
+    useEffect(() => {
+        if (plans.length <= 1) return;
+        if (activeVirtualIndex < plans.length) {
+            scrollToIndex(activeVirtualIndex + plans.length, "auto");
+            return;
+        }
+        if (activeVirtualIndex >= plans.length * 2) {
+            scrollToIndex(activeVirtualIndex - plans.length, "auto");
+        }
+    }, [activeVirtualIndex, plans.length, scrollToIndex]);
+
+    const updateSegmentHoverPoint = useCallback((event: MouseEvent<HTMLElement>) => {
+        const card = event.currentTarget;
+        const bounds = card.getBoundingClientRect();
+        card.style.setProperty("--spot-x", `${event.clientX - bounds.left}px`);
+        card.style.setProperty("--spot-y", `${event.clientY - bounds.top}px`);
+    }, []);
+    const onChoosePlan = useCallback((plan: Plan) => {
+        const whatsappNumber = "917770039037";
+        const userName = me?.name?.trim() || "N/A";
+        const userEmail = me?.email?.trim() || "N/A";
+        const userPhone = me?.phone?.trim() || "N/A";
+        const selectedPlanId = plan?._id || "N/A";
+        const selectedPlanName = plan?.name || "N/A";
+        const selectedPlanPrice = formatPriceLabel(plan?.price, plan?.isDemo);
+        const selectedPlanDuration = formatDurationLabel(plan?.durationDays);
+        const selectedPlanSegment = plan?.segment || "N/A";
+
+        const message = [
+            "Hello MSPK Team,",
+            "",
+            "I want to proceed with this plan:",
+            `- Plan Name: ${selectedPlanName}`,
+            `- Plan ID: ${selectedPlanId}`,
+            `- Plan Price: ${selectedPlanPrice}`,
+            `- Plan Duration: ${selectedPlanDuration}`,
+            `- Segment: ${selectedPlanSegment}`,
+            "",
+            "User Details:",
+            `- Name: ${userName}`,
+            `- Email: ${userEmail}`,
+            `- Phone: ${userPhone}`,
+        ].join("\n");
+
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    }, [me]);
+    const onExploreSegment = useCallback((segment: Segment, hasAccess: boolean | undefined, basePriceLabel: string) => {
+        const whatsappNumber = "917770039037";
+        const userName = me?.name?.trim() || "N/A";
+        const userEmail = me?.email?.trim() || "N/A";
+        const userPhone = me?.phone?.trim() || "N/A";
+        const accessStatus = hasAccess === true ? "Access active" : hasAccess === false ? "No access" : "Checking access";
+
+        const message = [
+            "Hello MSPK Team,",
+            "",
+            "I want to explore this segment:",
+            `- Segment Name: ${segment.name || "N/A"}`,
+            `- Segment Code: ${segment.segment_code || "N/A"}`,
+            `- Base Price: ${basePriceLabel}`,
+            `- Access Status: ${accessStatus}`,
+            "",
+            "User Details:",
+            `- Name: ${userName}`,
+            `- Email: ${userEmail}`,
+            `- Phone: ${userPhone}`,
+        ].join("\n");
+
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    }, [me]);
 
     return (
         <div className="flex-1 space-y-6 sm:space-y-8 py-2">
@@ -148,11 +245,11 @@ export default function PlansPage() {
                             <div className="flex flex-wrap gap-2">
                                 <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/70 px-3 py-1 text-xs text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground">
                                     <CalendarDays className="h-3.5 w-3.5 text-primary" />
-                                    {formatDuration(currentPlan.durationDays)}
+                                    {formatDurationLabel(currentPlan.durationDays)}
                                 </span>
                                 <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/70 px-3 py-1 text-xs text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground">
                                     <Wallet className="h-3.5 w-3.5 text-emerald-500" />
-                                    {formatPrice(currentPlan.price, currentPlan.isDemo)}
+                                    {formatPriceLabel(currentPlan.price, currentPlan.isDemo)}
                                 </span>
                                 <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-500">
                                     <ShieldCheck className="h-3.5 w-3.5" />
@@ -166,16 +263,37 @@ export default function PlansPage() {
                             </div>
                             <div className="rounded-2xl border border-slate-200 bg-slate-100/70 px-4 py-3 text-sm text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground w-full md:w-auto">
                                 <div className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-muted-foreground">Plan Price</div>
-                                <div className="mt-1 text-lg font-semibold">{formatPrice(currentPlan.price, currentPlan.isDemo)}</div>
+                                <div className="mt-1 text-lg font-semibold">{formatPriceLabel(currentPlan.price, currentPlan.isDemo)}</div>
                             </div>
                             <div className="rounded-2xl border border-slate-200 bg-slate-100/70 px-4 py-3 text-sm text-slate-900 dark:border-foreground/10 dark:bg-foreground/5 dark:text-foreground w-full md:w-auto">
                                 <div className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-muted-foreground">Duration</div>
-                                <div className="mt-1 text-lg font-semibold">{formatDuration(currentPlan.durationDays)}</div>
+                                <div className="mt-1 text-lg font-semibold">{formatDurationLabel(currentPlan.durationDays)}</div>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
             ) : null}
+
+            <div className="space-y-3">
+                <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-700 dark:border-foreground/10 dark:bg-foreground/5 dark:text-muted-foreground">
+                    <Star className="h-3.5 w-3.5 text-amber-500" />
+                    Plans Collection
+                </div>
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div className="space-y-1">
+                        <h3 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-foreground">
+                            Choose the right plan for your trading style
+                        </h3>
+                        <p className="text-sm text-slate-600 dark:text-muted-foreground">
+                            Compare pricing, duration, and features before selecting your subscription.
+                        </p>
+                    </div>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 dark:border-foreground/10 dark:bg-foreground/5 dark:text-muted-foreground">
+                        <Sparkles className="h-3.5 w-3.5 text-primary" />
+                        {plans.length} Plan{plans.length === 1 ? "" : "s"}
+                    </div>
+                </div>
+            </div>
 
             <div className="relative mx-auto w-full max-w-[1180px]">
                 <div
@@ -183,10 +301,16 @@ export default function PlansPage() {
                     {...bind}
                     className={`no-scrollbar flex gap-3 sm:gap-6 overflow-x-auto pb-5 px-1.5 sm:px-8 md:px-14 snap-x snap-mandatory scroll-smooth touch-pan-y items-stretch select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
                 >
-                    {plans.map((plan, index) => {
+                    {loopedPlans.map(({ plan, planIndex, virtualIndex: index }) => {
                         const isPopular = plan._id === popularId;
-                        const isActive = index === activeIndex;
-                        const distance = getCircularDistance(index, activeIndex, plans.length);
+                        const isActive = index === activeVirtualIndex;
+                        const theme = PLAN_CARD_THEMES[planIndex % PLAN_CARD_THEMES.length];
+                        const planFeatures = (
+                            plan.features?.length
+                                ? plan.features
+                                : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"]
+                        ).slice(0, 4);
+                        const distance = Math.abs(index - activeVirtualIndex);
                         const depthClass = isActive
                             ? "scale-100 opacity-100 z-20"
                             : distance === 1
@@ -194,66 +318,84 @@ export default function PlansPage() {
                                 : "scale-100 opacity-100 z-0 md:scale-[0.9] md:opacity-70";
                         return (
                             <Card
-                                key={plan._id}
-                                className={`plan-swipe-card plan-swap relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex h-[500px] sm:h-[560px] lg:h-[600px] flex-col snap-center shrink-0 w-[94%] sm:w-[78%] md:w-[430px] lg:w-[460px]
+                                key={`${plan._id}-${index}`}
+                                className={`plan-swipe-card plan-swap relative overflow-hidden rounded-[1.75rem] bg-card/95 transition-all duration-500 group flex min-h-[520px] sm:min-h-[560px] lg:min-h-[600px] flex-col snap-center shrink-0 w-[94%] sm:w-[78%] md:w-[430px] lg:w-[460px]
                                     ${isActive ? "plan-swipe-active" : ""}
                                     ${depthClass}
                                     ${isPopular
-                                        ? "bg-white dark:bg-zinc-900 border-primary shadow-[0_20px_60px_-15px_rgba(245,158,11,0.15)] ring-1 ring-primary/20"
-                                        : "bg-white dark:bg-black/50 border-slate-100 dark:border-white/5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-none hover:border-primary/30 sm:hover:-translate-y-1"
+                                        ? "border-primary/60 shadow-[0_24px_62px_-20px_rgba(245,158,11,0.28)] ring-1 ring-primary/25"
+                                        : "border-border/70 hover:border-primary/30 shadow-[0_10px_38px_-18px_rgba(15,23,42,0.2)] hover:shadow-[0_28px_60px_-20px_rgba(15,23,42,0.32)]"
                                     }`}
                             >
-                                {isPopular ? (
-                                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
-                                ) : null}
+                                <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${isPopular
+                                    ? "from-card via-card/95 to-amber-500/12"
+                                    : theme.surface
+                                    }`} />
+                                <div className={`pointer-events-none absolute -top-20 -right-16 h-44 w-44 rounded-full blur-3xl transition-transform duration-500 group-hover:scale-125 ${isPopular ? "bg-amber-500/24" : theme.glow}`} />
+                                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,hsl(var(--foreground)/0.12),transparent_45%)]" />
+                                <div className={`pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${isPopular ? "from-transparent via-primary to-transparent" : "from-transparent via-foreground/20 to-transparent"}`} />
 
-                                <CardHeader className="p-6 pb-0">
-                                    {isPopular ? (
-                                        <div className="mb-3">
+                                <CardHeader className="relative z-10 p-5 pb-2 sm:p-6 sm:pb-2">
+                                    <div className="mb-3 flex items-center justify-between gap-2">
+                                        {isPopular ? (
                                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-primary/25">
                                                 <Star className="w-3 h-3 fill-white" /> Most Popular
                                             </span>
-                                        </div>
-                                    ) : null}
-                                    <CardTitle className="text-xl font-bold mb-2">{plan.name}</CardTitle>
-                                    <CardDescription className="line-clamp-2">{plan.description}</CardDescription>
+                                        ) : (
+                                            <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${theme.tint}`}>
+                                                <Sparkles className="h-3 w-3" />
+                                                Smart Pick
+                                            </span>
+                                        )}
+                                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                            {formatDurationLabel(plan.durationDays)}
+                                        </span>
+                                    </div>
+                                    <CardTitle className="text-xl font-bold text-foreground mb-2">{plan.name}</CardTitle>
+                                    <CardDescription className="line-clamp-3 min-h-[3.75rem] text-muted-foreground">{plan.description}</CardDescription>
                                 </CardHeader>
 
-                                <CardContent className="p-6 pt-6 flex-1">
-                                    <div className="flex items-baseline gap-1 mb-6">
-                                        <span className="text-3xl font-bold tracking-tighter">{formatPrice(plan.price, plan.isDemo)}</span>
-                                        <span className="text-muted-foreground text-sm ml-1">/ {formatDuration(plan.durationDays)}</span>
+                                <CardContent className="relative z-10 p-5 sm:p-6 pt-3 flex flex-1 flex-col gap-5">
+                                    <div className={`rounded-2xl border p-4 ${isPopular
+                                        ? "border-amber-500/25 bg-amber-500/10 dark:border-amber-400/30 dark:bg-amber-500/10"
+                                        : "border-border/70 bg-card/80"
+                                        }`}>
+                                        <div className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                                            Plan Price
+                                        </div>
+                                        <div className="mt-1 flex items-end gap-1.5">
+                                            <span className="text-3xl font-bold tracking-tight text-foreground">{formatPriceLabel(plan.price, plan.isDemo)}</span>
+                                            <span className="pb-1 text-xs text-muted-foreground">/ {formatDurationLabel(plan.durationDays)}</span>
+                                        </div>
                                     </div>
 
-                                    <div className="space-y-4 mb-8">
-                                        {(plan.features?.length
-                                            ? plan.features
-                                            : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"]
-                                        )
-                                            .slice(0, 4)
-                                            .map((feature, index) => (
-                                                <div key={index} className="flex items-start gap-3">
-                                                    <div
-                                                        className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0
-                                                    ${isPopular ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
-                                                    >
-                                                        <Check className="w-2.5 h-2.5 stroke-[3]" />
-                                                    </div>
-                                                    <span className="text-sm leading-relaxed line-clamp-2">{feature}</span>
+                                    <div className="space-y-3 flex-1">
+                                        {planFeatures.map((feature, featureIndex) => (
+                                            <div key={featureIndex} className="flex items-start gap-3">
+                                                <div
+                                                    className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0
+                                                    ${isPopular ? "bg-primary text-white" : theme.bullet}`}
+                                                >
+                                                    <Check className="w-2.5 h-2.5 stroke-[3]" />
                                                 </div>
-                                            ))}
+                                                <span className="text-sm leading-relaxed text-foreground/90 line-clamp-2">{feature}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </CardContent>
 
-                                <CardFooter className="p-6 pt-0 mt-auto">
+                                <CardFooter className="relative z-10 p-5 sm:p-6 pt-0 mt-auto">
                                     <Button
                                         size="lg"
-                                        className={`w-full h-12 rounded-xl text-sm font-bold transition-all duration-300
-                                        ${isPopular
-                                                ? "bg-primary text-black hover:bg-primary/90 shadow-xl shadow-primary/20 hover:scale-[1.02]"
-                                                : "bg-foreground text-background hover:opacity-90"}`}
+                                        onClick={() => onChoosePlan(plan)}
+                                        className={`group/cta relative isolate w-full h-12 overflow-hidden rounded-xl text-sm font-bold tracking-wide transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0
+                                        ${theme.button}`}
                                     >
-                                        Choose Plan <ArrowRight className="w-4 h-4 ml-2" />
+                                        <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(255,255,255,0.38),transparent_42%)]" />
+                                        <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-22deg] bg-white/35 blur-sm opacity-0 transition-all duration-700 group-hover/cta:left-[120%] group-hover/cta:opacity-100" />
+                                        <span className="relative z-10 inline-flex items-center justify-center">
+                                            Choose Plan <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-1" />
+                                        </span>
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -265,7 +407,7 @@ export default function PlansPage() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-30 flex items-center justify-between">
                         <button
                             type="button"
-                            onClick={() => scrollToIndex(activeIndex - 1)}
+                            onClick={() => scrollToIndex(activeVirtualIndex - 1)}
                             aria-label="Previous plan"
                             className="pointer-events-auto relative z-40 ml-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
                         >
@@ -273,7 +415,7 @@ export default function PlansPage() {
                         </button>
                         <button
                             type="button"
-                            onClick={() => scrollToIndex(activeIndex + 1)}
+                            onClick={() => scrollToIndex(activeVirtualIndex + 1)}
                             aria-label="Next plan"
                             className="pointer-events-auto relative z-40 mr-2 h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-border/60 bg-white/80 text-foreground shadow-lg backdrop-blur transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 dark:bg-black/60"
                         >
@@ -291,25 +433,79 @@ export default function PlansPage() {
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                     {segmentCards.map((segment, index) => {
                         const hasAccess = accessQueries[index]?.data?.hasAccess;
+                        const theme = SEGMENT_CARD_THEMES[index % SEGMENT_CARD_THEMES.length];
+                        const basePrice = typeof segment.base_price === "number" ? segment.base_price : Number(segment.base_price);
+                        const hasBasePrice = Number.isFinite(basePrice) && basePrice > 0;
+                        const basePriceLabel = hasBasePrice
+                            ? `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(basePrice)}`
+                            : "Contact sales";
+                        const accessLabel = hasAccess === true ? "Access active" : hasAccess === false ? "No access" : "Checking access";
+                        const accessTone = hasAccess === true
+                            ? "border-emerald-500/35 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                            : hasAccess === false
+                                ? "border-rose-500/35 bg-rose-500/10 text-rose-700 dark:text-rose-300"
+                                : "border-slate-300 bg-slate-100/80 text-slate-600 dark:border-foreground/10 dark:bg-white/5 dark:text-muted-foreground";
+
                         return (
-                            <Card key={segment._id} className="border-border/60 bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-[1.25rem]">
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-base">{segment.name}</CardTitle>
-                                    <CardDescription>{segment.segment_code}</CardDescription>
-                                </CardHeader>
-                                <CardContent className="text-sm text-muted-foreground space-y-2">
-                                    <div>
-                                        {(() => {
-                                            const basePrice = typeof segment.base_price === "number" ? segment.base_price : Number(segment.base_price);
-                                            const hasBasePrice = Number.isFinite(basePrice) && basePrice > 0;
-                                            return hasBasePrice
-                                                ? `Base Price: INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(basePrice)}`
-                                                : "Contact sales";
-                                        })()}
+                            <Card
+                                key={segment._id}
+                                role="button"
+                                tabIndex={0}
+                                onMouseEnter={updateSegmentHoverPoint}
+                                onMouseMove={updateSegmentHoverPoint}
+                                onClick={() => onExploreSegment(segment, hasAccess, basePriceLabel)}
+                                onKeyDown={(event) => {
+                                    if (event.key === "Enter" || event.key === " ") {
+                                        event.preventDefault();
+                                        onExploreSegment(segment, hasAccess, basePriceLabel);
+                                    }
+                                }}
+                                className="segment-hover-fx group relative overflow-hidden rounded-[1.25rem] border border-slate-200/80 bg-white/85 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_28px_55px_-30px_rgba(15,23,42,0.42)] dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-white/20 cursor-pointer"
+                            >
+                                <div className={`pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${theme.ribbon} opacity-80 transition-opacity duration-500 group-hover:opacity-100`} />
+                                <div className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full blur-3xl transition-transform duration-500 group-hover:scale-125 ${theme.glow}`} />
+                                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.22),transparent_45%)] dark:bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.08),transparent_45%)]" />
+
+                                <CardHeader className="relative z-10 pb-3">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="space-y-1">
+                                            <CardTitle className="text-base text-slate-900 dark:text-foreground">{segment.name}</CardTitle>
+                                            <CardDescription className="font-medium tracking-wide">{segment.segment_code}</CardDescription>
+                                        </div>
+                                        <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${theme.chipTone}`}>
+                                            <Sparkles className="h-3 w-3" />
+                                            Segment
+                                        </span>
                                     </div>
-                                    <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs">
-                                        <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                                        {hasAccess === true ? "Access active" : hasAccess === false ? "No access" : "Checking access"}
+                                </CardHeader>
+
+                                <CardContent className="relative z-10 space-y-4 pt-0 text-sm text-muted-foreground">
+                                    <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-3 transition-colors duration-300 group-hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.03] dark:group-hover:border-white/20">
+                                        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-muted-foreground">
+                                            Base Price
+                                        </div>
+                                        <div className={`mt-2 flex items-center gap-2 text-lg font-semibold ${hasBasePrice ? theme.priceTone : "text-slate-700 dark:text-foreground"}`}>
+                                            <Wallet className="h-4 w-4" />
+                                            {basePriceLabel}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${accessTone}`}>
+                                            <ShieldCheck className="h-3.5 w-3.5" />
+                                            {accessLabel}
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                                onExploreSegment(segment, hasAccess, basePriceLabel);
+                                            }}
+                                            className="h-8 rounded-full px-3 text-xs font-semibold bg-[linear-gradient(135deg,#facc15_0%,#f59e0b_58%,#f97316_100%)] text-slate-950 shadow-[0_14px_28px_-16px_rgba(245,158,11,0.95)] hover:brightness-105"
+                                        >
+                                            Explore Now <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                                        </Button>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -317,80 +513,7 @@ export default function PlansPage() {
                     })}
                 </div>
             </div>
-
-            <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] items-start">
-                <Card className="border-border/60 bg-white/80 dark:bg-white/5 backdrop-blur-xl rounded-[1.5rem]">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-base">Subscription & Billing</CardTitle>
-                        <CardDescription>Purchase access by segment and plan type.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-5 text-sm text-muted-foreground">
-                        {subscriptionStatus ? (
-                            <div className="rounded-2xl border border-border/50 bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
-                                Status: {subscriptionStatus.hasActiveSubscription ? "Active" : "Inactive"}
-                                {subscriptionStatus.subscription?.status
-                                    ? ` • ${subscriptionStatus.subscription.status}`
-                                    : ""}
-                            </div>
-                        ) : null}
-
-                        <div className="space-y-3">
-                            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Segments</div>
-                            <div className="flex flex-wrap gap-2">
-                                {segments.map((segment) => {
-                                    const selected = selectedSegments.includes(segment.segment_code);
-                                    return (
-                                        <button
-                                            key={segment._id}
-                                            type="button"
-                                            onClick={() =>
-                                                setSelectedSegments((prev) =>
-                                                    selected
-                                                        ? prev.filter((code) => code !== segment.segment_code)
-                                                        : [...prev, segment.segment_code]
-                                                )
-                                            }
-                                            className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
-                                                selected ? "bg-primary text-black" : "bg-muted text-muted-foreground hover:bg-muted/70"
-                                            }`}
-                                        >
-                                            {segment.segment_code}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Plan Type</label>
-                            <select
-                                className="h-11 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                                value={planType}
-                                onChange={(e) => setPlanType(e.target.value)}
-                            >
-                                <option value="premium">Premium</option>
-                                <option value="standard">Standard</option>
-                                <option value="basic">Basic</option>
-                            </select>
-                        </div>
-
-                        {formError ? (
-                            <div className="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-3 text-xs text-rose-700 dark:text-rose-100">
-                                {formError}
-                            </div>
-                        ) : null}
-                        {purchaseNotice ? (
-                            <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-700 dark:text-emerald-100">
-                                {purchaseNotice}
-                            </div>
-                        ) : null}
-
-                        <Button className="h-11 rounded-xl" onClick={onPurchase} disabled={purchaseMutation.isPending}>
-                            {purchaseMutation.isPending ? "Processing..." : "Buy Subscription"}
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
         </div>
     );
 }
+

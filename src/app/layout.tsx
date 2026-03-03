@@ -32,6 +32,7 @@ export const metadata: Metadata = {
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeSync } from "@/components/theme-sync";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ClickSoundProvider } from "@/components/click-sound-provider";
 
 export default function RootLayout({
   children,
@@ -56,8 +57,10 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            {children}
-            <Toaster position="top-center" richColors />
+            <ClickSoundProvider>
+              {children}
+              <Toaster position="top-center" richColors />
+            </ClickSoundProvider>
           </ThemeProvider>
         </QueryProvider>
       </body>

@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
-import { Bell, Menu, Moon, Sun } from "lucide-react";
+import { Bell, Menu, Moon, Sun, Volume2, VolumeX } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useMeQuery } from "@/hooks/use-auth";
 import Link from "next/link";
 import { useNotificationsQuery } from "@/services/notifications/notification.hooks";
+import { useClickSound } from "@/components/click-sound-provider";
 
 interface HeaderProps {
     onMenuClick?: () => void;
@@ -12,6 +13,7 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
     const { resolvedTheme, setTheme } = useTheme();
+    const { enabled: soundEnabled, toggle: toggleSound } = useClickSound();
     const { data } = useNotificationsQuery();
     const notifications = Array.isArray(data) ? data : data?.results ?? [];
     const unreadCount =
@@ -50,6 +52,16 @@ export function Header({ onMenuClick }: HeaderProps) {
                 </div>
 
                 <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <button
+                    onClick={toggleSound}
+                    className="p-1.5 sm:p-2 text-muted-foreground hover:text-primary hover:bg-background/40 rounded-lg transition-all"
+                    title={soundEnabled ? "Mute Click Sound" : "Unmute Click Sound"}
+                    aria-label={soundEnabled ? "Mute click sound" : "Unmute click sound"}
+                    data-click-sound="off"
+                >
+                    {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                </button>
+
                 <button
                     onClick={() => setTheme(isDark ? "light" : "dark")}
                     className="p-1.5 sm:p-2 text-muted-foreground hover:text-primary hover:bg-background/40 rounded-lg transition-all"
