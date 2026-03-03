@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 export default function AnnouncementsPage() {
   const { data } = useAnnouncementsQuery({ status: "active", page: 1, limit: 20 });
   const announcements = data?.results ?? [];
+  const exportUrl = process.env.NEXT_PUBLIC_API_URL
+    ? `${process.env.NEXT_PUBLIC_API_URL}/announcements/export`
+    : "#";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -17,7 +20,7 @@ export default function AnnouncementsPage() {
             <h1 className="text-3xl sm:text-4xl font-bold">Announcements</h1>
             <p className="text-sm text-muted-foreground">Official updates, maintenance windows, and releases.</p>
           </div>
-          <Link href="http://localhost:4000/v1/announcements/export" target="_blank">
+          <Link href={exportUrl} target="_blank">
             <Button variant="outline" className="rounded-xl h-11">Export</Button>
           </Link>
         </div>

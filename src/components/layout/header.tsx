@@ -24,10 +24,13 @@ export function Header({ onMenuClick }: HeaderProps) {
     const meQuery = useMeQuery();
     const name = meQuery.data?.name?.trim() || "Test User";
     const avatarPath = meQuery.data?.profile?.avatar;
+    const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/v1\/?$/, "");
     const avatarUrl = avatarPath
         ? avatarPath.startsWith("http://") || avatarPath.startsWith("https://")
             ? avatarPath
-            : `http://localhost:4000/${avatarPath.replace(/^\/+/, "")}`
+            : apiBase
+                ? `${apiBase}/${avatarPath.replace(/^\/+/, "")}`
+                : null
         : null;
     const initials = name
         .split(" ")

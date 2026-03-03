@@ -72,10 +72,13 @@ export default function ProfilePage() {
       .map((part) => part[0]?.toUpperCase() ?? "")
       .join("") || "T";
 
+  const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/v1\/?$/, "");
   const avatarUrl = profile.avatar
     ? profile.avatar.startsWith("http://") || profile.avatar.startsWith("https://")
       ? profile.avatar
-      : `http://localhost:4000/${profile.avatar.replace(/^\/+/, "")}`
+      : apiBase
+        ? `${apiBase}/${profile.avatar.replace(/^\/+/, "")}`
+        : null
     : null;
 
   const handleCopyUserId = async () => {
