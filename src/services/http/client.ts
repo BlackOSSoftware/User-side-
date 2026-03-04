@@ -28,6 +28,16 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
+      const authHeader =
+        (error.config?.headers as Record<string, unknown> | undefined)?.Authorization ??
+        (error.config?.headers as Record<string, unknown> | undefined)?.authorization;
+      const hasAuthHeader = typeof authHeader === "string" && authHeader.trim().length > 0;
+      const hasSession = Boolean(getAuthToken());
+
+      if (!hasAuthHeader && !hasSession) {
+        return Promise.reject(error);
+      }
+
       clearAuthSession();
       if (window.location.pathname !== "/login") {
         window.location.href = "/login";

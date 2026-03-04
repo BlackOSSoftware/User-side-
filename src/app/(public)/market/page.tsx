@@ -17,7 +17,7 @@ const whatsappNumber = "917770039037";
 const whatsappMessage = [
   "Hi MSPK Team,",
   "I want access to the Live TradingView Chart with strategy signals and target mapping.",
-  "Please share onboarding for live chart room access.",
+  "Please share the onboarding steps for live chart room access.",
   "",
   "Name:",
   "City:",
@@ -27,22 +27,22 @@ const whatsappMessage = [
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
 const featureItems = [
-  { title: "Live Market Feed", description: "Real-time movement view with active structure.", icon: Activity },
-  { title: "Strategy Overlay", description: "Clear BUY and SELL direction with confidence map.", icon: TrendingUp },
-  { title: "Entry + SL + Targets", description: "Complete execution levels shown directly on chart.", icon: Target },
-  { title: "Risk Guardrails", description: "Defined invalidation and stop discipline on every setup.", icon: ShieldCheck },
+  { title: "Live Market Feed", description: "Real-time market movement with active structure visibility.", icon: Activity },
+  { title: "Strategy Overlay", description: "Clear BUY and SELL direction with confidence context.", icon: TrendingUp },
+  { title: "Entry + SL + Targets", description: "Complete execution levels mapped directly on chart.", icon: Target },
+  { title: "Risk Guardrails", description: "Defined invalidation and stop discipline for every setup.", icon: ShieldCheck },
 ];
 
 const chartNotes = [
-  "Current direction and trend confirmation",
+  "Current direction and trend confirmation in one view",
   "Entry trigger, stop-loss zone, and multi-target ladder",
-  "Live update flow so you can react without confusion",
+  "Live update flow so you can react faster without confusion",
 ];
 
 const accessSteps = [
-  "Tap Get Access and open WhatsApp message.",
+  "Tap Get Access to open the prefilled WhatsApp message.",
   "Share your segment preference and trading style.",
-  "Team enables your TradingView live chart room access.",
+  "Our team enables your TradingView live chart room access.",
 ];
 
 export default function MarketPage() {
@@ -67,9 +67,9 @@ export default function MarketPage() {
             </h1>
 
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
-              Yeh page user ko direct samjhata hai: live chart TradingView par milega with strategy direction, entry,
-              stop-loss, target levels, aur live market movement. Aapko plain text signals nahi, execution-ready chart
-              context milega.
+              This page clearly explains what you get: a live TradingView chart with strategy direction, entry,
+              stop-loss, target levels, and real-time market movement. You do not get plain text alerts, you get
+              execution-ready chart context.
             </p>
 
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
@@ -114,10 +114,10 @@ export default function MarketPage() {
               </span>
             </div>
 
-            <h2 className="mt-5 text-2xl font-bold leading-tight text-slate-900 dark:text-white">User ko exactly kya milega</h2>
+            <h2 className="mt-5 text-2xl font-bold leading-tight text-slate-900 dark:text-white">What Exactly You Get</h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              TradingView chart me signal context directly visible hoga, jisse user confuse nahi hoga aur instant decision
-              le payega.
+              Signal context appears directly on the TradingView chart, so users can read setups clearly and make
+              decisions faster.
             </p>
 
             <div className="mt-6 space-y-3">
@@ -135,7 +135,7 @@ export default function MarketPage() {
             <div className="mt-6 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-cyan-50 to-emerald-50 p-4 dark:border-cyan-300/25 dark:from-cyan-500/10 dark:via-blue-500/10 dark:to-emerald-500/10">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-700 dark:text-cyan-200">Best For</p>
               <p className="mt-2 text-sm font-medium text-slate-700 dark:text-slate-200">
-                Active traders jo live chart + signal execution ko one screen flow me dekhna chahte hain.
+                Active traders who want live chart context and signal execution in a one-screen flow.
               </p>
             </div>
           </aside>
@@ -224,7 +224,7 @@ export default function MarketPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-50/90">Instant Chat CTA</p>
               <h4 className="mt-2 text-2xl font-black leading-tight">Get Live Chart Access Now</h4>
               <p className="mt-2 text-sm text-emerald-50/90">
-                WhatsApp pe detailed request message prefilled rahega. Sirf send karo aur team onboarding start karegi.
+                WhatsApp opens with a prefilled detailed request. Just send it, and onboarding starts immediately.
               </p>
               <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/50 bg-white/15 px-4 py-2 text-sm font-semibold">
                 Open WhatsApp

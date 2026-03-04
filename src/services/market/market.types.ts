@@ -20,7 +20,14 @@ export type MarketTicker = {
   segment?: string;
   exchange?: string;
   price?: number;
+  open?: number;
+  high?: number;
+  low?: number;
+  close?: number;
+  bid?: number;
+  ask?: number;
   prevClose?: number;
+  points?: number;
   change?: number;
   isUp?: boolean;
   lotSize?: number;

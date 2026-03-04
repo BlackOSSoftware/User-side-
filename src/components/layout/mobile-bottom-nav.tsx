@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, CreditCard, House, ListChecks, Radio, type LucideIcon } from "lucide-react";
+import { CalendarDays, CreditCard, Eye, House, Radio, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type MobileNavItem = {
@@ -14,7 +14,7 @@ type MobileNavItem = {
 const items: MobileNavItem[] = [
   { label: "Home", path: "/dashboard", icon: House },
   { label: "Signals", path: "/dashboard/signals", icon: Radio },
-  { label: "Watch", path: "/dashboard/watchlist", icon: ListChecks },
+  { label: "Watch", path: "/dashboard/watchlist", icon: Eye },
   { label: "Calendar", path: "/dashboard/economic-calendar", icon: CalendarDays },
   { label: "Plan", path: "/dashboard/plans", icon: CreditCard },
 ];

@@ -9,7 +9,7 @@ import {
     LifeBuoy,
     CreditCard,
     Radio,
-    ListChecks,
+    Eye,
     CalendarDays,
     ChevronLeft,
     ChevronRight,
@@ -29,8 +29,8 @@ type SidebarNavItem = {
 const navigation: SidebarNavItem[] = [
     { name: "Dashboard", path: "/dashboard", icon: House },
     { name: "Profile", path: "/dashboard/profile", icon: UserRound },
-    { name: "Watchlist", path: "/dashboard/watchlist", icon: ListChecks },
     { name: "Signal", path: "/dashboard/signals", icon: Radio },
+    { name: "Watchlist", path: "/dashboard/watchlist", icon: Eye },
     { name: "Plans & Billing", path: "/dashboard/plans", icon: CreditCard },
     { name: "Calendar", path: "/dashboard/economic-calendar", icon: CalendarDays },
     { name: "Support", path: "/dashboard/support", icon: LifeBuoy },
