@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { getNotifications } from '@/services/notifications/notification.service';
 import type { NotificationItem, NotificationListResponse } from '@/services/notifications/notification.types';
+import { getAuthExpiresAt, getAuthToken } from '@/lib/auth/session';
 
 const LAST_SEEN_AT_KEY = 'mspk_notifications_last_seen_at_v1';
 const SEEN_IDS_KEY = 'mspk_notifications_seen_ids_v1';
@@ -55,10 +56,15 @@ function getCreatedAtMs(item: NotificationItem): number | null {
 }
 
 export function NotificationsWatcher() {
+  const token = getAuthToken();
+  const expiresAt = getAuthExpiresAt();
+  const hasValidSession = Boolean(token && expiresAt && expiresAt > Date.now());
+
   const { data } = useQuery({
     queryKey: ['notifications', 'watcher'],
     queryFn: getNotifications,
     refetchInterval: 15000,
+    enabled: hasValidSession,
   });
 
   const seenIdsRef = useRef<Set<string>>(new Set());
