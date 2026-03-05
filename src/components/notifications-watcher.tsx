@@ -9,6 +9,8 @@ import { getAuthExpiresAt, getAuthToken } from '@/lib/auth/session';
 
 const LAST_SEEN_AT_KEY = 'mspk_notifications_last_seen_at_v1';
 const SEEN_IDS_KEY = 'mspk_notifications_seen_ids_v1';
+const NOTIFICATION_PERMISSION_KEY = 'mspk_notifications_permission_v1';
+const DASHBOARD_NOTIFICATIONS_PATH = '/dashboard/notifications';
 const MAX_SEEN_IDS = 200;
 
 function normalizeNotifications(data: NotificationListResponse | NotificationItem[] | undefined) {
@@ -63,12 +65,27 @@ export function NotificationsWatcher() {
   const { data } = useQuery({
     queryKey: ['notifications', 'watcher'],
     queryFn: getNotifications,
-    refetchInterval: 15000,
+    refetchInterval: 1000,
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    staleTime: 0,
     enabled: hasValidSession,
   });
 
   const seenIdsRef = useRef<Set<string>>(new Set());
   const initializedRef = useRef(false);
+
+  useEffect(() => {
+    if (!hasValidSession) return;
+    if (typeof window === 'undefined' || !('Notification' in window)) return;
+    if (Notification.permission !== 'default') return;
+    if (window.localStorage.getItem(NOTIFICATION_PERMISSION_KEY)) return;
+
+    Notification.requestPermission().finally(() => {
+      window.localStorage.setItem(NOTIFICATION_PERMISSION_KEY, 'requested');
+    });
+  }, [hasValidSession]);
 
   useEffect(() => {
     const items = normalizeNotifications(data);
@@ -113,7 +130,11 @@ export function NotificationsWatcher() {
       const body = item.message || item.body || '';
 
       if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-        new Notification(title, { body, icon: '/logo.jpg' });
+        const notification = new Notification(title, { body, icon: '/logo.jpg' });
+        notification.onclick = () => {
+          window.focus();
+          window.location.href = DASHBOARD_NOTIFICATIONS_PATH;
+        };
       } else {
         toast(title, { description: body });
       }

@@ -79,8 +79,13 @@ export default function ContactPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               {[
                 { icon: Mail, title: "Email", val: "support@mspktrading.com" },
-                { icon: Phone, title: "Phone", val: "+91 93018 93055" },
-                { icon: MapPin, title: "Office", val: "Indore, India" },
+                { icon: Phone, title: "Phone", val: "917770039037" },
+                {
+                  icon: MapPin,
+                  title: "Connect to WhatsApp",
+                  val: "917770039037",
+                  href: "https://wa.me/917770039037?text=Hi%2C%20I%27m%20contacting%20you%20from%20your%20website%20contact%20page.",
+                },
                 { icon: Headphones, title: "Support Hours", val: "24/7 Active Desk" },
               ].map((item) => (
                 <div
@@ -94,7 +99,26 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground">{item.title}</p>
-                      <p className="text-sm text-muted-foreground">{item.val}</p>
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-1 inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 transition hover:border-emerald-400/70 hover:bg-emerald-400/20 dark:border-emerald-300/30 dark:bg-emerald-400/10 dark:text-emerald-100"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            className="h-3.5 w-3.5 fill-current"
+                          >
+                            <path d="M12.04 2C6.534 2 2.06 6.475 2.06 11.982c0 1.936.516 3.828 1.494 5.49L2 22l4.716-1.54a9.943 9.943 0 0 0 5.324 1.513h.003c5.507 0 9.982-4.474 9.982-9.981C22.02 6.475 17.546 2 12.04 2zm5.83 14.43c-.25.703-1.45 1.372-2.01 1.451-.531.076-1.214.109-1.959-.12-.451-.144-1.03-.335-1.777-.656-3.128-1.351-5.17-4.58-5.327-4.79-.157-.21-1.273-1.696-1.273-3.236 0-1.539.804-2.298 1.09-2.612.286-.315.623-.394.83-.394.207 0 .415.002.596.01.191.008.447-.073.7.534.25.602.85 2.079.924 2.23.075.15.125.33.025.53-.1.2-.15.33-.3.51-.15.18-.315.4-.45.54-.15.15-.306.313-.132.612.174.299.773 1.275 1.659 2.066 1.14 1.017 2.1 1.333 2.4 1.483.3.15.47.125.65-.075.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.7.8 1.99.95.29.15.48.22.55.34.07.12.07.69-.18 1.392z" />
+                          </svg>
+                          {item.val}
+                          <span className="text-[10px] font-bold">Open</span>
+                        </a>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">{item.val}</p>
+                      )}
                     </div>
                   </div>
                 </div>

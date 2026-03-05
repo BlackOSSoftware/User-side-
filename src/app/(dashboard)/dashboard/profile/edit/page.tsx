@@ -17,12 +17,14 @@ export default function EditProfilePage() {
     const me = meQuery.data;
     const name = draft?.name ?? me?.name ?? "";
     const email = me?.email ?? "";
+    const tradingViewId = draft?.tradingViewId ?? me?.tradingViewId ?? "";
 
     return {
       name,
       username: `@${email.split("@")[0] || "user"}`,
       email,
       phone: draft?.phone ?? me?.phone ?? "",
+      tradingViewId,
       address: draft?.profile?.address ?? me?.profile?.address ?? "",
       city: draft?.profile?.city ?? me?.profile?.city ?? "",
       state: draft?.profile?.state ?? me?.profile?.state ?? "",
@@ -58,6 +60,7 @@ export default function EditProfilePage() {
 
     if (draft?.name !== undefined) payload.name = draft.name;
     if (draft?.phone !== undefined) payload.phone = draft.phone;
+    if (draft?.tradingViewId !== undefined) payload.tradingViewId = draft.tradingViewId;
     if (draft?.profile) payload.profile = draft.profile;
 
     if (Object.keys(payload).length === 0) {
@@ -122,6 +125,10 @@ export default function EditProfilePage() {
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Address</div>
                 <div className="text-sm font-semibold text-foreground mt-1 truncate">{profile.address || "N/A"}</div>
               </div>
+              <div className="rounded-xl bg-black/5 dark:bg-white/5 px-3 py-2 col-span-2">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">TradingView ID</div>
+                <div className="text-sm font-semibold text-foreground mt-1 truncate">{profile.tradingViewId || "N/A"}</div>
+              </div>
             </div>
           </div>
 
@@ -169,6 +176,15 @@ export default function EditProfilePage() {
               <input
                 value={profile.phone}
                 onChange={(e) => setField("phone", e.target.value)}
+                className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-muted-foreground">TradingView ID</label>
+              <input
+                value={profile.tradingViewId}
+                onChange={(e) => setField("tradingViewId", e.target.value)}
+                placeholder="e.g. trader_123"
                 className="mt-1.5 w-full h-11 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
               />
             </div>

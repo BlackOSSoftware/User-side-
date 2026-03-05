@@ -42,6 +42,7 @@ export default function ProfilePage() {
     const phone = me?.phone ?? "N/A";
     const city = me?.profile?.city ?? "N/A";
     const state = me?.profile?.state ?? "N/A";
+    const tradingViewId = me?.tradingViewId ?? "N/A";
     const status = me?.status ?? "N/A";
     const referralCode = me?.referral?.code ?? "N/A";
 
@@ -59,6 +60,7 @@ export default function ProfilePage() {
       phone,
       city,
       state,
+      tradingViewId,
       status,
       referralCode,
     };
@@ -213,6 +215,17 @@ export default function ProfilePage() {
                   <div className="text-sm font-semibold text-foreground mt-1 truncate">
                     {profile.city}, {profile.state}
                   </div>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl border border-foreground/10 bg-foreground/5 flex items-center justify-center">
+                  <IdCard size={16} className="text-indigo-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">TradingView ID</div>
+                  <div className="text-sm font-semibold text-foreground mt-1 truncate">{profile.tradingViewId}</div>
                 </div>
               </div>
             </div>

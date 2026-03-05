@@ -1,50 +1,52 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Facebook, Instagram, Twitter, Youtube, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function SocialMediaSection() {
     return (
-        <section className="w-full max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10 overflow-hidden">
+        <section className="w-full max-w-7xl mx-auto px-4 py-10 sm:py-14 md:py-24 relative z-10 overflow-hidden">
             <div className="absolute inset-0 -z-10">
                 <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-[#0b0b0b] dark:via-[#0a0a0a] dark:to-[#0b0b0b]" />
                 <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] bg-[radial-gradient(circle,rgba(59,130,246,0.18),transparent_60%)]" />
                 <div className="absolute top-24 right-0 w-[520px] h-[520px] bg-[radial-gradient(circle,rgba(14,165,233,0.18),transparent_60%)]" />
             </div>
 
-            <div className="flex flex-col items-center text-center gap-6">
+            <div className="flex flex-col items-center text-center gap-4 sm:gap-6">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                     Social Media
                 </div>
-                <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold tracking-tight text-foreground">
+                <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-bold tracking-tight text-foreground">
                     Get Social With Us!
                 </h2>
-                <p className="max-w-3xl text-base sm:text-lg text-muted-foreground">
+                <p className="max-w-3xl text-sm sm:text-lg text-muted-foreground">
                     Stay updated with our latest news, products, services and campaigns. Follow us on our social media platforms for real-time insights.
                 </p>
             </div>
 
             {/* Mobile mini social strip */}
-            <div className="mt-8 grid grid-cols-2 gap-3 lg:hidden">
+            <div className="mt-6 grid grid-cols-5 gap-2 sm:gap-3 lg:hidden">
                 {[
-                    { label: "Instagram", handle: "@mspkfinance", icon: Instagram, color: "from-pink-500 to-yellow-400" },
-                    { label: "Facebook", handle: "@mspkfinance", icon: Facebook, color: "from-blue-600 to-sky-500" },
-                    { label: "X (Twitter)", handle: "@mspkfinance", icon: Twitter, color: "from-slate-900 to-slate-700" },
-                    { label: "YouTube", handle: "@mspkfinance", icon: Youtube, color: "from-red-600 to-rose-500" },
+                    { label: "Instagram", icon: Instagram, color: "from-pink-500 to-yellow-400", href: "#" },
+                    { label: "Facebook", icon: Facebook, color: "from-blue-600 to-sky-500", href: "#" },
+                    { label: "WhatsApp", icon: MessageCircle, color: "from-emerald-500 to-lime-400", href: "#" },
+                    { label: "X (Twitter)", icon: Twitter, color: "from-slate-900 to-slate-700", href: "#" },
+                    { label: "YouTube", icon: Youtube, color: "from-red-600 to-rose-500", href: "#" },
                 ].map((item, i) => {
                     const Icon = item.icon;
                     return (
-                        <div key={i} className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-2xl p-3 flex items-center gap-3 shadow-sm">
-                            <div className={`w-10 h-10 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center shrink-0`}>
-                                <Icon className="w-5 h-5 text-white" />
+                        <Link
+                            key={i}
+                            href={item.href}
+                            aria-label={item.label}
+                            className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl p-2 flex items-center justify-center shadow-sm"
+                        >
+                            <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center`}>
+                                <Icon className="w-4 h-4 text-white" />
                             </div>
-                            <div className="text-left min-w-0">
-                                <div className="text-sm font-semibold text-foreground truncate">{item.label}</div>
-                                <div className="text-[11px] text-muted-foreground truncate">{item.handle}</div>
-                            </div>
-                        </div>
+                        </Link>
                     );
                 })}
             </div>
@@ -66,6 +68,17 @@ export default function SocialMediaSection() {
                     <div className="absolute bottom-10 left-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
                         <div className="text-sm font-semibold text-foreground">Market Insights</div>
                         <div className="text-xs text-muted-foreground mt-1">Daily charts & momentum watchlist.</div>
+                    </div>
+                    <div className="absolute top-40 left-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-400 flex items-center justify-center">
+                                <MessageCircle className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="text-left">
+                                <div className="text-sm font-semibold">WhatsApp</div>
+                                <div className="text-xs text-muted-foreground">+91 77700 39037</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -110,10 +123,21 @@ export default function SocialMediaSection() {
                             </div>
                         </div>
                     </div>
+                    <div className="absolute bottom-44 left-0 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-600 to-rose-500 flex items-center justify-center">
+                                <Youtube className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="text-left">
+                                <div className="text-sm font-semibold">YouTube</div>
+                                <div className="text-xs text-muted-foreground">@mspkfinance</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <div className="mt-10 hidden lg:flex flex-wrap justify-center gap-4">
                 <Link href="#" className="w-full sm:w-auto">
                     <Button
                         size="lg"
@@ -128,6 +152,14 @@ export default function SocialMediaSection() {
                         className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <Facebook className="w-5 h-5 mr-2" /> Facebook
+                    </Button>
+                </Link>
+                <Link href="#" className="w-full sm:w-auto">
+                    <Button
+                        size="lg"
+                        className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
+                    >
+                        <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
                     </Button>
                 </Link>
                 <Link href="#" className="w-full sm:w-auto">

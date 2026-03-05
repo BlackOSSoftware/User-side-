@@ -20,6 +20,7 @@ async function initMessaging() {
     const options = {
       body: payload?.notification?.body,
       icon: payload?.notification?.icon || "/logo.jpg",
+      badge: "/logo.jpg",
       data: payload?.data || {},
     };
     self.registration.showNotification(title, options);
@@ -45,6 +46,26 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     (async () => {
       await initMessaging();
+    })()
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target =
+    event.notification?.data?.url ||
+    event.notification?.data?.click_action ||
+    "/dashboard/notifications";
+
+  event.waitUntil(
+    (async () => {
+      const allClients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      const existing = allClients.find((client) => client.url.includes(target));
+      if (existing) {
+        await existing.focus();
+        return;
+      }
+      await self.clients.openWindow(target);
     })()
   );
 });

@@ -1,17 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Check, Loader2, Sparkles, Zap, Shield, ArrowRight } from 'lucide-react';
+import { Check, Loader2, Sparkles, Zap, Shield, ArrowRight, BadgeCheck, BarChart3 } from 'lucide-react';
 import { useRegisterMutation, useSendOtpMutation, useVerifyOtpMutation } from '@/hooks/use-auth';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 
 export default function TrialPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const selectedPlanId = searchParams.get('planId');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [step, setStep] = useState<'form' | 'otp' | 'success'>('form');
@@ -24,7 +27,22 @@ export default function TrialPage() {
         email: '',
         phone: '',
         password: '',
+        city: '',
+        tradingViewId: '',
+        referralCode: '',
     });
+    const segmentOptions = useMemo(
+        () => [
+            { id: 'nse', label: 'NSE' },
+            { id: 'options', label: 'Options' },
+            { id: 'mcx', label: 'MCX' },
+            { id: 'forex', label: 'Forex' },
+            { id: 'crypto', label: 'Crypto' },
+            { id: 'all', label: 'All' },
+        ],
+        []
+    );
+    const [segments, setSegments] = useState<string[]>([]);
     const registerMutation = useRegisterMutation();
     const sendOtpMutation = useSendOtpMutation();
     const verifyOtpMutation = useVerifyOtpMutation();
@@ -38,6 +56,7 @@ export default function TrialPage() {
         return apiMessage || (error instanceof Error ? error.message : fallback);
     };
 
+
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);
@@ -47,9 +66,22 @@ export default function TrialPage() {
         const email = formValues.email.trim();
         const phone = formValues.phone.trim();
         const password = formValues.password.trim();
+        const city = formValues.city.trim();
+        const tradingViewId = formValues.tradingViewId.trim();
+        const referralCode = formValues.referralCode.trim();
 
         try {
-            await registerMutation.mutateAsync({ name, email, phone, password });
+            await registerMutation.mutateAsync({
+                name,
+                email,
+                phone,
+                password,
+                city,
+                tradingViewId: tradingViewId || undefined,
+                referralCode: referralCode || undefined,
+                segments,
+                selectedPlanId,
+            });
             await sendOtpMutation.mutateAsync({ type: 'email', identifier: email });
             setRegisteredEmail(email);
             setStep('otp');
@@ -58,7 +90,11 @@ export default function TrialPage() {
                 email: '',
                 phone: '',
                 password: '',
+                city: '',
+                tradingViewId: '',
+                referralCode: '',
             });
+            setSegments([]);
         } catch (error) {
             setFormError(getErrorMessage(error, 'Registration failed. Please try again.'));
         } finally {
@@ -105,25 +141,25 @@ export default function TrialPage() {
                 <div className="absolute right-0 bottom-0 h-[400px] w-[400px] bg-primary/5 opacity-30 blur-[100px]"></div>
             </div>
 
-            <div className="w-full max-w-7xl mx-auto mt-6 md:mt-10 px-4 sm:px-6 py-8 sm:py-12 md:py-24 relative z-10">
-                <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-10 sm:gap-16 lg:gap-8">
+            <div className="w-full max-w-7xl mx-auto mt-3 md:mt-8 px-3 sm:px-6 py-5 sm:py-10 md:py-16 relative z-10">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 sm:gap-10 lg:gap-8">
 
                     {/* Left Content: Value Props */}
-                    <div className="hidden lg:block w-full lg:max-w-xl space-y-8 text-center lg:text-left animate-in fade-in slide-in-from-bottom-8 duration-700 order-2 lg:order-1">
+                    <div className="hidden lg:block w-full lg:max-w-xl space-y-6 text-center lg:text-left animate-in fade-in slide-in-from-bottom-8 duration-700 order-2 lg:order-1">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
                             <Sparkles className="w-3 h-3 fill-current animate-pulse" /> Premium Registration
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-heading font-bold tracking-tighter leading-[0.9] text-slate-900 dark:text-white">
+                        <h1 className="text-4xl xl:text-6xl font-heading font-bold tracking-tighter leading-[0.95] text-slate-900 dark:text-white">
                             Create your <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary via-primary/80 to-primary/50 filter drop-shadow-sm">Account</span>
                             <span className="text-primary">.</span>
                         </h1>
-                        <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p className="text-base xl:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
                             Experience institutional-grade signal intelligence with guided onboarding.
                             <span className="block mt-2 font-medium text-slate-900 dark:text-white">Verify your email to activate instantly.</span>
                         </p>
 
-                        <div className="grid gap-6 pt-4">
+                        <div className="grid gap-4 pt-2">
                             {[
                                 { icon: Zap, title: "Real-time Signals", desc: "Receive alerts instantly via Telegram & Web." },
                                 { icon: Shield, title: "Verified Performance", desc: "Access transparent signal outcomes and risk levels." },
@@ -139,6 +175,27 @@ export default function TrialPage() {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+
+                        <div className="rounded-3xl border border-slate-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5 shadow-xl">
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                                    <BadgeCheck className="h-3.5 w-3.5" /> Trusted by 5,000+ traders
+                                </span>
+                                <span className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 border border-blue-500/20 px-3 py-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
+                                    <BarChart3 className="h-3.5 w-3.5" /> Live Execution
+                                </span>
+                            </div>
+                            <div className="relative overflow-hidden rounded-2xl">
+                                <Image
+                                    src="/trading-trust.svg"
+                                    alt="Trusted trading insights"
+                                    width={520}
+                                    height={320}
+                                    className="w-full h-auto"
+                                    priority
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -216,73 +273,138 @@ export default function TrialPage() {
                                     </form>
                                 </CardContent>
                             ) : (
-                                <CardContent className="p-6 sm:p-8">
-                                    <div className="mb-8">
-                                        <h2 className="text-2xl font-bold mb-2">Create Your Account</h2>
+                                <CardContent className="p-4 sm:p-6">
+                                    <div className="mb-5">
+                                        <h2 className="text-xl sm:text-2xl font-bold mb-1">Create Your Account</h2>
                                         <p className="text-sm text-muted-foreground">Share your details to register and verify your email.</p>
                                     </div>
 
-                                    <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
+                                    <form onSubmit={onSubmit} className="space-y-3 sm:space-y-5">
                                         {formError ? (
                                             <div className="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-100">
                                                 {formError}
                                             </div>
                                         ) : null}
-                                        <div className="space-y-2">
-                                            <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Full Name</Label>
-                                            <Input
-                                                id="name"
-                                                name="name"
-                                                value={formValues.name}
-                                                onChange={(e) => setFormValues((prev) => ({ ...prev, name: e.target.value }))}
-                                                required
-                                                placeholder="John Doe"
-                                                className="h-12 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
-                                            />
+                                        <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
+                                            <div className="space-y-2 md:col-span-2">
+                                                <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Full Name</Label>
+                                                <Input
+                                                    id="name"
+                                                    name="name"
+                                                    value={formValues.name}
+                                                    onChange={(e) => setFormValues((prev) => ({ ...prev, name: e.target.value }))}
+                                                    required
+                                                    placeholder="John Doe"
+                                                    className="h-10 sm:h-11 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
+                                                />
+                                            </div>
+                                            <div className="space-y-2 md:col-span-2">
+                                                <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Email Address</Label>
+                                                <Input
+                                                    id="email"
+                                                    name="email"
+                                                    type="email"
+                                                    value={formValues.email}
+                                                    onChange={(e) => setFormValues((prev) => ({ ...prev, email: e.target.value }))}
+                                                    required
+                                                    placeholder="john@example.com"
+                                                    className="h-10 sm:h-11 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Phone Number</Label>
+                                                <Input
+                                                    id="phone"
+                                                    name="phone"
+                                                    type="tel"
+                                                    value={formValues.phone}
+                                                    onChange={(e) => setFormValues((prev) => ({ ...prev, phone: e.target.value }))}
+                                                    required
+                                                    placeholder="+91 98765 43210"
+                                                    className="h-10 sm:h-11 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="city" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">City</Label>
+                                                <Input
+                                                    id="city"
+                                                    name="city"
+                                                    value={formValues.city}
+                                                    onChange={(e) => setFormValues((prev) => ({ ...prev, city: e.target.value }))}
+                                                    required
+                                                    placeholder="Mumbai"
+                                                    className="h-10 sm:h-11 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="tradingViewId" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">TradingView ID (Optional)</Label>
+                                                <Input
+                                                    id="tradingViewId"
+                                                    name="tradingViewId"
+                                                    value={formValues.tradingViewId}
+                                                    onChange={(e) => setFormValues((prev) => ({ ...prev, tradingViewId: e.target.value }))}
+                                                    placeholder="e.g. trader_123"
+                                                    className="h-10 sm:h-11 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
+                                                />
+                                            </div>
+                                            <div className="space-y-2 md:col-span-2">
+                                                <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Password</Label>
+                                                <Input
+                                                    id="password"
+                                                    name="password"
+                                                    type="password"
+                                                    value={formValues.password}
+                                                    onChange={(e) => setFormValues((prev) => ({ ...prev, password: e.target.value }))}
+                                                    required
+                                                    placeholder="********"
+                                                    className="h-10 sm:h-11 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
+                                                />
+                                            </div>
+                                            <div className="space-y-2 md:col-span-2">
+                                                <Label htmlFor="referralCode" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Referral Code (Optional)</Label>
+                                                <Input
+                                                    id="referralCode"
+                                                    name="referralCode"
+                                                    value={formValues.referralCode}
+                                                    onChange={(e) => setFormValues((prev) => ({ ...prev, referralCode: e.target.value }))}
+                                                    placeholder="ABC123"
+                                                    className="h-10 sm:h-11 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
+                                                />
+                                            </div>
                                         </div>
+
                                         <div className="space-y-2">
-                                            <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Email Address</Label>
-                                            <Input
-                                                id="email"
-                                                name="email"
-                                                type="email"
-                                                value={formValues.email}
-                                                onChange={(e) => setFormValues((prev) => ({ ...prev, email: e.target.value }))}
-                                                required
-                                                placeholder="john@example.com"
-                                                className="h-12 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Phone Number</Label>
-                                            <Input
-                                                id="phone"
-                                                name="phone"
-                                                type="tel"
-                                                value={formValues.phone}
-                                                onChange={(e) => setFormValues((prev) => ({ ...prev, phone: e.target.value }))}
-                                                required
-                                                placeholder="+91 98765 43210"
-                                                className="h-12 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Password</Label>
-                                            <Input
-                                                id="password"
-                                                name="password"
-                                                type="password"
-                                                value={formValues.password}
-                                                onChange={(e) => setFormValues((prev) => ({ ...prev, password: e.target.value }))}
-                                                required
-                                                placeholder="********"
-                                                className="h-12 rounded-xl bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus:ring-primary/20 focus:border-primary px-4"
-                                            />
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Preferred Segments</Label>
+                                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                                                {segmentOptions.map((segment) => {
+                                                    const active = segments.includes(segment.id);
+                                                    return (
+                                                        <button
+                                                            key={segment.id}
+                                                            type="button"
+                                                            onClick={() =>
+                                                                setSegments((prev) =>
+                                                                    prev.includes(segment.id)
+                                                                        ? prev.filter((item) => item !== segment.id)
+                                                                        : [...prev, segment.id]
+                                                                )
+                                                            }
+                                                            className={`h-9 rounded-full px-3 text-xs font-semibold transition-all border ${
+                                                                active
+                                                                    ? "bg-primary text-black border-primary shadow-[0_10px_30px_-18px_rgba(59,130,246,0.7)]"
+                                                                    : "bg-white/70 dark:bg-white/5 border-slate-200 dark:border-white/10 text-muted-foreground hover:text-foreground"
+                                                            }`}
+                                                        >
+                                                            {segment.label}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
 
                                         <Button
                                             type="submit"
-                                            className="w-full h-14 rounded-xl text-base font-bold bg-primary text-black hover:bg-primary/90 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all duration-200 mt-2"
+                                            className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-bold bg-primary text-black hover:bg-primary/90 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all duration-200 mt-1.5"
                                             disabled={loading}
                                         >
                                             {loading ? (
@@ -292,7 +414,7 @@ export default function TrialPage() {
                                             )}
                                         </Button>
 
-                                        <p className="text-xs text-center text-muted-foreground mt-6">
+                                        <p className="text-[11px] text-center text-muted-foreground mt-4">
                                             By continuing, you agree to our Terms of Service and Privacy Policy.
                                         </p>
                                     </form>

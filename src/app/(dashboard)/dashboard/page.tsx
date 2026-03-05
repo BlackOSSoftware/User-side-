@@ -2,7 +2,23 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDownRight, ArrowUpRight, ChevronRight, BadgeCheck, CalendarClock, Activity, Sparkles, ShieldCheck, TrendingUp, X, Instagram, Facebook, Twitter } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  ChevronRight,
+  BadgeCheck,
+  CalendarClock,
+  Activity,
+  Sparkles,
+  ShieldCheck,
+  TrendingUp,
+  X,
+  Instagram,
+  Facebook,
+  Twitter,
+  MessageCircle,
+  Send,
+} from "lucide-react";
 import { useMeQuery } from "@/hooks/use-auth";
 import { useSignalsQuery } from "@/services/signals/signal.hooks";
 import { useSubscriptionStatusQuery } from "@/services/subscriptions/subscription.hooks";
@@ -49,6 +65,8 @@ function formatDate(value?: string) {
 type HoverKey = "plan" | "days" | "today";
 
 const socialLinks = [
+  { label: "WhatsApp", href: "#", Icon: MessageCircle },
+  { label: "Telegram", href: "#", Icon: Send },
   { label: "Facebook", href: "#", Icon: Facebook },
   { label: "X (Twitter)", href: "#", Icon: Twitter },
   { label: "Instagram", href: "#", Icon: Instagram },

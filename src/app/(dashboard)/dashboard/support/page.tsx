@@ -41,6 +41,7 @@ const initialForm: TicketFormState = {
 
 const TICKET_TYPES = ["Billing", "Technical", "Account", "General"] as const;
 const SUPPORT_EMAIL = "support@mspktrading.com";
+const SUPPORT_WHATSAPP = "917770039037";
 
 function getStatusNode(status?: string) {
   const normalized = (status || "pending").toLowerCase();
@@ -377,6 +378,40 @@ export default function SupportPage() {
         <aside className="space-y-4">
           <div className="rounded-[1.5rem] border border-slate-300/70 bg-white/80 p-5 dark:border-primary/20 dark:bg-slate-900/70">
             <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-700 dark:text-slate-300">
+              Support Channel
+            </h3>
+            <div className="mt-3 space-y-2 text-xs">
+              <div className="inline-flex w-full items-center gap-2 rounded-xl border border-slate-300/70 dark:border-slate-700 bg-slate-100/75 dark:bg-slate-800/65 px-3 py-2 text-slate-700 dark:text-slate-300">
+                <LifeBuoy className="h-3.5 w-3.5 text-primary" />
+                <span className="truncate">{SUPPORT_EMAIL}</span>
+              </div>
+              <a
+                href={`https://wa.me/${SUPPORT_WHATSAPP}?text=Hello%20MSPK%20Support%2C%20I%20am%20contacting%20you%20from%20the%20Support%20page%20regarding%20an%20issue%20with%20my%20account%20or%20plan.%20Please%20assist%20me%20with%20the%20next%20steps.%20Thank%20you.`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex w-full items-center gap-3 rounded-xl border border-emerald-400/70 bg-[linear-gradient(120deg,rgba(16,185,129,0.18),rgba(34,197,94,0.08))] px-3 py-2 text-emerald-800 shadow-[0_12px_24px_-18px_rgba(16,185,129,0.7)] transition hover:-translate-y-0.5 hover:border-emerald-500/80 hover:bg-[linear-gradient(120deg,rgba(16,185,129,0.24),rgba(34,197,94,0.12))] hover:text-emerald-900 dark:border-emerald-400/60 dark:bg-[linear-gradient(120deg,rgba(16,185,129,0.16),rgba(34,197,94,0.08))] dark:text-emerald-100"
+              >
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-emerald-500/15">
+                  <MessageSquare className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-200" />
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700/80 dark:text-emerald-100/80">
+                    WhatsApp Support
+                  </span>
+                  <span className="text-sm font-semibold">Connect on +{SUPPORT_WHATSAPP}</span>
+                </span>
+              </a>
+              <p className="text-[11px] text-emerald-700/90 dark:text-emerald-200/80">
+                Clicking WhatsApp opens a prefilled professional message to help our team understand the reason for your request.
+              </p>
+              <p className="text-slate-600 dark:text-slate-400">
+                For critical tickets, submit complete details from the Raise Ticket form.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-[1.5rem] border border-slate-300/70 bg-white/80 p-5 dark:border-primary/20 dark:bg-slate-900/70">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-700 dark:text-slate-300">
               Response Guide
             </h3>
             <div className="mt-3 space-y-2.5 text-xs">
@@ -389,21 +424,6 @@ export default function SupportPage() {
               <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-emerald-700 dark:text-emerald-200">
                 Closed archive stores resolved tickets for quick follow-up reference.
               </div>
-            </div>
-          </div>
-
-          <div className="rounded-[1.5rem] border border-slate-300/70 bg-white/80 p-5 dark:border-primary/20 dark:bg-slate-900/70">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-700 dark:text-slate-300">
-              Support Channel
-            </h3>
-            <div className="mt-3 space-y-2 text-xs">
-              <div className="inline-flex w-full items-center gap-2 rounded-xl border border-slate-300/70 dark:border-slate-700 bg-slate-100/75 dark:bg-slate-800/65 px-3 py-2 text-slate-700 dark:text-slate-300">
-                <LifeBuoy className="h-3.5 w-3.5 text-primary" />
-                <span className="truncate">{SUPPORT_EMAIL}</span>
-              </div>
-              <p className="text-slate-600 dark:text-slate-400">
-                For critical tickets, submit complete details from the Raise Ticket form.
-              </p>
             </div>
           </div>
         </aside>

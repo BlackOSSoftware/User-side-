@@ -77,20 +77,32 @@ export default function PlansPage() {
     const { data: plans = [] } = usePlansQuery();
     const { data: segments = [] } = useSegmentsQuery();
     const { data: subscriptionStatus } = useSubscriptionStatusQuery();
+    const visiblePlans = useMemo(() => {
+        if (!currentPlan) return plans;
+        const currentPrice = typeof currentPlan.price === "number" ? currentPlan.price : Number(currentPlan.price);
+        if (!Number.isFinite(currentPrice)) return plans;
+        return plans.filter((plan) => {
+            if (plan._id === currentPlan._id) return true;
+            const price = typeof plan.price === "number" ? plan.price : Number(plan.price);
+            if (!Number.isFinite(price)) return true;
+            return price >= currentPrice;
+        });
+    }, [currentPlan, plans]);
+
     const loopedPlans = useMemo(
         () =>
-            plans.length > 1
-                ? Array.from({ length: plans.length * 3 }, (_, index) => ({
-                    plan: plans[index % plans.length],
-                    planIndex: index % plans.length,
+            visiblePlans.length > 1
+                ? Array.from({ length: visiblePlans.length * 3 }, (_, index) => ({
+                    plan: visiblePlans[index % visiblePlans.length],
+                    planIndex: index % visiblePlans.length,
                     virtualIndex: index,
                 }))
-                : plans.map((plan, index) => ({ plan, planIndex: index, virtualIndex: index })),
-        [plans]
+                : visiblePlans.map((plan, index) => ({ plan, planIndex: index, virtualIndex: index })),
+        [visiblePlans]
     );
     const { containerRef, activeIndex: activeVirtualIndex, isDragging, bind } = useSwipeCards(loopedPlans.length);
 
-    const popularId = plans
+    const popularId = visiblePlans
         .filter((plan) => !plan.isDemo)
         .sort((a, b) => (b.price ?? 0) - (a.price ?? 0))[0]?._id;
 
@@ -122,23 +134,23 @@ export default function PlansPage() {
         container.scrollTo({ left, behavior });
     }, [containerRef]);
 
-    const showArrows = plans.length > 1;
+    const showArrows = visiblePlans.length > 1;
 
     useEffect(() => {
-        if (plans.length <= 1) return;
-        scrollToIndex(plans.length, "auto");
-    }, [plans.length, scrollToIndex]);
+        if (visiblePlans.length <= 1) return;
+        scrollToIndex(visiblePlans.length, "auto");
+    }, [visiblePlans.length, scrollToIndex]);
 
     useEffect(() => {
-        if (plans.length <= 1) return;
-        if (activeVirtualIndex < plans.length) {
-            scrollToIndex(activeVirtualIndex + plans.length, "auto");
+        if (visiblePlans.length <= 1) return;
+        if (activeVirtualIndex < visiblePlans.length) {
+            scrollToIndex(activeVirtualIndex + visiblePlans.length, "auto");
             return;
         }
-        if (activeVirtualIndex >= plans.length * 2) {
-            scrollToIndex(activeVirtualIndex - plans.length, "auto");
+        if (activeVirtualIndex >= visiblePlans.length * 2) {
+            scrollToIndex(activeVirtualIndex - visiblePlans.length, "auto");
         }
-    }, [activeVirtualIndex, plans.length, scrollToIndex]);
+    }, [activeVirtualIndex, visiblePlans.length, scrollToIndex]);
 
     const updateSegmentHoverPoint = useCallback((event: MouseEvent<HTMLElement>) => {
         const card = event.currentTarget;
@@ -290,7 +302,7 @@ export default function PlansPage() {
                     </div>
                     <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 dark:border-foreground/10 dark:bg-foreground/5 dark:text-muted-foreground">
                         <Sparkles className="h-3.5 w-3.5 text-primary" />
-                        {plans.length} Plan{plans.length === 1 ? "" : "s"}
+                        {visiblePlans.length} Plan{visiblePlans.length === 1 ? "" : "s"}
                     </div>
                 </div>
             </div>

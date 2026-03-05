@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Instagram, Linkedin, Twitter } from "lucide-react";
+import { ArrowRight, Instagram, Twitter, Facebook, Youtube, MessageCircle } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 const Footer = () => {
@@ -69,7 +69,7 @@ const Footer = () => {
 
           {/* ⭐ SOCIAL */}
           <div className="flex items-center justify-center sm:justify-start gap-3">
-            {[Twitter, Linkedin, Instagram].map((Icon, i) => (
+            {[MessageCircle, Instagram, Facebook, Twitter, Youtube].map((Icon, i) => (
               <Link
                 key={i}
                 href="#"

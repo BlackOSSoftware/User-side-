@@ -10,6 +10,11 @@ export type RegisterPayload = {
   email: string;
   password: string;
   phone?: string;
+  referralCode?: string;
+  city?: string;
+  tradingViewId?: string;
+  segments?: string[];
+  selectedPlanId?: string | null;
 };
 
 export type RegisterApiResponse = Record<string, unknown>;
@@ -42,6 +47,7 @@ export type MeResponse = {
   email: string;
   role?: string;
   phone?: string;
+  tradingViewId?: string;
   profile?: UserProfile;
   referral?: {
     code?: string;
@@ -72,6 +78,7 @@ export type MeResponse = {
 export type UpdateMePayload = {
   name?: string;
   phone?: string;
+  tradingViewId?: string;
   isWhatsAppEnabled?: boolean;
   isNotificationEnabled?: boolean;
   profile?: {

@@ -17,7 +17,11 @@ export function FcmListener() {
         };
 
         if (Notification.permission === 'granted') {
-          new Notification(title, options);
+          const popup = new Notification(title, options);
+          popup.onclick = () => {
+            window.focus();
+            window.location.href = '/dashboard/notifications';
+          };
         } else {
           console.log('FCM message (foreground):', payload);
         }

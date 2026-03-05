@@ -46,6 +46,7 @@ type ViewMode = "table" | "cards";
 type CardPulse = "up" | "down";
 
 const VIEW_MODE_STORAGE_KEY = "watchlist_view_mode";
+const SUPPORT_WHATSAPP = "917770039037";
 
 type SocketTick = {
   symbol: string;
@@ -605,6 +606,7 @@ export default function WatchlistPage() {
     return ["ALL", ...Array.from(set).sort((a, b) => a.localeCompare(b))];
   }, [allRows]);
 
+
   const filteredRows = useMemo(() => {
     const query = tableSearch.trim().toLowerCase();
     return allRows.filter((row) => {
@@ -625,6 +627,21 @@ export default function WatchlistPage() {
     if (!selectedSymbol) return null;
     return allRows.find((row) => row.symbol === selectedSymbol) ?? null;
   }, [allRows, selectedSymbol]);
+  const whatsappUrl = useMemo(() => {
+    if (!selectedRow) return "";
+    const message = [
+      "Hello MSPK Support,",
+      "",
+      "I would like to request TradingView chart access for the following instrument:",
+      `- Symbol: ${selectedRow.symbol}`,
+      `- Name: ${selectedRow.name}`,
+      `- Segment: ${selectedRow.segment}`,
+      `- Exchange: ${selectedRow.exchange}`,
+      "",
+      "Please guide me on the next steps. Thank you.",
+    ].join("\n");
+    return `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent(message)}`;
+  }, [selectedRow]);
 
   const handleAddSymbol = async (candidate?: string) => {
     const target = normalizeSymbol(candidate ?? symbolInput);
@@ -976,7 +993,8 @@ export default function WatchlistPage() {
                 return (
                   <TableRow
                     key={row.symbol}
-                    className="group transition-all duration-300 hover:bg-sky-500/[0.06] dark:hover:bg-sky-400/[0.08]"
+                    onClick={() => setSelectedSymbol(row.symbol)}
+                    className="group cursor-pointer transition-all duration-300 hover:bg-sky-500/[0.06] dark:hover:bg-sky-400/[0.08]"
                   >
                     <TableCell className="font-semibold tracking-wide text-slate-900 dark:text-slate-100">
                       {row.symbol}
@@ -1099,7 +1117,10 @@ export default function WatchlistPage() {
                         variant="ghost"
                         size="sm"
                         className="h-8 px-2 text-rose-600 hover:bg-rose-500/10 hover:text-rose-700 dark:text-rose-300 dark:hover:text-rose-200"
-                        onClick={() => void handleRemoveSymbol(row.symbol)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          void handleRemoveSymbol(row.symbol);
+                        }}
                         disabled={removeMutation.isPending && removingSymbol === row.symbol}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -1365,7 +1386,16 @@ export default function WatchlistPage() {
                   </div>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-9 items-center gap-2 rounded-lg border border-emerald-400/70 bg-emerald-500/15 px-3 text-xs font-semibold text-emerald-800 transition hover:-translate-y-0.5 hover:bg-emerald-500/20 hover:text-emerald-900 dark:border-emerald-400/50 dark:bg-emerald-500/10 dark:text-emerald-100"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    WhatsApp: Request Chart Access
+                  </a>
                   <Button
                     type="button"
                     variant="ghost"
