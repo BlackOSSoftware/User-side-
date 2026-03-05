@@ -65,11 +65,12 @@ export function NotificationsWatcher() {
   const { data } = useQuery({
     queryKey: ['notifications', 'watcher'],
     queryFn: getNotifications,
-    refetchInterval: 1000,
-    refetchIntervalInBackground: true,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    staleTime: 0,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
+    staleTime: 30_000,
     enabled: hasValidSession,
   });
 
