@@ -1,5 +1,11 @@
 import { apiClient } from "@/services/http/client";
-import type { NotificationItem, NotificationListResponse, RegisterFcmTokenPayload } from "./notification.types";
+import type {
+  NotificationItem,
+  NotificationListResponse,
+  RegisterFcmTokenPayload,
+  TelegramConnectLinkResponse,
+  TelegramDisconnectResponse,
+} from "./notification.types";
 
 export async function getNotifications(): Promise<NotificationListResponse | NotificationItem[]> {
   const response = await apiClient.get<NotificationListResponse | NotificationItem[]>("/notifications");
@@ -25,4 +31,14 @@ export async function deleteNotification(notificationId: string): Promise<void> 
 
 export async function registerFcmToken(payload: RegisterFcmTokenPayload): Promise<void> {
   await apiClient.post("/notifications/fcm-token", payload);
+}
+
+export async function getTelegramConnectLink(): Promise<TelegramConnectLinkResponse> {
+  const response = await apiClient.get<TelegramConnectLinkResponse>("/notifications/telegram/connect-link");
+  return response.data;
+}
+
+export async function disconnectTelegram(): Promise<TelegramDisconnectResponse> {
+  const response = await apiClient.post<TelegramDisconnectResponse>("/notifications/telegram/disconnect");
+  return response.data;
 }

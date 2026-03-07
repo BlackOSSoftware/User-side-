@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { Mail, Phone, MapPin, Headphones, Sparkles, ShieldCheck, Zap } from "lucide-react";
-import { useCreateTicketMutation } from "@/services/tickets/ticket.hooks";
+import { useCreateEnquiryMutation } from "@/services/enquiries/enquiry.hooks";
 
 type StatusState = "idle" | "loading" | "success" | "error";
 
 export default function ContactPage() {
-  const createTicketMutation = useCreateTicketMutation();
+  const createEnquiryMutation = useCreateEnquiryMutation();
   const [status, setStatus] = useState<StatusState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -28,10 +28,11 @@ export default function ContactPage() {
     setErrorMessage("");
 
     try {
-      await createTicketMutation.mutateAsync({
+      await createEnquiryMutation.mutateAsync({
+        contactName: formData.name.trim(),
         subject: formData.subject.trim(),
         ticketType: formData.subject.trim(),
-        description: `${formData.message.trim()}\n\nName: ${formData.name.trim()}`.trim(),
+        description: formData.message.trim(),
         contactEmail: formData.email.trim(),
         contactNumber: formData.phone.trim(),
       });
@@ -154,8 +155,8 @@ export default function ContactPage() {
           <div className="relative">
             <div className="rounded-[28px] bg-card/80 p-6 shadow-[0_16px_40px_rgba(15,23,42,0.18)] backdrop-blur dark:bg-slate-900/70 dark:shadow-[0_16px_40px_rgba(15,23,42,0.35)]">
               <div className="mb-6 space-y-2">
-                <p className="text-sm font-semibold uppercase tracking-[0.35em] text-muted-foreground">Support Ticket</p>
-                <h2 className="text-2xl font-semibold text-foreground">Send your request</h2>
+                <p className="text-sm font-semibold uppercase tracking-[0.35em] text-muted-foreground">Support Enquiry</p>
+                <h2 className="text-2xl font-semibold text-foreground">Send your enquiry</h2>
                 <p className="text-sm text-muted-foreground">
                   Share the full context so we can route the request to the right desk instantly.
                 </p>
@@ -165,7 +166,7 @@ export default function ContactPage() {
                 <div className="rounded-2xl bg-emerald-400/10 p-5 text-emerald-700 dark:text-emerald-100">
                   <p className="text-base font-semibold">Request received.</p>
                   <p className="text-sm text-emerald-700/80 dark:text-emerald-100/80">
-                    Your ticket is active. A specialist will respond with next steps shortly.
+                    Your enquiry is in queue. A specialist will respond with next steps shortly.
                   </p>
                 </div>
               ) : (
@@ -236,7 +237,7 @@ export default function ContactPage() {
                   >
                     <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition duration-700 group-hover:translate-x-full" />
                     <span className="relative">
-                      {status === "loading" ? "Submitting request..." : "Submit Ticket"}
+                      {status === "loading" ? "Submitting enquiry..." : "Submit Enquiry"}
                     </span>
                   </button>
                 </form>

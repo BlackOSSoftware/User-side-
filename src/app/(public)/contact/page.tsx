@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import ContactPage from "./page.client";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { buildMetadata, SITE_URL } from "@/lib/seo/metadata";
 import { JsonLd, breadcrumbsJsonLd, faqJsonLd } from "@/lib/seo/jsonld";
-import { SITE_URL } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildMetadata({
   title: "Contact",

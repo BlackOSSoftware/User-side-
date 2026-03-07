@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { clearAuthSession, getAuthToken } from "@/lib/auth/session";
 import { LOGIN_URL } from "@/lib/external-links";
+import { clearAuthSession, getAuthExpiresAt, getAuthToken } from "@/lib/auth/session";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,6 +17,12 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   const token = getAuthToken();
+  const expiresAt = getAuthExpiresAt();
+
+  if (expiresAt && expiresAt <= Date.now()) {
+    clearAuthSession();
+    return config;
+  }
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
