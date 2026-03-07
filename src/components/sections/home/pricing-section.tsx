@@ -47,6 +47,7 @@ export default function PricingSection({ plans }: PricingSectionProps) {
             <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch">
                 {plans.slice(0, 3).map((plan) => {
                     const isPopular = plan.isPopular;
+                    const isExternal = plan.href.startsWith("http");
                     return (
                         <div
                             key={plan.id}
@@ -81,7 +82,11 @@ export default function PricingSection({ plans }: PricingSectionProps) {
                                 ))}
                             </ul>
                             <div className="mt-auto w-full">
-                                <Link href={plan.href}>
+                                <Link
+                                    href={plan.href}
+                                    target={isExternal ? "_blank" : undefined}
+                                    rel={isExternal ? "noopener noreferrer" : undefined}
+                                >
                                     <Button
                                         size="lg"
                                         variant={isPopular ? "default" : "outline"}

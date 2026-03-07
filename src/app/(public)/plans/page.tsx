@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePlansQuery } from "@/services/plans/plan.hooks";
 import type { Plan } from "@/services/plans/plan.types";
 import { useSwipeCards } from "@/hooks/use-swipe-cards";
+import { TRIAL_URL } from "@/lib/external-links";
 
 export default function PlansPage() {
   const words = ["Scale With Confidence.", "Execute With Precision.", "Grow With Structure."];
@@ -45,7 +46,7 @@ export default function PlansPage() {
         duration: "1 Day",
         features: ["Core strategy feed", "Fast signal delivery", "Performance snapshots", "Guided onboarding support"],
         buttonText: "Start 1-Day Access",
-        href: "/trial",
+        href: TRIAL_URL,
         isPopular: false,
       },
       {
@@ -56,7 +57,7 @@ export default function PlansPage() {
         duration: "Month",
         features: ["Full multi-strategy coverage", "Sub-100ms signal routing", "Deep analytics and exports", "Priority response support"],
         buttonText: "Activate Professional",
-        href: "/trial",
+        href: TRIAL_URL,
         isPopular: true,
       },
       {
@@ -106,7 +107,7 @@ export default function PlansPage() {
           ? plan.features
           : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
         buttonText: isDemo ? "Start Demo Access" : "Activate Plan",
-        href: `/trial?planId=${plan._id}`,
+        href: `${TRIAL_URL}?planId=${plan._id}`,
         isPopular,
       };
     });
@@ -327,6 +328,7 @@ const scrollByStep = useCallback(
           >
             {loopedPlans.map((plan, index) => {
               const isActive = index === activeIndex;
+              const isExternal = plan.href.startsWith("http");
               const distance = getCircularDistance(index, activeIndex, loopedPlans.length + 1);
               const depthClass = isActive
                 ? "scale-[1.06] opacity-100 z-20"
@@ -377,7 +379,12 @@ const scrollByStep = useCallback(
                 </CardContent>
 
                 <CardFooter className="p-6 pt-0 mt-auto">
-                  <Link href={plan.href} className="w-full">
+                  <Link
+                    href={plan.href}
+                    className="w-full"
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                  >
                     <Button
                       size="lg"
                       className={`w-full h-12 rounded-xl text-sm font-bold transition-all duration-300

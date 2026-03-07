@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { clearAuthSession, getAuthToken } from "@/lib/auth/session";
+import { LOGIN_URL } from "@/lib/external-links";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -39,8 +40,8 @@ apiClient.interceptors.response.use(
       }
 
       clearAuthSession();
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
+      if (window.location.href !== LOGIN_URL) {
+        window.location.href = LOGIN_URL;
       }
     }
 

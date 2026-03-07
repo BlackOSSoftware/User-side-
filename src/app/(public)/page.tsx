@@ -8,6 +8,7 @@ import PlatformEcosystemSection from "@/components/sections/home/platform-ecosys
 import PricingSection, { type PricingPlan } from "@/components/sections/home/pricing-section";
 import TestimonialsSection from "@/components/sections/home/testimonials-section";
 import SocialMediaSection from "@/components/sections/home/social-media-section";
+import { TRIAL_URL } from "@/lib/external-links";
 
 export default function Home() {
     const { data: plans = [] } = usePlansQuery();
@@ -22,7 +23,7 @@ export default function Home() {
                 duration: "1 Day",
                 features: ["Unlimited Strategies", "< 100ms Latency", "Deep Analytics & Export", "Priority 24/7 Support"],
                 buttonText: "Start 1-Day Trial",
-                href: "/trial",
+                href: TRIAL_URL,
                 isPopular: false,
             },
             {
@@ -33,7 +34,7 @@ export default function Home() {
                 duration: "Month",
                 features: ["Unlimited Strategies", "< 100ms Latency", "Deep Analytics & Export", "Priority 24/7 Support"],
                 buttonText: "Get Started",
-                href: "/pricing",
+                href: TRIAL_URL,
                 isPopular: true,
             },
             {
@@ -83,7 +84,7 @@ export default function Home() {
                     ? plan.features
                     : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
                 buttonText: isDemo ? "Start Demo Access" : "Activate Plan",
-                href: `/trial?planId=${plan._id}`,
+                href: `${TRIAL_URL}?planId=${plan._id}`,
                 isPopular,
             };
         });

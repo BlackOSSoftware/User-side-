@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Instagram, Twitter, Facebook, Youtube, MessageCircle } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { LOGIN_URL, TRIAL_URL } from "@/lib/external-links";
 
 const Footer = () => {
   return (
@@ -19,8 +20,10 @@ const Footer = () => {
           </p>
 
           <Link
-            href="/trial"
+            href={TRIAL_URL}
             className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Start Free Access
             <ArrowRight className="h-4 w-4" />
@@ -36,7 +39,7 @@ const Footer = () => {
             <li><Link className="transition hover:text-primary" href="/">Home</Link></li>
             <li><Link className="transition hover:text-primary" href="/market">Market</Link></li>
             <li><Link className="transition hover:text-primary" href="/plans">Plans</Link></li>
-            <li><Link className="transition hover:text-primary" href="/trial">Free Trial</Link></li>
+            <li><Link className="transition hover:text-primary" href={TRIAL_URL} target="_blank" rel="noopener noreferrer">Free Trial</Link></li>
           </ul>
         </div>
 
@@ -47,8 +50,7 @@ const Footer = () => {
           </h4>
           <ul className="space-y-3 text-sm text-muted-foreground">
             <li><Link className="transition hover:text-primary" href="/about">About</Link></li>
-            <li><Link className="transition hover:text-primary" href="/login">Client Login</Link></li>
-            <li><Link className="transition hover:text-primary" href="/dashboard">Dashboard</Link></li>
+            <li><Link className="transition hover:text-primary" href={LOGIN_URL} target="_blank" rel="noopener noreferrer">Client Login</Link></li>
           </ul>
         </div>
 

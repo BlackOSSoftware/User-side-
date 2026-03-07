@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { BrandLogo } from "@/components/layout/brand-logo"
+import { LOGIN_URL, TRIAL_URL } from "@/lib/external-links"
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
@@ -82,14 +83,14 @@ export default function Navbar() {
                         <ModeToggle />
 
                         {/* ⭐ FIXED → visible only on desktop */}
-                        <Link href="/login" className="hidden lg:block" onClick={closeMobileMenu}>
+                        <Link href={LOGIN_URL} className="hidden lg:block" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
                             <Button variant="ghost" size="sm" className="rounded-full font-semibold hover:bg-muted text-foreground/80 whitespace-nowrap">
                                 Log In
                             </Button>
                         </Link>
 
                         {/* ⭐ FIXED → visible only on desktop */}
-                        <Link href="/trial" className="hidden lg:block" onClick={closeMobileMenu}>
+                        <Link href={TRIAL_URL} className="hidden lg:block" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
                             <Button size="sm" className="relative overflow-hidden rounded-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 px-4 sm:px-6 shadow-lg shadow-primary/25 group/btn whitespace-nowrap">
                                 <span className="relative z-10 text-sm sm:text-base">Get Started</span>
                                 <div className="absolute inset-0 -translate-x-[100%] group-hover/btn:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -147,11 +148,11 @@ export default function Navbar() {
 
                         {/* Drawer actions */}
                         <div className="flex flex-col sm:flex-row gap-2 pt-3 mt-1 border-t border-border/40">
-                            <Link href="/login" className="sm:flex-1" onClick={closeMobileMenu}>
+                            <Link href={LOGIN_URL} className="sm:flex-1" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
                                 <Button variant="ghost" className="w-full rounded-xl py-2.5 sm:py-2 text-sm sm:text-base">Log In</Button>
                             </Link>
 
-                            <Link href="/trial" className="sm:flex-1" onClick={closeMobileMenu}>
+                            <Link href={TRIAL_URL} className="sm:flex-1" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
                                 <Button className="w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 py-2.5 sm:py-2 text-sm sm:text-base">Get Started</Button>
                             </Link>
                         </div>

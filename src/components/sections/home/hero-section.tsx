@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { TRIAL_URL } from "@/lib/external-links";
 
 export default function HeroSection() {
     const heroRightImage =
@@ -116,7 +117,7 @@ export default function HeroSection() {
 
                     {/* CTA Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                        <Link href="/trial" className="w-full sm:w-auto">
+                        <Link href={TRIAL_URL} className="w-full sm:w-auto" target="_blank" rel="noopener noreferrer">
                             <Button
                                 size="lg"
                                 className="w-full sm:w-auto h-14 px-8 rounded-2xl bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-400 text-white font-bold shadow-[0_12px_40px_-16px_rgba(59,130,246,0.8)] hover:shadow-[0_18px_50px_-16px_rgba(59,130,246,0.9)] hover:scale-[1.02] transition-all"
