@@ -1,102 +1,53 @@
-"use client";
+import type { Metadata } from "next";
+import HomePage from "./page.client";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { JsonLd, breadcrumbsJsonLd, faqJsonLd } from "@/lib/seo/jsonld";
+import { SITE_URL } from "@/lib/seo/metadata";
 
-import { useMemo } from "react";
-import { usePlansQuery } from "@/services/plans/plan.hooks";
-import type { Plan } from "@/services/plans/plan.types";
-import HeroSection from "@/components/sections/home/hero-section";
-import PlatformEcosystemSection from "@/components/sections/home/platform-ecosystem-section";
-import PricingSection, { type PricingPlan } from "@/components/sections/home/pricing-section";
-import TestimonialsSection from "@/components/sections/home/testimonials-section";
-import SocialMediaSection from "@/components/sections/home/social-media-section";
-import { TRIAL_URL } from "@/lib/external-links";
+export const metadata: Metadata = buildMetadata({
+  title: "Live Trading Signals",
+  description:
+    "MSPK Trade Solutions provides live trading signals with entry, stop-loss, and target levels across forex, commodities, indices, and Indian markets.",
+  path: "/",
+  keywordsExtra: [
+    "forex signals",
+    "comex signals",
+    "mcx signals",
+    "indian market signals",
+    "nifty signals",
+    "bank nifty signals",
+    "live tradingview signals",
+    "signal service india",
+  ],
+});
 
-export default function Home() {
-    const { data: plans = [] } = usePlansQuery();
+export default function Page() {
+  const breadcrumbs = breadcrumbsJsonLd([
+    { name: "Home", url: SITE_URL },
+  ]);
 
-    const fallbackPlans: PricingPlan[] = useMemo(
-        () => [
-            {
-                id: "demo",
-                name: "Demo Access",
-                description: "Perfect for testing the waters",
-                price: "Free",
-                duration: "1 Day",
-                features: ["Unlimited Strategies", "< 100ms Latency", "Deep Analytics & Export", "Priority 24/7 Support"],
-                buttonText: "Start 1-Day Trial",
-                href: TRIAL_URL,
-                isPopular: false,
-            },
-            {
-                id: "pro",
-                name: "Pro Access",
-                description: "For serious algorithmic traders",
-                price: "INR 25,000",
-                duration: "Month",
-                features: ["Unlimited Strategies", "< 100ms Latency", "Deep Analytics & Export", "Priority 24/7 Support"],
-                buttonText: "Get Started",
-                href: TRIAL_URL,
-                isPopular: true,
-            },
-            {
-                id: "enterprise",
-                name: "Enterprise",
-                description: "For Prop Desks & Funds",
-                price: "Custom",
-                duration: "Pricing",
-                features: ["Dedicated Infrastructure", "White Label Solution", "FIX API Access", "Dedicated Account Manager"],
-                buttonText: "Contact Sales",
-                href: "/contact",
-                isPopular: false,
-            },
-        ],
-        []
-    );
+  const faq = faqJsonLd([
+    {
+      question: "What does MSPK Trade Solutions provide?",
+      answer:
+        "We provide live trading signals with entry, stop-loss, and target levels across forex, commodities, indices, and Indian markets.",
+    },
+    {
+      question: "Are the signals real time?",
+      answer:
+        "Yes. Signals are delivered in real time with clear execution context and disciplined risk guidance.",
+    },
+    {
+      question: "How do I start a trial or login?",
+      answer:
+        "Use the Get Started and Login links to access the trial and client portal on the official MSPK user site.",
+    },
+  ]);
 
-    const formattedPlans: PricingPlan[] = useMemo(() => {
-        if (!plans.length) return fallbackPlans;
-
-        const popularId = plans
-            .filter((plan) => !plan.isDemo)
-            .sort((a, b) => (b.price ?? 0) - (a.price ?? 0))[0]?._id;
-
-        const formatPrice = (price?: number, isDemo?: boolean) => {
-            if (!price || price <= 0 || isDemo) return "Free";
-            const value = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(price);
-            return `INR ${value}`;
-        };
-
-        const formatDuration = (durationDays?: number) => {
-            if (!durationDays) return "Flexible";
-            return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
-        };
-
-        return plans.map((plan: Plan) => {
-            const isPopular = plan._id === popularId;
-            const isDemo = Boolean(plan.isDemo);
-
-            return {
-                id: plan._id,
-                name: plan.name,
-                description: plan.description || "Premium access built for disciplined execution.",
-                price: formatPrice(plan.price, isDemo),
-                duration: formatDuration(plan.durationDays),
-                features: plan.features?.length
-                    ? plan.features
-                    : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
-                buttonText: isDemo ? "Start Demo Access" : "Activate Plan",
-                href: `${TRIAL_URL}?planId=${plan._id}`,
-                isPopular,
-            };
-        });
-    }, [fallbackPlans, plans]);
-
-    return (
-        <div className="flex flex-col min-h-screen font-sans overflow-x-hidden">
-            <HeroSection />
-            <PlatformEcosystemSection />
-            <PricingSection plans={formattedPlans} />
-            <TestimonialsSection />
-            <SocialMediaSection />
-        </div>
-    );
+  return (
+    <>
+      <JsonLd data={[breadcrumbs, faq]} />
+      <HomePage />
+    </>
+  );
 }

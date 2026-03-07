@@ -1,41 +1,30 @@
-"use client";
+import type { Metadata } from "next";
+import AnnouncementDetailPage from "./page.client";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { JsonLd, breadcrumbsJsonLd } from "@/lib/seo/jsonld";
+import { SITE_URL } from "@/lib/seo/metadata";
 
-import { useAnnouncementQuery } from "@/services/announcements/announcement.hooks";
-import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
-import { use } from "react";
+export function generateMetadata({ params }: { params: { id: string } }): Metadata {
+  return buildMetadata({
+    title: "Announcement Details",
+    description: "MSPK Trade Solutions announcement details and signal desk notices.",
+    path: `/announcements/${params.id}`,
+    keywordsExtra: ["announcement details", "signal notice", "platform update"],
+  });
+}
 
-export default function AnnouncementDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
-  const { data, isLoading } = useAnnouncementQuery(id);
+export default function Page({ params }: { params: { id: string } }) {
+  const idLabel = params.id.replace(/[-_]/g, " ");
+  const breadcrumbs = breadcrumbsJsonLd([
+    { name: "Home", url: SITE_URL },
+    { name: "Announcements", url: `${SITE_URL}/announcements` },
+    { name: idLabel, url: `${SITE_URL}/announcements/${params.id}` },
+  ]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="w-full max-w-4xl mx-auto px-6 py-16 space-y-6">
-        <Link href="/announcements" className="text-sm text-primary">← Back to announcements</Link>
-
-        <Card className="border-border/60 bg-white/80 dark:bg-white/5 rounded-[1.5rem]">
-          <CardContent className="p-6 space-y-4">
-            {isLoading ? (
-              <div className="text-sm text-muted-foreground">Loading...</div>
-            ) : (
-              <>
-                <h1 className="text-2xl font-bold">{data?.title || "Announcement"}</h1>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {data?.type || "General"} {data?.priority ? `• ${data.priority}` : ""}
-                </div>
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                  {data?.description || data?.summary || "No description available."}
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <>
+      <JsonLd data={breadcrumbs} />
+      <AnnouncementDetailPage params={Promise.resolve(params)} />
+    </>
   );
 }

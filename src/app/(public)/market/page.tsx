@@ -11,6 +11,23 @@ import {
   TrendingUp,
   Wifi,
 } from "lucide-react";
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { JsonLd, breadcrumbsJsonLd, faqJsonLd } from "@/lib/seo/jsonld";
+import { SITE_URL } from "@/lib/seo/metadata";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Market Signals",
+  description:
+    "Get MSPK live TradingView chart access with entry, stop-loss, and target levels for precision market execution.",
+  path: "/market",
+  keywordsExtra: [
+    "tradingview signals",
+    "live chart signals",
+    "market signals",
+    "real time tradingview",
+  ],
+});
 
 const whatsappNumber = "917770039037";
 
@@ -46,8 +63,27 @@ const accessSteps = [
 ];
 
 export default function MarketPage() {
+  const breadcrumbs = breadcrumbsJsonLd([
+    { name: "Home", url: SITE_URL },
+    { name: "Market", url: `${SITE_URL}/market` },
+  ]);
+
+  const faq = faqJsonLd([
+    {
+      question: "What is included in the live chart access?",
+      answer:
+        "You receive TradingView chart access with direction, entries, stop-loss, and multi-target levels.",
+    },
+    {
+      question: "Which segments are supported?",
+      answer:
+        "Coverage includes NFO, MCX, equity indices, forex, and major commodities depending on plan.",
+    },
+  ]);
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#f8fafc_0%,#eef2ff_48%,#f8fafc_100%)] text-slate-900 dark:bg-[radial-gradient(circle_at_10%_10%,#123057_0%,#050b1c_40%,#020611_100%)] dark:text-slate-100">
+      <JsonLd data={[breadcrumbs, faq]} />
       <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-cyan-300/25 blur-3xl dark:bg-cyan-400/10" />
       <div className="pointer-events-none absolute -right-24 top-40 h-80 w-80 rounded-full bg-amber-300/30 blur-3xl dark:bg-amber-400/10" />
 

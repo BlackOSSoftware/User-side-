@@ -51,6 +51,7 @@ const Footer = () => {
           <ul className="space-y-3 text-sm text-muted-foreground">
             <li><Link className="transition hover:text-primary" href="/about">About</Link></li>
             <li><Link className="transition hover:text-primary" href={LOGIN_URL} target="_blank" rel="noopener noreferrer">Client Login</Link></li>
+            <li><Link className="transition hover:text-primary" href="/privacy-policy">Privacy Policy</Link></li>
           </ul>
         </div>
 
