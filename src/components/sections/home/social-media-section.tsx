@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Twitter, Youtube, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function SocialMediaSection() {
@@ -27,11 +27,12 @@ export default function SocialMediaSection() {
             </div>
 
             {/* Mobile mini social strip */}
-            <div className="mt-6 grid grid-cols-5 gap-2 sm:gap-3 lg:hidden">
+            <div className="mt-6 grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 lg:hidden">
                 {[
                     { label: "Instagram", icon: Instagram, color: "from-pink-500 to-yellow-400", href: "#" },
                     { label: "Facebook", icon: Facebook, color: "from-blue-600 to-sky-500", href: "#" },
                     { label: "WhatsApp", icon: MessageCircle, color: "from-emerald-500 to-lime-400", href: "#" },
+                    { label: "Telegram", icon: Send, color: "from-sky-500 to-cyan-400", href: "#" },
                     { label: "X (Twitter)", icon: Twitter, color: "from-slate-900 to-slate-700", href: "#" },
                     { label: "YouTube", icon: Youtube, color: "from-red-600 to-rose-500", href: "#" },
                 ].map((item, i) => {
@@ -77,6 +78,17 @@ export default function SocialMediaSection() {
                             <div className="text-left">
                                 <div className="text-sm font-semibold">WhatsApp</div>
                                 <div className="text-xs text-muted-foreground">+91 77700 39037</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="absolute bottom-6 right-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
+                                <Send className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="text-left">
+                                <div className="text-sm font-semibold">Telegram</div>
+                                <div className="text-xs text-muted-foreground">@mspkfinance</div>
                             </div>
                         </div>
                     </div>
@@ -160,6 +172,14 @@ export default function SocialMediaSection() {
                         className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
+                    </Button>
+                </Link>
+                <Link href="#" className="w-full sm:w-auto">
+                    <Button
+                        size="lg"
+                        className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-sky-500 to-cyan-400 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
+                    >
+                        <Send className="w-5 h-5 mr-2" /> Telegram
                     </Button>
                 </Link>
                 <Link href="#" className="w-full sm:w-auto">

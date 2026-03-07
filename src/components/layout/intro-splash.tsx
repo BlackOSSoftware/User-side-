@@ -14,24 +14,32 @@ type TargetState = {
 
 export default function IntroSplash() {
     const [active, setActive] = useState(false);
+    const forceIntro = useRef(false);
     const [target, setTarget] = useState<TargetState>({ x: 0, y: 0, scale: 0.5 });
     const logoRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (typeof window === "undefined") return;
 
         const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
         if (reduceMotion) {
-            window.localStorage.setItem("mspk_intro_seen", "true");
+            window.sessionStorage.setItem("mspk_intro_seen", "true");
             return;
         }
 
         const params = new URLSearchParams(window.location.search);
         const force = params.has("intro");
+        forceIntro.current = force;
+
         const seen = window.sessionStorage.getItem("mspk_intro_seen");
         if (!force && seen) return;
 
         setActive(true);
+    }, []);
+
+    useEffect(() => {
+        if (!active) return;
+
         document.body.classList.add("intro-active");
         document.body.style.overflow = "hidden";
 
@@ -39,7 +47,7 @@ export default function IntroSplash() {
             setActive(false);
             document.body.style.overflow = "";
             document.body.classList.remove("intro-active");
-            if (!force) window.sessionStorage.setItem("mspk_intro_seen", "true");
+            if (!forceIntro.current) window.sessionStorage.setItem("mspk_intro_seen", "true");
         }, INTRO_DURATION_MS);
 
         return () => {
@@ -47,7 +55,7 @@ export default function IntroSplash() {
             document.body.style.overflow = "";
             document.body.classList.remove("intro-active");
         };
-    }, []);
+    }, [active]);
 
     useLayoutEffect(() => {
         if (!active) return;

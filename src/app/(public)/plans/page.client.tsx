@@ -42,10 +42,10 @@ export default function PlansPage() {
         id: "demo",
         name: "Explorer Access",
         description: "Built for evaluating workflow, signal quality, and speed",
-        price: "Free",
-        duration: "1 Day",
+        price: "Demo",
+        duration: "30 Days",
         features: ["Core strategy feed", "Fast signal delivery", "Performance snapshots", "Guided onboarding support"],
-        buttonText: "Start 1-Day Access",
+        buttonText: "Start 30-Day Access",
         href: TRIAL_URL,
         isPopular: false,
       },
@@ -65,7 +65,7 @@ export default function PlansPage() {
         name: "Institutional Suite",
         description: "Tailored for desks, teams, and managed capital mandates",
         price: "Custom",
-        duration: "Pricing",
+        duration: "30 Days",
         features: ["Dedicated infrastructure", "White-label deployment", "FIX/API integrations", "Dedicated relationship manager"],
         buttonText: "Schedule Consultation",
         href: "/contact",
@@ -82,13 +82,16 @@ export default function PlansPage() {
       .filter((plan) => !plan.isDemo)
       .sort((a, b) => (b.price ?? 0) - (a.price ?? 0))[0]?._id;
 
-    const formatPrice = (price?: number, isDemo?: boolean) => {
-      if (!price || price <= 0 || isDemo) return "Free";
+    const formatPrice = (price?: number, isDemo?: boolean, isCustom?: boolean) => {
+      if (isDemo) return "Demo";
+      if (isCustom) return "Custom";
+      if (!price || price <= 0) return "Custom";
       const value = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(price);
       return `INR ${value}`;
     };
 
-    const formatDuration = (durationDays?: number) => {
+    const formatDuration = (durationDays?: number, isDemo?: boolean, isCustom?: boolean) => {
+      if ((isDemo || isCustom) && !durationDays) return "30 Days";
       if (!durationDays) return "Flexible";
       return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
     };
@@ -96,13 +99,23 @@ export default function PlansPage() {
     return plans.map((plan: Plan) => {
       const isPopular = plan._id === popularId;
       const isDemo = Boolean(plan.isDemo);
+      const name = plan.name?.toLowerCase() ?? "";
+      const segment = plan.segment?.toLowerCase() ?? "";
+      const isCustom =
+        !isDemo &&
+        ((plan.price ?? 0) <= 0 ||
+          name.includes("custom") ||
+          name.includes("enterprise") ||
+          name.includes("institutional") ||
+          segment.includes("enterprise") ||
+          segment.includes("institutional"));
 
       return {
         id: plan._id,
         name: plan.name,
         description: plan.description || "Premium access with execution-ready workflows.",
-        price: formatPrice(plan.price, isDemo),
-        duration: formatDuration(plan.durationDays),
+        price: formatPrice(plan.price, isDemo, isCustom),
+        duration: formatDuration(plan.durationDays, isDemo, isCustom),
         features: plan.features?.length
           ? plan.features
           : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],

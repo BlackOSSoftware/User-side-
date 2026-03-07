@@ -134,43 +134,83 @@ export default function PlatformEcosystemSection() {
                     </div>
                 </div>
 
-                {/* Feature 2: Analytics (Golden Colors) */}
+                {/* Feature 2: Execution Intelligence */}
                 <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-24 group">
                     {/* Visual Mockup */}
                     <div className="lg:w-1/2 w-full lg:h-[400px] relative">
-                        <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-sky-600/20 rounded-[30px] blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <div className="relative h-full bg-white dark:bg-[#0a0a0a] border border-black/5 dark:border-white/10 rounded-[20px] shadow-2xl overflow-hidden p-8 flex items-end justify-center">
-                            {/* Bar Chart Visualization - Golden */}
-                            <div className="w-full flex items-end justify-between gap-2 h-48">
-                                {[35, 55, 40, 70, 50, 85, 60, 95, 75, 50, 65, 80].map((h, i) => (
-                                    <div key={i} className="flex-1 bg-gradient-to-t from-blue-500 dark:from-blue-600 to-sky-400 rounded-t-sm opacity-80 hover:opacity-100 transition-all duration-300 hover:scale-y-105 origin-bottom shadow-[0_0_10px_rgba(245,158,11,0.3)]" style={{ height: `${h}%` }}></div>
-                                ))}
+                        <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 to-sky-500/20 rounded-[30px] blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <div className="relative h-full bg-white dark:bg-[#0a0a0a] border border-black/5 dark:border-white/10 rounded-[20px] shadow-2xl overflow-hidden p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-xs uppercase tracking-[0.28em] text-slate-500 dark:text-white/50">Command Center</div>
+                                    <div className="text-lg font-semibold text-foreground">Execution Intelligence</div>
+                                </div>
+                                <div className="flex gap-1.5">
+                                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/30 border border-emerald-500/60"></div>
+                                    <div className="h-2.5 w-2.5 rounded-full bg-sky-500/30 border border-sky-500/60"></div>
+                                    <div className="h-2.5 w-2.5 rounded-full bg-slate-400/30 border border-slate-400/60"></div>
+                                </div>
                             </div>
-                            <div className="absolute top-8 left-8">
-                                <div className="text-sm text-slate-500 dark:text-white/50 uppercase tracking-wider mb-1">Total P&L</div>
-                                <div className="text-4xl font-mono font-bold text-slate-900 dark:text-white">INR 4.2L</div>
+
+                            <div className="mt-6 grid grid-cols-2 gap-4">
+                                <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-slate-50/70 dark:bg-white/5 p-4">
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Risk Pulse</div>
+                                    <div className="text-2xl font-bold text-foreground">0.84</div>
+                                    <div className="mt-2 h-2 w-full rounded-full bg-slate-200/80 dark:bg-white/10 overflow-hidden">
+                                        <div className="h-full w-[84%] bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-slate-50/70 dark:bg-white/5 p-4">
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Latency Guard</div>
+                                    <div className="text-2xl font-bold text-foreground">62 ms</div>
+                                    <div className="mt-2 h-2 w-full rounded-full bg-slate-200/80 dark:bg-white/10 overflow-hidden">
+                                        <div className="h-full w-[72%] bg-gradient-to-r from-sky-400 to-sky-600"></div>
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-slate-50/70 dark:bg-white/5 p-4">
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Signal Health</div>
+                                    <div className="text-2xl font-bold text-foreground">98.1%</div>
+                                    <div className="mt-2 flex gap-1">
+                                        {["emerald", "emerald", "emerald", "sky", "sky", "slate"].map((c, i) => (
+                                            <span
+                                                key={i}
+                                                className={`h-2 flex-1 rounded-full ${c === "emerald"
+                                                    ? "bg-emerald-400"
+                                                    : c === "sky"
+                                                        ? "bg-sky-400"
+                                                        : "bg-slate-300 dark:bg-white/20"
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-slate-50/70 dark:bg-white/5 p-4">
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Playbook Mode</div>
+                                    <div className="text-2xl font-bold text-foreground">Auto</div>
+                                    <div className="mt-2 text-xs text-muted-foreground">3 guardrails active</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="lg:w-1/2 space-y-8">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-500/50 flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform duration-500">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform duration-500">
                             <TrendingUp className="w-8 h-8 text-white fill-white/20" />
                         </div>
                         <h3 className="text-4xl md:text-5xl font-bold text-foreground">
-                            Deep Analytics
+                            Execution Intelligence
                         </h3>
                         <p className="text-lg text-muted-foreground leading-loose">
-                            Comprehensive trading journals and performance reports to optimize your edge.
+                            A live command center that tracks signal health, latency guardrails, and adaptive playbooks in real time.
                         </p>
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-4">
-                                <div className="p-2 rounded-lg bg-purple-500/10"><CheckCircle2 className="w-5 h-5 text-purple-500" /></div>
-                                <span className="text-lg">Strategy-wise Performance</span>
+                                <div className="p-2 rounded-lg bg-emerald-500/10"><CheckCircle2 className="w-5 h-5 text-emerald-500" /></div>
+                                <span className="text-lg">Signal health scoring across markets</span>
                             </div>
                             <div className="flex items-center gap-4">
-                                <div className="p-2 rounded-lg bg-purple-500/10"><CheckCircle2 className="w-5 h-5 text-purple-500" /></div>
-                                <span className="text-lg">One-Click CSV/PDF Export</span>
+                                <div className="p-2 rounded-lg bg-emerald-500/10"><CheckCircle2 className="w-5 h-5 text-emerald-500" /></div>
+                                <span className="text-lg">Latency guardrails and auto playbooks</span>
                             </div>
                         </div>
                     </div>
