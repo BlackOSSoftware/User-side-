@@ -138,33 +138,33 @@ export default function PlatformEcosystemSection() {
                 <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-24 group">
                     {/* Visual Mockup */}
                     <div className="lg:w-1/2 w-full lg:h-[400px] relative">
-                        <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 to-sky-500/20 rounded-[30px] blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/20 to-indigo-500/20 rounded-[30px] blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
                         <div className="relative h-full bg-white dark:bg-[#0a0a0a] border border-black/5 dark:border-white/10 rounded-[20px] shadow-2xl overflow-hidden p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <div className="text-xs uppercase tracking-[0.28em] text-slate-500 dark:text-white/50">Command Center</div>
-                                    <div className="text-lg font-semibold text-foreground">Execution Intelligence</div>
+                                    <div className="text-xs uppercase tracking-[0.28em] text-slate-500 dark:text-white/50">Ops Console</div>
+                                    <div className="text-lg font-semibold text-foreground">Market Operations</div>
                                 </div>
                                 <div className="flex gap-1.5">
-                                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/30 border border-emerald-500/60"></div>
-                                    <div className="h-2.5 w-2.5 rounded-full bg-sky-500/30 border border-sky-500/60"></div>
+                                    <div className="h-2.5 w-2.5 rounded-full bg-amber-500/30 border border-amber-500/60"></div>
+                                    <div className="h-2.5 w-2.5 rounded-full bg-indigo-500/30 border border-indigo-500/60"></div>
                                     <div className="h-2.5 w-2.5 rounded-full bg-slate-400/30 border border-slate-400/60"></div>
                                 </div>
                             </div>
 
                             <div className="mt-6 grid grid-cols-2 gap-4">
                                 <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-slate-50/70 dark:bg-white/5 p-4">
-                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Risk Pulse</div>
-                                    <div className="text-2xl font-bold text-foreground">0.84</div>
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Coverage Index</div>
+                                    <div className="text-2xl font-bold text-foreground">24 / 30</div>
                                     <div className="mt-2 h-2 w-full rounded-full bg-slate-200/80 dark:bg-white/10 overflow-hidden">
-                                        <div className="h-full w-[84%] bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+                                        <div className="h-full w-[80%] bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
                                     </div>
                                 </div>
                                 <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-slate-50/70 dark:bg-white/5 p-4">
-                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Latency Guard</div>
-                                    <div className="text-2xl font-bold text-foreground">62 ms</div>
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Fill Quality</div>
+                                    <div className="text-2xl font-bold text-foreground">97.2%</div>
                                     <div className="mt-2 h-2 w-full rounded-full bg-slate-200/80 dark:bg-white/10 overflow-hidden">
-                                        <div className="h-full w-[72%] bg-gradient-to-r from-sky-400 to-sky-600"></div>
+                                        <div className="h-full w-[92%] bg-gradient-to-r from-amber-400 to-amber-600"></div>
                                     </div>
                                 </div>
                                 <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-slate-50/70 dark:bg-white/5 p-4">
@@ -201,16 +201,16 @@ export default function PlatformEcosystemSection() {
                             Execution Intelligence
                         </h3>
                         <p className="text-lg text-muted-foreground leading-loose">
-                            A live command center that tracks signal health, latency guardrails, and adaptive playbooks in real time.
+                            A live command center that tracks signal integrity, fill quality, and adaptive playbooks in real time.
                         </p>
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="p-2 rounded-lg bg-emerald-500/10"><CheckCircle2 className="w-5 h-5 text-emerald-500" /></div>
-                                <span className="text-lg">Signal health scoring across markets</span>
+                                <span className="text-lg">Cross-market signal integrity scoring</span>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="p-2 rounded-lg bg-emerald-500/10"><CheckCircle2 className="w-5 h-5 text-emerald-500" /></div>
-                                <span className="text-lg">Latency guardrails and auto playbooks</span>
+                                <span className="text-lg">Fill-quality monitoring and adaptive playbooks</span>
                             </div>
                         </div>
                     </div>
