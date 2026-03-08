@@ -1,8 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube, MessageCircle, Send } from "lucide-react";
+import { Facebook, Instagram, Youtube, MessageCircle, Send, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const whatsappNumber = "917770039037";
+const whatsappMessage = "Please contact me from the dashboard.";
+const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+const telegramUrl = "https://t.me/Mspktradesolution";
+const facebookUrl = "https://www.facebook.com/share/198XcXtc6n/";
+const youtubeUrl = "https://youtube.com/@mspktradesolution?si=1_U7FF2PehnzFh_z";
+const instagramUrl = "https://www.instagram.com/mspk_tradesolutions/";
 
 export default function SocialMediaSection() {
     return (
@@ -19,35 +26,50 @@ export default function SocialMediaSection() {
                     Social Media
                 </div>
                 <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-bold tracking-tight text-foreground">
-                    Get Social With Us!
+                    Get Social With Us
                 </h2>
                 <p className="max-w-3xl text-sm sm:text-lg text-muted-foreground">
-                    Stay updated with our latest news, products, services and campaigns. Follow us on our social media platforms for real-time insights.
+                    Follow MSPK Trade Solutions for updates, education, and community insights across your favorite platforms.
                 </p>
             </div>
 
             {/* Mobile mini social strip */}
             <div className="mt-6 grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 lg:hidden">
                 {[
-                    { label: "Instagram", icon: Instagram, color: "from-pink-500 to-yellow-400", href: "#" },
-                    { label: "Facebook", icon: Facebook, color: "from-blue-600 to-sky-500", href: "#" },
-                    { label: "WhatsApp", icon: MessageCircle, color: "from-emerald-500 to-lime-400", href: "#" },
-                    { label: "Telegram", icon: Send, color: "from-sky-500 to-cyan-400", href: "#" },
-                    { label: "X (Twitter)", icon: Twitter, color: "from-slate-900 to-slate-700", href: "#" },
-                    { label: "YouTube", icon: Youtube, color: "from-red-600 to-rose-500", href: "#" },
+                    { label: "Instagram", icon: Instagram, color: "from-pink-500 to-yellow-400", href: instagramUrl },
+                    { label: "Facebook", icon: Facebook, color: "from-blue-600 to-sky-500", href: facebookUrl },
+                    { label: "WhatsApp", icon: MessageCircle, color: "from-emerald-500 to-lime-400", href: whatsappUrl },
+                    { label: "Telegram", icon: Send, color: "from-sky-500 to-cyan-400", href: telegramUrl },
+                    { label: "X (Twitter)", icon: Twitter, color: "from-slate-900 to-slate-700", href: "" },
+                    { label: "YouTube", icon: Youtube, color: "from-red-600 to-rose-500", href: youtubeUrl },
                 ].map((item, i) => {
                     const Icon = item.icon;
                     return (
-                        <Link
+                        item.href ? (
+                            <a
+                                key={i}
+                                href={item.href}
+                                aria-label={item.label}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl p-2 flex items-center justify-center shadow-sm"
+                            >
+                                <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center`}>
+                                    <Icon className="w-4 h-4 text-white" />
+                                </div>
+                            </a>
+                        ) : (
+                            <div
                             key={i}
-                            href={item.href}
                             aria-label={item.label}
-                            className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl p-2 flex items-center justify-center shadow-sm"
+                            className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl p-2 flex items-center justify-center shadow-sm opacity-60 cursor-not-allowed"
+                            title="X (Twitter) coming soon"
                         >
                             <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center`}>
                                 <Icon className="w-4 h-4 text-white" />
                             </div>
-                        </Link>
+                        </div>
+                        )
                     );
                 })}
             </div>
@@ -62,13 +84,13 @@ export default function SocialMediaSection() {
                             </div>
                             <div className="text-left">
                                 <div className="text-sm font-semibold">Instagram Page</div>
-                                <div className="text-xs text-muted-foreground">@mspkfinance</div>
+                                <div className="text-xs text-muted-foreground">@mspk_tradesolutions</div>
                             </div>
                         </div>
                     </div>
                     <div className="absolute bottom-10 left-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
-                        <div className="text-sm font-semibold text-foreground">Market Insights</div>
-                        <div className="text-xs text-muted-foreground mt-1">Daily charts & momentum watchlist.</div>
+                        <div className="text-sm font-semibold text-foreground">Community Updates</div>
+                        <div className="text-xs text-muted-foreground mt-1">Education, highlights, and weekly recaps.</div>
                     </div>
                     <div className="absolute top-40 left-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
                         <div className="flex items-center gap-3">
@@ -88,7 +110,7 @@ export default function SocialMediaSection() {
                             </div>
                             <div className="text-left">
                                 <div className="text-sm font-semibold">Telegram</div>
-                                <div className="text-xs text-muted-foreground">@mspkfinance</div>
+                                <div className="text-xs text-muted-foreground">t.me/Mspktradesolution</div>
                             </div>
                         </div>
                     </div>
@@ -120,18 +142,7 @@ export default function SocialMediaSection() {
                             </div>
                             <div className="text-left">
                                 <div className="text-sm font-semibold">Facebook</div>
-                                <div className="text-xs text-muted-foreground">@mspkfinance</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="absolute bottom-12 right-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-black to-slate-700 flex items-center justify-center">
-                                <Twitter className="w-5 h-5 text-white" />
-                            </div>
-                            <div className="text-left">
-                                <div className="text-sm font-semibold">X (Twitter)</div>
-                                <div className="text-xs text-muted-foreground">@mspkfinance</div>
+                                <div className="text-xs text-muted-foreground">MSPK Trade Solutions</div>
                             </div>
                         </div>
                     </div>
@@ -142,7 +153,7 @@ export default function SocialMediaSection() {
                             </div>
                             <div className="text-left">
                                 <div className="text-sm font-semibold">YouTube</div>
-                                <div className="text-xs text-muted-foreground">@mspkfinance</div>
+                                <div className="text-xs text-muted-foreground">@mspktradesolution</div>
                             </div>
                         </div>
                     </div>
@@ -150,54 +161,56 @@ export default function SocialMediaSection() {
             </div>
 
             <div className="mt-10 hidden lg:flex flex-wrap justify-center gap-4">
-                <Link href="#" className="w-full sm:w-auto">
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
                         className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-400 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <Instagram className="w-5 h-5 mr-2" /> Instagram
                     </Button>
-                </Link>
-                <Link href="#" className="w-full sm:w-auto">
+                </a>
+                <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
                         className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <Facebook className="w-5 h-5 mr-2" /> Facebook
                     </Button>
-                </Link>
-                <Link href="#" className="w-full sm:w-auto">
+                </a>
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
                         className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
                     </Button>
-                </Link>
-                <Link href="#" className="w-full sm:w-auto">
+                </a>
+                <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
                         className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-sky-500 to-cyan-400 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <Send className="w-5 h-5 mr-2" /> Telegram
                     </Button>
-                </Link>
-                <Link href="#" className="w-full sm:w-auto">
+                </a>
+                <div className="w-full sm:w-auto">
                     <Button
                         size="lg"
-                        className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
+                        className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base cursor-not-allowed opacity-70"
+                        aria-disabled="true"
+                        title="X (Twitter) coming soon"
                     >
                         <Twitter className="w-5 h-5 mr-2" /> X (Twitter)
                     </Button>
-                </Link>
-                <Link href="#" className="w-full sm:w-auto">
+                </div>
+                <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
                         className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-red-600 to-rose-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <Youtube className="w-5 h-5 mr-2" /> YouTube
                     </Button>
-                </Link>
+                </a>
             </div>
         </section>
     );

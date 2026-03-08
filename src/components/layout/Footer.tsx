@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { ArrowRight, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
+﻿import Link from "next/link";
+import { ArrowRight, Instagram, Facebook, Youtube, Twitter } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { LOGIN_URL, TRIAL_URL } from "@/lib/external-links";
 
@@ -21,16 +21,20 @@ const TelegramIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const whatsappNumber = "917770039037";
+const whatsappMessage = "Please contact me from the dashboard.";
+const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+const telegramUrl = "https://t.me/Mspktradesolution";
+const facebookUrl = "https://www.facebook.com/share/198XcXtc6n/";
+const youtubeUrl = "https://youtube.com/@mspktradesolution?si=1_U7FF2PehnzFh_z";
+const instagramUrl = "https://www.instagram.com/mspk_tradesolutions/";
+
 const Footer = () => {
   return (
     <footer className="relative w-full overflow-hidden border-t bg-card/60 backdrop-blur-xl">
-      {/* ambient bg */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,hsl(var(--primary)/0.12),transparent_38%),radial-gradient(circle_at_88%_10%,hsl(var(--accent)/0.12),transparent_34%)]" />
 
-      {/* ⭐ GRID */}
       <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-5 py-14 text-center sm:text-left sm:px-6 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
-
-        {/* ⭐ BRAND */}
         <div className="space-y-5 flex flex-col items-center sm:items-start">
           <BrandLogo />
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
@@ -48,7 +52,6 @@ const Footer = () => {
           </Link>
         </div>
 
-        {/* ⭐ PLATFORM */}
         <div>
           <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.12em] text-foreground/85">
             Platform
@@ -61,7 +64,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* ⭐ COMPANY */}
         <div>
           <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.12em] text-foreground/85">
             Company
@@ -73,7 +75,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* ⭐ CONNECT */}
         <div className="space-y-4 flex flex-col items-center sm:items-start">
           <h4 className="text-sm font-bold uppercase tracking-[0.12em] text-foreground/85">
             Connect
@@ -93,37 +94,51 @@ const Footer = () => {
             <ArrowRight className="h-4 w-4" />
           </Link>
 
-          {/* ⭐ SOCIAL */}
           <div className="flex items-center justify-center sm:justify-start gap-3">
             {[
-              { label: "WhatsApp", Icon: WhatsAppIcon, href: "#" },
-              { label: "Instagram", Icon: Instagram, href: "#" },
-              { label: "Facebook", Icon: Facebook, href: "#" },
-              { label: "Telegram", Icon: TelegramIcon, href: "#" },
-              { label: "X (Twitter)", Icon: Twitter, href: "#" },
-              { label: "YouTube", Icon: Youtube, href: "#" },
+              { label: "WhatsApp", Icon: WhatsAppIcon, href: whatsappUrl },
+              { label: "Instagram", Icon: Instagram, href: instagramUrl },
+              { label: "Facebook", Icon: Facebook, href: facebookUrl },
+              { label: "Telegram", Icon: TelegramIcon, href: telegramUrl },
+              { label: "X (Twitter)", Icon: Twitter, href: "" },
+              { label: "YouTube", Icon: Youtube, href: youtubeUrl },
             ].map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="group relative rounded-full border border-border bg-background/60 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary"
-                aria-label={item.label}
-              >
-                <item.Icon className="h-4 w-4" />
-                <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-foreground px-2 py-1 text-[10px] font-semibold text-background opacity-0 shadow-sm transition-all group-hover:opacity-100 group-hover:-translate-y-0.5">
-                  {item.label}
-                </span>
-              </Link>
+              item.href ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative rounded-full border border-border bg-background/60 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary"
+                  aria-label={item.label}
+                >
+                  <item.Icon className="h-4 w-4" />
+                  <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-foreground px-2 py-1 text-[10px] font-semibold text-background opacity-0 shadow-sm transition-all group-hover:opacity-100 group-hover:-translate-y-0.5">
+                    {item.label}
+                  </span>
+                </a>
+              ) : (
+                <div
+                  key={item.label}
+                  className="group relative rounded-full border border-border bg-background/60 p-2 text-muted-foreground opacity-60 cursor-not-allowed"
+                  aria-label={item.label}
+                  title="X (Twitter) coming soon"
+                >
+                  <item.Icon className="h-4 w-4" />
+                  <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-foreground px-2 py-1 text-[10px] font-semibold text-background opacity-0 shadow-sm transition-all group-hover:opacity-100 group-hover:-translate-y-0.5">
+                    {item.label}
+                  </span>
+                </div>
+              )
             ))}
           </div>
         </div>
       </div>
 
-      {/* ⭐ BOTTOM */}
-      <div className="border-t ">
+      <div className="border-t">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-2 px-5 py-4 text-center text-xs text-muted-foreground sm:flex-row sm:justify-between sm:text-left">
           <p>© 2026 MSPK Trade Solutions. All rights reserved.</p>
-          <p>Market data is provided for informational use only, not as a recommendation or financial advice</p>
+          <p>Market data is provided for informational use only, not as a recommendation or financial advice.</p>
         </div>
       </div>
     </footer>

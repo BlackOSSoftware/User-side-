@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildMetadata({
   title: "Privacy Policy",
   description:
-    "Read MSPK Trade Solutions privacy policy covering data collection, usage, security, and user rights for our live trading signals platform.",
+    "Read MSPK Trade Solutions privacy policy covering data collection, usage, security, and user rights for our educational market insights platform.",
   path: "/privacy-policy",
   keywordsExtra: [
     "privacy policy",
@@ -47,7 +47,7 @@ export default function PrivacyPolicyPage() {
       <div className="mx-auto w-full max-w-5xl px-6 py-16 space-y-8">
         <header className="space-y-3">
           <h1 className="text-3xl md:text-4xl font-bold">Privacy Policy</h1>
-          <p className="text-sm text-muted-foreground">Last updated: March 7, 2026</p>
+          <p className="text-sm text-muted-foreground">Last updated: March 8, 2026</p>
           <p className="text-base text-muted-foreground leading-relaxed">
             MSPK Trade Solutions respects your privacy. This policy explains how we collect, use, and protect
             information when you use our website, app, signal services, and related tools.
@@ -64,15 +64,17 @@ export default function PrivacyPolicyPage() {
           <p className="text-sm text-muted-foreground leading-relaxed">
             MSPK Trade Solutions provides market information, charts, and educational content for general
             awareness only. We are not a registered investment advisor, broker, or portfolio manager, and we do
-            not provide personalized financial, legal, tax, or investment advice. Any trading signals, market
-            views, or commentary are shared strictly for educational purposes and should never be interpreted as
-            a recommendation to buy, sell, or hold any security, derivative, or instrument.
+            not provide personalized financial, legal, tax, or investment advice. We do not place trades, handle
+            funds, or provide brokerage services. Any trading signals, market views, examples, or commentary are
+            shared strictly for educational purposes and should never be interpreted as a recommendation to buy,
+            sell, or hold any security, derivative, or instrument.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
             All trading decisions are made solely by you. Markets are inherently risky, and losses can exceed
             expectations. Past performance, hypothetical results, or example outcomes do not guarantee future
             performance. We do not promise profits, guaranteed accuracy, or specific returns under any
-            circumstances.
+            circumstances. You should seek advice from a qualified professional before making any financial
+            decisions.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
             By using this website or app, you acknowledge and accept that you are responsible for your own
@@ -84,7 +86,8 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-xl font-semibold">Information We Collect</h2>
           <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
             <li>Contact details (such as name, email, phone) when you inquire or register.</li>
-            <li>Usage data such as pages visited, interactions, device type, and browser details.</li>
+            <li>Account details and preferences you provide for service delivery.</li>
+            <li>Usage data such as pages visited, interactions, device type, IP address, and browser details.</li>
             <li>Payment and billing information if you purchase a plan (processed by trusted providers).</li>
             <li>Support communications and feedback you send to us.</li>
           </ul>
@@ -120,6 +123,15 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Legal Basis for Processing (Where Applicable)</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Depending on your location, we process personal data based on one or more of the following legal
+            bases: your consent, the performance of a contract (providing the service), our legitimate interests
+            (security, improvement, and analytics), or compliance with legal obligations.
+          </p>
+        </section>
+
+        <section className="space-y-4">
           <h2 className="text-xl font-semibold">Cookies and Tracking</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             We use cookies and similar technologies to analyze traffic, remember preferences, and improve
@@ -129,6 +141,19 @@ export default function PrivacyPolicyPage() {
           <p className="text-sm text-muted-foreground leading-relaxed">
             We may also use session identifiers and analytics tags to understand feature usage and improve the
             overall user experience.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Your Choices</h2>
+          <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+            <li>You can opt out of non-essential emails using unsubscribe links in those messages.</li>
+            <li>You can manage cookies and tracking settings in your browser.</li>
+            <li>You can update your account profile details through your dashboard (if available).</li>
+          </ul>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Certain operational communications are required to deliver the service and cannot be opted out of
+            while an account remains active.
           </p>
         </section>
 
@@ -188,7 +213,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-xl font-semibold">App Store Compliance</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             This policy applies to our website and mobile app. We do not promote guaranteed profits or
-            ask users to trade. Any use of signals or market insights is at the user’s sole discretion and risk.
+            ask users to trade. Any use of signals or market insights is at the user's sole discretion and risk.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
             If any allegation or complaint arises regarding content, signals, or outcomes, you acknowledge that
@@ -206,7 +231,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Children’s Privacy</h2>
+          <h2 className="text-xl font-semibold">Children's Privacy</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Our services are intended for adults. We do not knowingly collect personal information from anyone
             under the age of 18. If you believe a minor has provided personal data, please contact us and we will
@@ -232,6 +257,14 @@ export default function PrivacyPolicyPage() {
             incidental, special, or consequential damages arising from the use of information, signals, or tools
             provided through the service. You assume full responsibility for any trading activity you choose to
             undertake.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Contact Us</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            For privacy questions or requests, please contact us through the support channels listed on the
+            Contact page. We respond to reasonable requests in accordance with applicable law.
           </p>
         </section>
 
