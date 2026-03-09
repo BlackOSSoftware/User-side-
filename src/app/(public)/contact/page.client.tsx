@@ -80,7 +80,7 @@ export default function ContactPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               {[
                 { icon: Mail, title: "Email", val: "support@mspktrading.com" },
-                { icon: Phone, title: "Phone", val: "917770039037" },
+                { icon: Phone, title: "Phone", val: "+91 7770039037" },
                 {
                   icon: MapPin,
                   title: "Connect to WhatsApp",
