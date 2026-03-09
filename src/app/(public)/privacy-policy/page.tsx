@@ -50,7 +50,8 @@ export default function PrivacyPolicyPage() {
           <p className="text-sm text-muted-foreground">Last updated: March 8, 2026</p>
           <p className="text-base text-muted-foreground leading-relaxed">
             MSPK Trade Solutions respects your privacy. This policy explains how we collect, use, and protect
-            information when you use our website, app, signal services, and related tools.
+            information when you use our website, app, signal services, and related tools. Our platform is
+            designed for education and awareness only.
           </p>
           <p className="text-base text-muted-foreground leading-relaxed">
             This policy applies to visitors, trial users, and subscribed users across all MSPK properties,
@@ -70,15 +71,16 @@ export default function PrivacyPolicyPage() {
             sell, or hold any security, derivative, or instrument.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            All trading decisions are made solely by you. Markets are inherently risky, and losses can exceed
-            expectations. Past performance, hypothetical results, or example outcomes do not guarantee future
-            performance. We do not promise profits, guaranteed accuracy, or specific returns under any
-            circumstances. You should seek advice from a qualified professional before making any financial
-            decisions.
+            If you choose to trade based on any information on this platform, you do so at your own risk and
+            responsibility. Markets are inherently risky, and losses can exceed expectations. Past performance,
+            hypothetical results, or example outcomes do not guarantee future performance. We do not promise
+            profits, guaranteed accuracy, or specific returns under any circumstances. Any profit or loss is
+            solely yours, and MSPK Trade Solutions is not responsible for outcomes related to your trades.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
             By using this website or app, you acknowledge and accept that you are responsible for your own
-            decisions, risk management, and compliance with applicable laws in your jurisdiction.
+            decisions, risk management, and compliance with applicable laws in your jurisdiction. If you are
+            unsure, seek advice from a qualified professional before making any financial decisions.
           </p>
         </section>
 
@@ -257,6 +259,78 @@ export default function PrivacyPolicyPage() {
             incidental, special, or consequential damages arising from the use of information, signals, or tools
             provided through the service. You assume full responsibility for any trading activity you choose to
             undertake.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Additional Disclosures & User Responsibilities</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Our platform exists to support education, research, and awareness. It does not offer personalized
+            advice, and it should not be treated as a solicitation to buy, sell, or hold any instrument.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            You are solely responsible for ensuring that your use of the platform complies with all applicable
+            laws, rules, and regulations in your location, including any requirements related to trading,
+            taxation, reporting, or licensing.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Market data and analytics may be delayed, incomplete, or subject to technical limitations. We do
+            not guarantee real-time accuracy, and you should independently verify critical information before
+            acting on it.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Any links, integrations, or references to third-party services are provided for convenience. We do
+            not control third-party content or services, and your use of those services is governed by their
+            own terms and policies.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            We may send account-related communications, including security notices, service updates, and
+            onboarding messages. These operational communications are essential to deliver the service and are
+            not optional while your account is active.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            We reserve the right to suspend, restrict, or terminate access if we detect abuse, fraud, or other
+            activity that risks platform integrity, user safety, or legal compliance.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Payments, pricing, and plan availability may change based on business, regulatory, or operational
+            needs. Any pricing updates will be communicated through the platform or official channels.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Refunds, if any, are handled in accordance with the terms presented at the time of purchase and may
+            be limited by payment provider rules or statutory requirements.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Use of the platform requires stable internet connectivity and compatible devices. We are not
+            responsible for losses or disruptions caused by outages, latency, or device limitations.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            By continuing to use MSPK Trade Solutions, you acknowledge that all signals, insights, and examples
+            are educational only, and you accept full responsibility for any trading outcomes, whether gains or
+            losses.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            To avoid any doubt, this platform is intended to help users learn how markets behave and how trading
+            strategies are evaluated, but it does not provide investment advice, does not guarantee any results,
+            and does not promise suitability for any particular user or financial objective. You agree that any
+            trade you place is your independent decision, made after your own analysis and risk assessment. You
+            understand that markets can move rapidly and unpredictably, that liquidity conditions and spreads
+            can change without notice, and that technical failures, price gaps, or data interruptions can occur.
+            You acknowledge that results shown on the platform, including backtests, sample signals, and
+            illustrative outcomes, are provided for educational context only and may not reflect actual trading
+            results. You further agree that you will not rely on MSPK Trade Solutions as your sole source of
+            information for trading decisions, and that you will consult qualified professionals if you need
+            financial, legal, or tax guidance. You accept that MSPK Trade Solutions has no control over your
+            brokerage account, order execution, or trade management, and that it cannot supervise or prevent
+            losses. You are responsible for maintaining appropriate safeguards, including position sizing,
+            stop-loss discipline, diversification, and adherence to your own trading plan. You also agree that
+            your use of the service is voluntary and at your own risk, and that MSPK Trade Solutions is not
+            liable for any direct or indirect losses, missed opportunities, or consequential damages arising
+            from the use of any information or tools provided. This educational-only framework is fundamental
+            to the service, and continued use of the platform indicates your understanding and acceptance of
+            these terms. You also agree to keep your expectations realistic, to use demo or paper trading when
+            appropriate, and to review this policy periodically for updates. If you do not accept these
+            conditions, you should discontinue use of the platform and avoid acting on any information shown.
           </p>
         </section>
 
