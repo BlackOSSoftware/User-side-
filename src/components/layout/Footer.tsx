@@ -28,6 +28,7 @@ const telegramUrl = "https://t.me/Mspktradesolution";
 const facebookUrl = "https://www.facebook.com/share/198XcXtc6n/";
 const youtubeUrl = "https://youtube.com/@mspktradesolution?si=1_U7FF2PehnzFh_z";
 const instagramUrl = "https://www.instagram.com/mspk_tradesolutions/";
+const xUrl = "https://x.com/MspkTrade";
 
 const Footer = () => {
   return (
@@ -100,36 +101,22 @@ const Footer = () => {
               { label: "Instagram", Icon: Instagram, href: instagramUrl },
               { label: "Facebook", Icon: Facebook, href: facebookUrl },
               { label: "Telegram", Icon: TelegramIcon, href: telegramUrl },
-              { label: "X (Twitter)", Icon: Twitter, href: "" },
+              { label: "X (Twitter)", Icon: Twitter, href: xUrl },
               { label: "YouTube", Icon: Youtube, href: youtubeUrl },
             ].map((item) => (
-              item.href ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative rounded-full border border-border bg-background/60 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary"
-                  aria-label={item.label}
-                >
-                  <item.Icon className="h-4 w-4" />
-                  <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-foreground px-2 py-1 text-[10px] font-semibold text-background opacity-0 shadow-sm transition-all group-hover:opacity-100 group-hover:-translate-y-0.5">
-                    {item.label}
-                  </span>
-                </a>
-              ) : (
-                <div
-                  key={item.label}
-                  className="group relative rounded-full border border-border bg-background/60 p-2 text-muted-foreground opacity-60 cursor-not-allowed"
-                  aria-label={item.label}
-                  title="X (Twitter) coming soon"
-                >
-                  <item.Icon className="h-4 w-4" />
-                  <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-foreground px-2 py-1 text-[10px] font-semibold text-background opacity-0 shadow-sm transition-all group-hover:opacity-100 group-hover:-translate-y-0.5">
-                    {item.label}
-                  </span>
-                </div>
-              )
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative rounded-full border border-border bg-background/60 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary"
+                aria-label={item.label}
+              >
+                <item.Icon className="h-4 w-4" />
+                <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-foreground px-2 py-1 text-[10px] font-semibold text-background opacity-0 shadow-sm transition-all group-hover:opacity-100 group-hover:-translate-y-0.5">
+                  {item.label}
+                </span>
+              </a>
             ))}
           </div>
         </div>

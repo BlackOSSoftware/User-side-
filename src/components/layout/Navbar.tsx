@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { Home, TrendingUp, BadgeDollarSign, Info, Menu, X, Mail, FileText } from "lucide-react"
+import { Home, TrendingUp, BadgeDollarSign, Info, Menu, X, Mail, FileText, Twitter } from "lucide-react"
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -23,6 +23,7 @@ export default function Navbar() {
     }, [])
 
     const pathname = usePathname()
+    const xUrl = "https://x.com/MspkTrade"
 
     const closeMobileMenu = () => {
         setMobileOpen(false)
@@ -81,6 +82,17 @@ export default function Navbar() {
                     {/* Right actions */}
                     <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         <ModeToggle />
+                        <a
+                            href={xUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="MSPK on X"
+                            className="hidden lg:inline-flex"
+                        >
+                            <Button variant="ghost" size="icon" className="rounded-full">
+                                <Twitter className="h-4 w-4" />
+                            </Button>
+                        </a>
 
                         {/* ⭐ FIXED → visible only on desktop */}
                         <Link href={LOGIN_URL} className="hidden lg:block" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
@@ -148,6 +160,11 @@ export default function Navbar() {
 
                         {/* Drawer actions */}
                         <div className="flex flex-col sm:flex-row gap-2 pt-3 mt-1 border-t border-border/40">
+                            <a href={xUrl} target="_blank" rel="noopener noreferrer" className="sm:flex-1">
+                                <Button variant="outline" className="w-full rounded-xl py-2.5 sm:py-2 text-sm sm:text-base">
+                                    <Twitter className="h-4 w-4 mr-2" /> X (Twitter)
+                                </Button>
+                            </a>
                             <Link href={LOGIN_URL} className="sm:flex-1" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
                                 <Button variant="ghost" className="w-full rounded-xl py-2.5 sm:py-2 text-sm sm:text-base">Log In</Button>
                             </Link>

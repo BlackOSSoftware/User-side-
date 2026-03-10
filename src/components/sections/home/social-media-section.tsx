@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Facebook, Instagram, Youtube, MessageCircle, Send, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +11,7 @@ const telegramUrl = "https://t.me/Mspktradesolution";
 const facebookUrl = "https://www.facebook.com/share/198XcXtc6n/";
 const youtubeUrl = "https://youtube.com/@mspktradesolution?si=1_U7FF2PehnzFh_z";
 const instagramUrl = "https://www.instagram.com/mspk_tradesolutions/";
+const xUrl = "https://x.com/MspkTrade";
 
 export default function SocialMediaSection() {
     return (
@@ -40,36 +42,23 @@ export default function SocialMediaSection() {
                     { label: "Facebook", icon: Facebook, color: "from-blue-600 to-sky-500", href: facebookUrl },
                     { label: "WhatsApp", icon: MessageCircle, color: "from-emerald-500 to-lime-400", href: whatsappUrl },
                     { label: "Telegram", icon: Send, color: "from-sky-500 to-cyan-400", href: telegramUrl },
-                    { label: "X (Twitter)", icon: Twitter, color: "from-slate-900 to-slate-700", href: "" },
+                    { label: "X (Twitter)", icon: Twitter, color: "from-slate-900 to-slate-700", href: xUrl },
                     { label: "YouTube", icon: Youtube, color: "from-red-600 to-rose-500", href: youtubeUrl },
                 ].map((item, i) => {
                     const Icon = item.icon;
                     return (
-                        item.href ? (
-                            <a
-                                key={i}
-                                href={item.href}
-                                aria-label={item.label}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl p-2 flex items-center justify-center shadow-sm"
-                            >
-                                <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center`}>
-                                    <Icon className="w-4 h-4 text-white" />
-                                </div>
-                            </a>
-                        ) : (
-                            <div
+                        <a
                             key={i}
+                            href={item.href}
                             aria-label={item.label}
-                            className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl p-2 flex items-center justify-center shadow-sm opacity-60 cursor-not-allowed"
-                            title="X (Twitter) coming soon"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl p-2 flex items-center justify-center shadow-sm"
                         >
                             <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center`}>
                                 <Icon className="w-4 h-4 text-white" />
                             </div>
-                        </div>
-                        )
+                        </a>
                     );
                 })}
             </div>
@@ -77,7 +66,12 @@ export default function SocialMediaSection() {
             <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_360px_1fr] items-center">
                 {/* Left floating cards */}
                 <div className="relative hidden lg:block h-[420px]">
-                    <div className="absolute top-8 right-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56">
+                    <a
+                        href={instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute top-8 right-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56 transition hover:-translate-y-0.5"
+                    >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-500 to-yellow-400 flex items-center justify-center">
                                 <Instagram className="w-5 h-5 text-white" />
@@ -87,12 +81,17 @@ export default function SocialMediaSection() {
                                 <div className="text-xs text-muted-foreground">@mspk_tradesolutions</div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                     <div className="absolute bottom-10 left-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
                         <div className="text-sm font-semibold text-foreground">Community Updates</div>
                         <div className="text-xs text-muted-foreground mt-1">Education, highlights, and weekly recaps.</div>
                     </div>
-                    <div className="absolute top-40 left-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
+                    <a
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute top-40 left-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52 transition hover:-translate-y-0.5"
+                    >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-400 flex items-center justify-center">
                                 <MessageCircle className="w-5 h-5 text-white" />
@@ -102,8 +101,13 @@ export default function SocialMediaSection() {
                                 <div className="text-xs text-muted-foreground">+91 77700 39037</div>
                             </div>
                         </div>
-                    </div>
-                    <div className="absolute bottom-6 right-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
+                    </a>
+                    <a
+                        href={telegramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute bottom-6 right-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52 transition hover:-translate-y-0.5"
+                    >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
                                 <Send className="w-5 h-5 text-white" />
@@ -113,7 +117,7 @@ export default function SocialMediaSection() {
                                 <div className="text-xs text-muted-foreground">t.me/Mspktradesolution</div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 {/* Center phone mock */}
@@ -127,7 +131,9 @@ export default function SocialMediaSection() {
                             </div>
                             <div className="text-xl font-semibold text-foreground">Our Social Media</div>
                             <div className="w-48 h-48 rounded-full bg-gradient-to-br from-blue-500/15 to-sky-400/10 flex items-center justify-center">
-                                <div className="w-28 h-28 rounded-full bg-white/80 dark:bg-white/10 border border-black/5 dark:border-white/10"></div>
+                                <div className="relative w-28 h-28 rounded-full bg-white/80 dark:bg-white/10 border border-black/5 dark:border-white/10 overflow-hidden">
+                                    <Image src="/logo.jpg" alt="MSPK Trade Solutions logo" fill className="object-cover" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -135,7 +141,12 @@ export default function SocialMediaSection() {
 
                 {/* Right floating cards */}
                 <div className="relative hidden lg:block h-[420px]">
-                    <div className="absolute top-10 left-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56">
+                    <a
+                        href={facebookUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute top-10 left-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56 transition hover:-translate-y-0.5"
+                    >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-sky-400 flex items-center justify-center">
                                 <Facebook className="w-5 h-5 text-white" />
@@ -145,8 +156,13 @@ export default function SocialMediaSection() {
                                 <div className="text-xs text-muted-foreground">MSPK Trade Solutions</div>
                             </div>
                         </div>
-                    </div>
-                    <div className="absolute bottom-44 left-0 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56">
+                    </a>
+                    <a
+                        href={youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute bottom-44 left-0 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56 transition hover:-translate-y-0.5"
+                    >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-600 to-rose-500 flex items-center justify-center">
                                 <Youtube className="w-5 h-5 text-white" />
@@ -156,7 +172,7 @@ export default function SocialMediaSection() {
                                 <div className="text-xs text-muted-foreground">@mspktradesolution</div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 
@@ -193,16 +209,14 @@ export default function SocialMediaSection() {
                         <Send className="w-5 h-5 mr-2" /> Telegram
                     </Button>
                 </a>
-                <div className="w-full sm:w-auto">
+                <a href={xUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
-                        className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base cursor-not-allowed opacity-70"
-                        aria-disabled="true"
-                        title="X (Twitter) coming soon"
+                        className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                     >
                         <Twitter className="w-5 h-5 mr-2" /> X (Twitter)
                     </Button>
-                </div>
+                </a>
                 <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
