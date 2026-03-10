@@ -82,18 +82,8 @@ export default function Navbar() {
                     {/* Right actions */}
                     <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         <ModeToggle />
-                        <a
-                            href={xUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="MSPK on X"
-                            className="hidden lg:inline-flex"
-                        >
-                            <Button variant="ghost" size="icon" className="rounded-full">
-                                <Twitter className="h-4 w-4" />
-                            </Button>
-                        </a>
-
+                       
+                       
                         {/* ⭐ FIXED → visible only on desktop */}
                         <Link href={LOGIN_URL} className="hidden lg:block" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
                             <Button variant="ghost" size="sm" className="rounded-full font-semibold hover:bg-muted text-foreground/80 whitespace-nowrap">
@@ -110,7 +100,15 @@ export default function Navbar() {
                         </Link>
 
                         {/* Mobile menu button */}
-                       
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="lg:hidden rounded-full"
+                            onClick={() => setMobileOpen((v) => !v)}
+                            aria-label="Toggle navigation"
+                        >
+                            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        </Button>
                     </div>
                 </div>
 

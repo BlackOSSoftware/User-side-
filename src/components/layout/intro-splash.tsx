@@ -32,21 +32,24 @@ export default function IntroSplash() {
         forceIntro.current = force;
 
         const seen = window.sessionStorage.getItem("mspk_intro_seen");
-        if (!force && seen) return;
+        if (!force && seen) {
+            document.body.classList.remove("intro-preload");
+            return;
+        }
 
+        document.body.classList.add("intro-active");
+        document.body.style.overflow = "hidden";
         setActive(true);
     }, []);
 
     useEffect(() => {
         if (!active) return;
 
-        document.body.classList.add("intro-active");
-        document.body.style.overflow = "hidden";
-
         const timer = window.setTimeout(() => {
             setActive(false);
             document.body.style.overflow = "";
             document.body.classList.remove("intro-active");
+            document.body.classList.remove("intro-preload");
             if (!forceIntro.current) window.sessionStorage.setItem("mspk_intro_seen", "true");
         }, INTRO_DURATION_MS);
 
@@ -153,6 +156,13 @@ export default function IntroSplash() {
                 }
 
                 body.intro-active #navbar-brand-logo * {
+                    pointer-events: none;
+                }
+
+                body.intro-active header,
+                body.intro-active main,
+                body.intro-active footer {
+                    opacity: 0;
                     pointer-events: none;
                 }
 

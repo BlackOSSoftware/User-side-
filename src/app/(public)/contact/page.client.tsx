@@ -80,11 +80,16 @@ export default function ContactPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               {[
                 { icon: Mail, title: "Email", val: "support@mspktrading.com" },
-                { icon: Phone, title: "Phone", val: "+91 7770039037" },
+                {
+                  icon: Phone,
+                  title: "Phone",
+                  val: "+91 7770039037",
+                  note: "WhatsApp call & message only (no standard voice calls).",
+                },
                 {
                   icon: MapPin,
                   title: "Connect to WhatsApp",
-                  val: "917770039037",
+                  val: "+91 7770039037",
                   href: "https://wa.me/917770039037?text=Hi%2C%20I%27m%20contacting%20you%20from%20your%20website%20contact%20page.",
                 },
                 { icon: Headphones, title: "Support Hours", val: "24/7 Active Desk" },
@@ -118,7 +123,12 @@ export default function ContactPage() {
                           <span className="text-[10px] font-bold">Open</span>
                         </a>
                       ) : (
-                        <p className="text-sm text-muted-foreground">{item.val}</p>
+                        <div className="space-y-1">
+                          <p className="text-sm text-muted-foreground">{item.val}</p>
+                          {item.note ? (
+                            <p className="text-xs text-muted-foreground/80">{item.note}</p>
+                          ) : null}
+                        </div>
                       )}
                     </div>
                   </div>

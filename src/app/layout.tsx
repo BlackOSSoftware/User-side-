@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 import { Toaster } from 'sonner';
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: {
@@ -96,9 +97,35 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteLinksSchema) }}
         />
+        <style>{`
+          body.intro-preload header,
+          body.intro-preload main,
+          body.intro-preload footer {
+            opacity: 0;
+            pointer-events: none;
+          }
+        `}</style>
+        <Script id="intro-preload" strategy="beforeInteractive">
+          {`
+            (function () {
+              try {
+                var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                var params = new URLSearchParams(window.location.search);
+                var force = params.has("intro");
+                var seen = window.sessionStorage.getItem("mspk_intro_seen");
+                var shouldShow = !reduce && (force || !seen);
+                if (shouldShow) {
+                  document.body.classList.add("intro-active");
+                }
+              } catch (e) {
+              }
+            })();
+          `}
+        </Script>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
+        className={`intro-preload ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeSync />
         <QueryProvider>

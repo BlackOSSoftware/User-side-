@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Facebook, Instagram, Youtube, MessageCircle, Send, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
 
 const whatsappNumber = "917770039037";
 const whatsappMessage = "Please contact me from the dashboard.";
@@ -14,15 +15,42 @@ const instagramUrl = "https://www.instagram.com/mspk_tradesolutions/";
 const xUrl = "https://x.com/MspkTrade";
 
 export default function SocialMediaSection() {
+    const sectionRef = useRef<HTMLElement | null>(null);
+    const [inView, setInView] = useState(false);
+
+    useEffect(() => {
+        const node = sectionRef.current;
+        if (!node) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setInView(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "-10% 0px -10% 0px", threshold: 0.2 }
+        );
+
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
+
     return (
-        <section className="w-full max-w-7xl mx-auto px-4 py-10 sm:py-14 md:py-24 relative z-10 overflow-hidden">
+        <section
+            ref={sectionRef}
+            className="w-full max-w-7xl mx-auto px-4 py-10 sm:py-14 md:py-24 relative z-10 overflow-hidden"
+        >
             <div className="absolute inset-0 -z-10">
                 <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-[#0b0b0b] dark:via-[#0a0a0a] dark:to-[#0b0b0b]" />
                 <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] bg-[radial-gradient(circle,rgba(59,130,246,0.18),transparent_60%)]" />
                 <div className="absolute top-24 right-0 w-[520px] h-[520px] bg-[radial-gradient(circle,rgba(14,165,233,0.18),transparent_60%)]" />
             </div>
 
-            <div className="flex flex-col items-center text-center gap-4 sm:gap-6">
+            <div
+                className={`flex flex-col items-center text-center gap-4 sm:gap-6 transition-all duration-1000 ease-out transform-gpu ${inView ? "opacity-100 translate-y-0 blur-0" : "opacity-0 translate-y-10 blur-sm"}`}
+                style={{ transitionDelay: "80ms" }}
+            >
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                     Social Media
@@ -36,7 +64,10 @@ export default function SocialMediaSection() {
             </div>
 
             {/* Mobile mini social strip */}
-            <div className="mt-6 grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 lg:hidden">
+            <div
+                className={`mt-6 grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 lg:hidden transition-all duration-1000 ease-out transform-gpu ${inView ? "opacity-100 translate-y-0 blur-0" : "opacity-0 translate-y-10 blur-sm"}`}
+                style={{ transitionDelay: "140ms" }}
+            >
                 {[
                     { label: "Instagram", icon: Instagram, color: "from-pink-500 to-yellow-400", href: instagramUrl },
                     { label: "Facebook", icon: Facebook, color: "from-blue-600 to-sky-500", href: facebookUrl },
@@ -65,12 +96,15 @@ export default function SocialMediaSection() {
 
             <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_360px_1fr] items-center">
                 {/* Left floating cards */}
-                <div className="relative hidden lg:block h-[420px]">
+                <div
+                    className={`relative hidden lg:flex lg:flex-col lg:gap-4 lg:items-start xl:block h-auto xl:h-[420px] transition-all duration-1000 ease-out transform-gpu ${inView ? "opacity-100 translate-x-0 blur-0" : "opacity-0 -translate-x-10 blur-sm"}`}
+                    style={{ transitionDelay: "160ms" }}
+                >
                     <a
                         href={instagramUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute top-8 right-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56 transition hover:-translate-y-0.5"
+                        className="lg:static xl:absolute xl:top-8 xl:right-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-56 lg:w-full xl:w-56 transition hover:-translate-y-0.5"
                     >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-500 to-yellow-400 flex items-center justify-center">
@@ -82,15 +116,12 @@ export default function SocialMediaSection() {
                             </div>
                         </div>
                     </a>
-                    <div className="absolute bottom-10 left-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52">
-                        <div className="text-sm font-semibold text-foreground">Community Updates</div>
-                        <div className="text-xs text-muted-foreground mt-1">Education, highlights, and weekly recaps.</div>
-                    </div>
+                   
                     <a
                         href={whatsappUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute top-40 left-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52 transition hover:-translate-y-0.5"
+                        className="lg:static xl:absolute xl:top-40 xl:left-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52 lg:w-full xl:w-52 transition hover:-translate-y-0.5"
                     >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-400 flex items-center justify-center">
@@ -106,7 +137,7 @@ export default function SocialMediaSection() {
                         href={telegramUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute bottom-6 right-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52 transition hover:-translate-y-0.5"
+                        className="lg:static xl:absolute xl:bottom-6 xl:right-2 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52 lg:w-full xl:w-52 transition hover:-translate-y-0.5"
                     >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
@@ -121,7 +152,10 @@ export default function SocialMediaSection() {
                 </div>
 
                 {/* Center phone mock */}
-                <div className="relative mx-auto w-full max-w-[360px]">
+                <div
+                    className={`relative mx-auto w-full max-w-[360px] transition-all duration-1000 ease-out transform-gpu ${inView ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[0.94] blur-sm"}`}
+                    style={{ transitionDelay: "220ms" }}
+                >
                     <div className="absolute -inset-6 bg-gradient-to-br from-blue-500/20 to-sky-400/20 blur-2xl rounded-[40px]"></div>
                     <div className="relative rounded-[32px] border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl p-6">
                         <div className="mx-auto h-5 w-24 rounded-full bg-slate-200 dark:bg-white/10 mb-6"></div>
@@ -130,17 +164,20 @@ export default function SocialMediaSection() {
                                 MSPK
                             </div>
                             <div className="text-xl font-semibold text-foreground">Our Social Media</div>
-                            <div className="w-48 h-48 rounded-full bg-gradient-to-br from-blue-500/15 to-sky-400/10 flex items-center justify-center">
-                                <div className="relative w-28 h-28 rounded-full bg-white/80 dark:bg-white/10 border border-black/5 dark:border-white/10 overflow-hidden">
+                            
+                                <div className="relative w-48 h-48 rounded-full bg-white/80 dark:bg-white/10 border border-black/5 dark:border-white/10 overflow-hidden">
                                     <Image src="/logo.jpg" alt="MSPK Trade Solutions logo" fill className="object-cover" />
                                 </div>
-                            </div>
+                            {/* </div> */}
                         </div>
                     </div>
                 </div>
 
                 {/* Right floating cards */}
-                <div className="relative hidden lg:block h-[420px]">
+                <div
+                    className={`relative hidden lg:block h-[420px] transition-all duration-1000 ease-out transform-gpu ${inView ? "opacity-100 translate-x-0 blur-0" : "opacity-0 translate-x-10 blur-sm"}`}
+                    style={{ transitionDelay: "180ms" }}
+                >
                     <a
                         href={facebookUrl}
                         target="_blank"
@@ -173,10 +210,17 @@ export default function SocialMediaSection() {
                             </div>
                         </div>
                     </a>
+                     <div className="lg:static xl:absolute xl:bottom-10 xl:left-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 shadow-xl rounded-2xl p-4 w-52 lg:w-full xl:w-52">
+                        <div className="text-sm font-semibold text-foreground">Community Updates</div>
+                        <div className="text-xs text-muted-foreground mt-1">Education, highlights, and weekly recaps.</div>
+                    </div>
                 </div>
             </div>
 
-            <div className="mt-10 hidden lg:flex flex-wrap justify-center gap-4">
+            <div
+                className={`mt-10 hidden lg:flex flex-wrap justify-center gap-4 transition-all duration-1000 ease-out transform-gpu ${inView ? "opacity-100 translate-y-0 blur-0" : "opacity-0 translate-y-10 blur-sm"}`}
+                style={{ transitionDelay: "260ms" }}
+            >
                 <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                     <Button
                         size="lg"
