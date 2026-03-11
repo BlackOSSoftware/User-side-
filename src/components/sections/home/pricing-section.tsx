@@ -69,7 +69,7 @@ export default function PricingSection({ plans }: PricingSectionProps) {
                                 <span className="text-4xl font-bold text-slate-900 dark:text-white">{plan.price}</span>
                                 <span className="text-sm text-slate-500 dark:text-white/40"> / {plan.duration}</span>
                             </div>
-                            <ul className="space-y-4 mb-8 text-left w-full max-w-[240px] mx-auto">
+                            <ul className="space-y-4 mb-8 text-left w-full">
                                 {plan.features.map((feature, i) => (
                                     <li key={i} className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/80">
                                         {isPopular ? (
