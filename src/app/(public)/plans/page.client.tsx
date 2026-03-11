@@ -351,7 +351,7 @@ const scrollByStep = useCallback(
               return (
                 <Card
                   key={`${plan.id}-${index}`}
-                  className={`plan-swipe-card relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex h-[500px] sm:h-[540px] lg:h-[580px] flex-col snap-center shrink-0 w-[88%] sm:w-[70%] md:w-[48%] lg:w-[32%] min-w-[250px]
+                  className={`plan-swipe-card relative overflow-hidden rounded-[1.75rem] transition-all duration-500 group flex min-h-[500px] sm:min-h-[540px] lg:min-h-[580px] flex-col snap-center shrink-0 w-[88%] sm:w-[70%] md:w-[48%] lg:w-[32%] min-w-[250px]
                     ${isActive ? "plan-swipe-active" : ""}
                     ${depthClass}
                     ${plan.isPopular
@@ -370,14 +370,14 @@ const scrollByStep = useCallback(
                   <CardDescription className="line-clamp-2">{plan.description}</CardDescription>
                 </CardHeader>
 
-                <CardContent className="p-6 pt-6 flex-1">
+                <CardContent className="p-6 pt-6 flex-1 flex flex-col">
                   <div className="flex items-baseline gap-1 mb-6">
                     <span className="text-4xl font-bold tracking-tighter">{plan.price}</span>
                     <span className="text-muted-foreground text-sm ml-1">/ {plan.duration}</span>
                   </div>
 
-                  <div className="space-y-4 mb-8">
-                    {plan.features.slice(0, 4).map((feature, i) => (
+                  <div className="space-y-4 mb-6 flex-1">
+                    {plan.features.map((feature, i) => (
                       <div key={i} className="flex items-start gap-3">
                         <div
                           className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0
