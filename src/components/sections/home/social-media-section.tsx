@@ -9,7 +9,7 @@ const whatsappNumber = "917770039037";
 const whatsappMessage = "Please contact me from the dashboard.";
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 const telegramUrl = "https://t.me/Mspktradesolution";
-const facebookUrl = "https://www.facebook.com/share/198XcXtc6n/";
+const facebookUrl = "https://www.facebook.com/share/18BV74A6dD/";
 const youtubeUrl = "https://youtube.com/@mspktradesolution?si=1_U7FF2PehnzFh_z";
 const instagramUrl = "https://www.instagram.com/mspk_tradesolutions/";
 const xUrl = "https://x.com/MspkTrade";
@@ -165,9 +165,21 @@ export default function SocialMediaSection() {
                             </div>
                             <div className="text-xl font-semibold text-foreground">Our Social Media</div>
                             
-                                <div className="relative w-48 h-48 rounded-full bg-white/80 dark:bg-white/10 border border-black/5 dark:border-white/10 overflow-hidden">
+                            <div className="relative w-48 h-48 motion-safe:animate-[floatBeat_3.6s_ease-in-out_infinite]">
+                                <div
+                                    className="absolute inset-0 rounded-full border border-blue-500/30"
+                                    style={{ animation: "spin 24s linear infinite" }}
+                                />
+                                <div
+                                    className="absolute -inset-2 rounded-full border border-sky-400/20"
+                                    style={{ animation: "spin 32s linear infinite", animationDirection: "reverse" }}
+                                />
+                                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/10 via-transparent to-sky-400/10 blur-xl" />
+                                <div className="relative w-full h-full rounded-full bg-white/80 dark:bg-white/10 border border-black/5 dark:border-white/10 overflow-hidden shadow-xl animate-pulse">
+                                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent opacity-70" />
                                     <Image src="/logo.jpg" alt="MSPK Trade Solutions logo" fill className="object-cover" />
                                 </div>
+                            </div>
                             {/* </div> */}
                         </div>
                     </div>
@@ -270,6 +282,25 @@ export default function SocialMediaSection() {
                     </Button>
                 </a>
             </div>
+            <style jsx>{`
+                @keyframes floatBeat {
+                    0% {
+                        transform: translateY(0) scale(1);
+                    }
+                    35% {
+                        transform: translateY(-6px) scale(1.02);
+                    }
+                    50% {
+                        transform: translateY(-2px) scale(0.99);
+                    }
+                    70% {
+                        transform: translateY(-4px) scale(1.01);
+                    }
+                    100% {
+                        transform: translateY(0) scale(1);
+                    }
+                }
+            `}</style>
         </section>
     );
 }

@@ -25,7 +25,7 @@ const whatsappNumber = "917770039037";
 const whatsappMessage = "Please contact me from the dashboard.";
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 const telegramUrl = "https://t.me/Mspktradesolution";
-const facebookUrl = "https://www.facebook.com/share/198XcXtc6n/";
+const facebookUrl = "https://www.facebook.com/share/18BV74A6dD/";
 const youtubeUrl = "https://youtube.com/@mspktradesolution?si=1_U7FF2PehnzFh_z";
 const instagramUrl = "https://www.instagram.com/mspk_tradesolutions/";
 const xUrl = "https://x.com/MspkTrade";

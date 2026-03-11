@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,62 @@ export default function HeroSection() {
         "Verified structure. Confident execution.",
         "Live signals. Disciplined entries.",
         "Precision in, protected out.",
+    ];
+    const chipColors = [
+        "from-blue-500/20 to-blue-500/5 border-blue-500/30",
+        "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30",
+        "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30",
+        "from-purple-500/20 to-purple-500/5 border-purple-500/30",
+        "from-amber-500/20 to-amber-500/5 border-amber-500/30",
+        "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30",
+        "from-pink-500/20 to-pink-500/5 border-pink-500/30",
+        "from-teal-500/20 to-teal-500/5 border-teal-500/30",
+        "from-orange-500/20 to-orange-500/5 border-orange-500/30",
+        "from-primary/20 to-primary/5 border-primary/30",
+    ];
+    const row1Items = [
+        "Nifty 50",
+        "Bank Nifty",
+        "BSE Sensex",
+        "Fin Nifty",
+        "Nifty IT",
+        "Nifty Auto",
+        "Nifty Pharma",
+        "Nifty FMCG",
+        "Nifty Metal",
+        "Nifty PSU Bank",
+        "Nifty Realty",
+        "Nifty Energy",
+        "India VIX",
+        "USD/INR",
+        "Forex Majors",
+        "COMEX Gold",
+        "COMEX Silver",
+        "Crude Oil",
+        "BTC/USDT",
+        "ETH/USDT",
+    ];
+    const row2Items = [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "AUD/USD",
+        "Forex Minors",
+        "Gold Spot",
+        "Silver Spot",
+        "Natural Gas",
+        "Brent Crude",
+        "MCX Gold",
+        "MCX Silver",
+        "MCX Crude",
+        "Nifty Midcap",
+        "Nifty Smallcap",
+        "Nifty Next 50",
+        "Nifty 500",
+        "Bankex",
+        "Crypto Alt Index",
+        "SOL/USDT",
+        "XRP/USDT",
     ];
 
     const [taglineIndex, setTaglineIndex] = useState(0);
@@ -53,6 +110,7 @@ export default function HeroSection() {
 
         return () => clearTimeout(timeout);
     }, [charIndex, isDeleting, taglineIndex]);
+
 
     return (
         <section className="relative pt-14 pb-12 md:pb-20 overflow-hidden">
@@ -172,6 +230,17 @@ export default function HeroSection() {
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 animate-[pulse_8s_infinite]" />
 
                         <div className="relative p-10 lg:p-16 flex flex-col items-center text-center gap-10">
+                            <div className="absolute inset-0 -z-10 overflow-hidden">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                    alt="Market background"
+                                    fill
+                                    className="object-cover opacity-80 animate-in fade-in duration-800"
+                                    sizes="100vw"
+                                    loading="lazy"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-b from-background/15 via-background/55 to-background" />
+                            </div>
 
                             {/* MAIN QUOTE */}
                             <div className="max-w-3xl space-y-4">
@@ -191,23 +260,20 @@ export default function HeroSection() {
 
                                 {/* ================= ROW 1 ================= */}
                                 <div className="overflow-hidden">
-                                    <div className="flex w-max animate-[marquee-left_25s_linear_infinite]">
+                                    <div className="flex w-max animate-[marquee-left_45s_linear_infinite]">
 
                                         {/* GROUP 1 */}
                                         <div className="flex gap-3 pr-3">
                                             {[
-                                                { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
-                                                { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
-                                                { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
-                                                { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
-                                                { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
-                                                { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
-                                                { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
-                                                { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
-                                                { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
-                                                { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
+                                                ...row1Items.map((label, i) => ({
+                                                    label,
+                                                    color: chipColors[i % chipColors.length],
+                                                })),
                                             ].map((item, i) => (
-                                                <div key={i} className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
+                                                <div
+                                                    key={i}
+                                                    className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}
+                                                >
                                                     {item.label}
                                                 </div>
                                             ))}
@@ -216,18 +282,15 @@ export default function HeroSection() {
                                         {/* GROUP 2 (clone SAME order -> seamless) */}
                                         <div className="flex gap-3">
                                             {[
-                                                { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
-                                                { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
-                                                { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
-                                                { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
-                                                { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
-                                                { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
-                                                { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
-                                                { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
-                                                { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
-                                                { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
+                                                ...row1Items.map((label, i) => ({
+                                                    label,
+                                                    color: chipColors[i % chipColors.length],
+                                                })),
                                             ].map((item, i) => (
-                                                <div key={i} className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
+                                                <div
+                                                    key={i}
+                                                    className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}
+                                                >
                                                     {item.label}
                                                 </div>
                                             ))}
@@ -238,23 +301,20 @@ export default function HeroSection() {
 
                                 {/* ================= ROW 2 ================= */}
                                 <div className="overflow-hidden">
-                                    <div className="flex w-max animate-[marquee-right_28s_linear_infinite]">
+                                    <div className="flex w-max animate-[marquee-right_50s_linear_infinite]">
 
                                         {/* GROUP 1 */}
                                         <div className="flex gap-3 pr-3">
                                             {[
-                                                { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
-                                                { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
-                                                { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
-                                                { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
-                                                { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
-                                                { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
-                                                { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
-                                                { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
-                                                { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
-                                                { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
+                                                ...row2Items.map((label, i) => ({
+                                                    label,
+                                                    color: chipColors[(i + 3) % chipColors.length],
+                                                })),
                                             ].map((item, i) => (
-                                                <div key={i} className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
+                                                <div
+                                                    key={i}
+                                                    className={`px-4 py-3 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}
+                                                >
                                                     {item.label}
                                                 </div>
                                             ))}
@@ -263,18 +323,15 @@ export default function HeroSection() {
                                         {/* GROUP 2 */}
                                         <div className="flex gap-3">
                                             {[
-                                                { label: "Edge", color: "from-primary/20 to-primary/5 border-primary/30" },
-                                                { label: "Focus", color: "from-orange-500/20 to-orange-500/5 border-orange-500/30" },
-                                                { label: "Reliability", color: "from-teal-500/20 to-teal-500/5 border-teal-500/30" },
-                                                { label: "Performance", color: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
-                                                { label: "Structure", color: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
-                                                { label: "Confidence", color: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
-                                                { label: "Discipline", color: "from-purple-500/20 to-purple-500/5 border-purple-500/30" },
-                                                { label: "Clarity", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30" },
-                                                { label: "Consistency", color: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
-                                                { label: "Precision", color: "from-blue-500/20 to-blue-500/5 border-blue-500/30" },
+                                                ...row2Items.map((label, i) => ({
+                                                    label,
+                                                    color: chipColors[(i + 3) % chipColors.length],
+                                                })),
                                             ].map((item, i) => (
-                                                <div key={i} className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}>
+                                                <div
+                                                    key={i}
+                                                    className={`px-2 py-1.5 sm:px-5 sm:py-4 rounded-xl bg-gradient-to-br ${item.color} backdrop-blur border text-xs sm:text-base font-semibold whitespace-nowrap`}
+                                                >
                                                     {item.label}
                                                 </div>
                                             ))}
@@ -309,6 +366,7 @@ export default function HeroSection() {
                     </div>
                 </div>
             </div>
+
         </section>
     );
 }

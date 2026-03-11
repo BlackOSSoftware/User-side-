@@ -2,6 +2,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import IntroSplash from "@/components/layout/intro-splash";
 import PublicMotionShell from "@/components/motion/public-motion-shell";
+import AppDownloadWidget from "@/components/layout/app-download-widget";
 
 export default function PublicLayout({
     children,
@@ -16,6 +17,7 @@ export default function PublicLayout({
                 <PublicMotionShell>{children}</PublicMotionShell>
             </main>
             <Footer />
+            <AppDownloadWidget />
         </div>
     );
 }

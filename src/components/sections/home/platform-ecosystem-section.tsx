@@ -47,7 +47,7 @@ export default function PlatformEcosystemSection() {
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="p-2 rounded-lg bg-blue-500/10"><CheckCircle2 className="w-5 h-5 text-blue-500" /></div>
-                                <span className="text-lg">&lt; 100ms Push Latency</span>
+                                <span className="text-lg">Real-time Alert Delivery</span>
                             </div>
                         </div>
                     </div>
