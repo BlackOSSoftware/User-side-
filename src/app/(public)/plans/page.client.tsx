@@ -8,7 +8,7 @@ import Link from "next/link";
 import { usePlansQuery } from "@/services/plans/plan.hooks";
 import type { Plan } from "@/services/plans/plan.types";
 import { useSwipeCards } from "@/hooks/use-swipe-cards";
-import { TRIAL_URL } from "@/lib/external-links";
+import { buildPublicPlanCta, TRIAL_URL } from "@/lib/external-links";
 
 export default function PlansPage() {
   const words = ["Scale With Confidence.", "Execute With Precision.", "Grow With Structure."];
@@ -56,8 +56,14 @@ export default function PlansPage() {
         price: "INR 25,000",
         duration: "Month",
         features: ["Full multi-strategy coverage", "Sub-100ms signal routing", "Deep analytics and exports", "Priority response support"],
-        buttonText: "Activate Professional",
-        href: TRIAL_URL,
+        buttonText: "Choose Plan",
+        href: buildPublicPlanCta({
+          id: "pro",
+          name: "Professional Access",
+          price: 25000,
+          durationDays: 30,
+          segment: "N/A",
+        }).href,
         isPopular: true,
       },
       {
@@ -67,8 +73,14 @@ export default function PlansPage() {
         price: "Custom",
         duration: "30 Days",
         features: ["Dedicated infrastructure", "White-label deployment", "FIX/API integrations", "Dedicated relationship manager"],
-        buttonText: "Schedule Consultation",
-        href: "/contact",
+        buttonText: "Choose Plan",
+        href: buildPublicPlanCta({
+          id: "enterprise",
+          name: "Institutional Suite",
+          durationDays: 30,
+          isCustom: true,
+          segment: "N/A",
+        }).href,
         isPopular: false,
       },
     ],
@@ -111,6 +123,15 @@ export default function PlansPage() {
           segment.includes("institutional"));
 
       return {
+        ...buildPublicPlanCta({
+          id: plan._id,
+          name: plan.name,
+          price: plan.price,
+          durationDays: plan.durationDays,
+          segment: plan.segment,
+          isDemo,
+          isCustom,
+        }),
         id: plan._id,
         name: plan.name,
         description: plan.description || "Premium access with execution-ready workflows.",
@@ -119,8 +140,6 @@ export default function PlansPage() {
         features: plan.features?.length
           ? plan.features
           : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
-        buttonText: isDemo ? "Start Demo Access" : "Activate Plan",
-        href: `${TRIAL_URL}?planId=${plan._id}`,
         isPopular,
       };
     });

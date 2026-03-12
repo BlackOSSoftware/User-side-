@@ -8,7 +8,7 @@ import PlatformEcosystemSection from "@/components/sections/home/platform-ecosys
 import PricingSection, { type PricingPlan } from "@/components/sections/home/pricing-section";
 import TestimonialsSection from "@/components/sections/home/testimonials-section";
 import SocialMediaSection from "@/components/sections/home/social-media-section";
-import { TRIAL_URL } from "@/lib/external-links";
+import { buildPublicPlanCta, TRIAL_URL } from "@/lib/external-links";
 
 export default function Home() {
     const { data: plans = [] } = usePlansQuery();
@@ -33,8 +33,14 @@ export default function Home() {
                 price: "INR 25,000",
                 duration: "Month",
                 features: ["Unlimited Strategies", "< 100ms Latency", "Deep Analytics & Export", "Priority 24/7 Support"],
-                buttonText: "Get Started",
-                href: TRIAL_URL,
+                buttonText: "Choose Plan",
+                href: buildPublicPlanCta({
+                    id: "pro",
+                    name: "Pro Access",
+                    price: 25000,
+                    durationDays: 30,
+                    segment: "N/A",
+                }).href,
                 isPopular: true,
             },
             {
@@ -44,8 +50,14 @@ export default function Home() {
                 price: "Custom",
                 duration: "30 Days",
                 features: ["Dedicated Infrastructure", "White Label Solution", "FIX API Access", "Dedicated Account Manager"],
-                buttonText: "Contact Sales",
-                href: "/contact",
+                buttonText: "Choose Plan",
+                href: buildPublicPlanCta({
+                    id: "enterprise",
+                    name: "Enterprise",
+                    durationDays: 30,
+                    isCustom: true,
+                    segment: "N/A",
+                }).href,
                 isPopular: false,
             },
         ],
@@ -88,6 +100,15 @@ export default function Home() {
                     segment.includes("institutional"));
 
             return {
+                ...buildPublicPlanCta({
+                    id: plan._id,
+                    name: plan.name,
+                    price: plan.price,
+                    durationDays: plan.durationDays,
+                    segment: plan.segment,
+                    isDemo,
+                    isCustom,
+                }),
                 id: plan._id,
                 name: plan.name,
                 description: plan.description || "Premium access built for disciplined execution.",
@@ -96,8 +117,6 @@ export default function Home() {
                 features: plan.features?.length
                     ? plan.features
                     : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
-                buttonText: isDemo ? "Start Demo Access" : "Activate Plan",
-                href: `${TRIAL_URL}?planId=${plan._id}`,
                 isPopular,
             };
         });
