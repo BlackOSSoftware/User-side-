@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { Users } from "lucide-react";
@@ -24,17 +24,17 @@ export default function TestimonialsSection() {
             rating: 4.3,
         },
         {
-            quote: "सिग्नल वेळेवर मिळतात आणि रिस्क नोट्स खूप स्पष्ट आहेत. माझा डिसिप्लिन खूप सुधारला.",
-            name: "रोहन पाटील",
-            role: "इंट्राडे ट्रेडर - पुणे",
+            quote: "Signals arrive on time and the risk notes are clear. My trading discipline has improved a lot.",
+            name: "Rohan P.",
+            role: "Intraday Trader - Pune",
             initials: "RP",
             gradient: "from-emerald-400 to-teal-500",
             rating: 3.5,
         },
         {
-            quote: "ट्रेड रिपोर्टिंग एकदम स्वच्छ आहे. लाईव्हमध्ये जे दिसतं तेच प्रत्यक्षात होतं.",
-            name: "स्नेहा देशमुख",
-            role: "स्विंग ट्रेडर - नागपूर",
+            quote: "Trade reporting is clean and transparent. What appears live is what gets executed.",
+            name: "Sneha D.",
+            role: "Swing Trader - Nagpur",
             initials: "SD",
             gradient: "from-amber-400 to-orange-500",
             rating: 5,

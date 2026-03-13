@@ -59,9 +59,9 @@ export default function AlertsPage() {
         connectUrl: data.connectUrl,
         startCommand,
       });
-      toast.info("Telegram app installed nahi hai to Open Telegram Web use karo aur copied command paste karo.");
+      toast.info("If the Telegram app is unavailable, open Telegram Web and paste the copied start command.");
     } catch (error) {
-      toast.error(getErrorMessage(error, "Telegram connect link generate nahi ho saka"));
+      toast.error(getErrorMessage(error, "Unable to generate the Telegram connection link"));
     }
   };
 
@@ -71,10 +71,10 @@ export default function AlertsPage() {
       if (result.data?.telegram?.connected) {
         toast.success("Telegram successfully connected");
       } else {
-        toast.info("Bot me Start dabane ke baad fir se Refresh Status karo");
+        toast.info("Press Start in the Telegram bot, then click Refresh Status.");
       }
     } catch (error) {
-      toast.error(getErrorMessage(error, "Telegram status refresh nahi ho saka"));
+      toast.error(getErrorMessage(error, "Unable to refresh Telegram status"));
     }
   };
 
@@ -84,7 +84,7 @@ export default function AlertsPage() {
       await meQuery.refetch();
       toast.success("Telegram disconnected");
     } catch (error) {
-      toast.error(getErrorMessage(error, "Telegram disconnect nahi ho saka"));
+      toast.error(getErrorMessage(error, "Unable to disconnect Telegram"));
     }
   };
 
@@ -95,13 +95,13 @@ export default function AlertsPage() {
       });
       toast.success(`Signal email alerts ${!isEmailEnabled ? "enabled" : "disabled"}`);
     } catch (error) {
-      toast.error(getErrorMessage(error, "Email alert preference update nahi ho saka"));
+      toast.error(getErrorMessage(error, "Unable to update email alert preferences"));
     }
   };
 
   const handleCopyCommand = async () => {
     if (!pendingConnect?.startCommand || typeof navigator === "undefined" || !navigator.clipboard) {
-      toast.error("Copy command available nahi hai");
+      toast.error("Copy is not available in this browser");
       return;
     }
 
@@ -109,7 +109,7 @@ export default function AlertsPage() {
       await navigator.clipboard.writeText(pendingConnect.startCommand);
       toast.success("Start command copied");
     } catch {
-      toast.error("Command copy nahi ho saka");
+      toast.error("Unable to copy the command");
     }
   };
 
@@ -120,7 +120,7 @@ export default function AlertsPage() {
           <Bell className="text-primary" /> Alert Channels
         </h1>
         <p className="text-sm text-muted-foreground">
-          Paid aur demo users ke liye direct delivery setup. Telegram ab direct user bot connection se chalega, refresh timer se nahi.
+          Direct delivery setup for paid and demo users. Telegram now uses a direct bot connection instead of timer-based refresh.
         </p>
       </div>
 
@@ -132,7 +132,7 @@ export default function AlertsPage() {
               Telegram Direct Alerts
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
-              Signal alerts connected Telegram chat par direct aayenge. Channel join karne ki zarurat nahi.
+              Signal alerts are sent directly to your connected Telegram chat. No channel join is required.
             </p>
           </div>
           <div
@@ -169,10 +169,10 @@ export default function AlertsPage() {
             <div className="rounded-2xl border border-sky-500/15 bg-sky-500/[0.04] px-4 py-4">
               <div className="text-sm font-semibold text-foreground">Setup flow</div>
               <ol className="mt-2 space-y-2 text-sm text-muted-foreground">
-                <li>1. `Connect Telegram` dabao.</li>
-                <li>2. Bot khulega aur deep-link se tumhara account identify hoga.</li>
-                <li>3. Telegram me `Start` dabao.</li>
-                <li>4. Wapas aake `Refresh Status` karo.</li>
+                <li>1. Click `Connect Telegram`.</li>
+                <li>2. The bot opens with a secure deep link for your account.</li>
+                <li>3. Press `Start` in Telegram.</li>
+                <li>4. Return here and click `Refresh Status`.</li>
               </ol>
             </div>
 
@@ -245,7 +245,7 @@ export default function AlertsPage() {
               <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.06] px-4 py-4">
                 <div className="text-sm font-semibold text-foreground">Desktop fallback</div>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Agar browser `tg://` error de raha hai to `Open Telegram Web` kholo, bot search karo, phir ye command bhejo.
+                  If your browser blocks `tg://` links, open Telegram Web, find the bot, and send this command.
                 </p>
                 <div className="mt-3 rounded-xl border border-black/10 bg-black/[0.04] px-3 py-3 font-mono text-xs text-foreground dark:border-white/10 dark:bg-white/[0.03]">
                   {pendingConnect.startCommand}
@@ -258,7 +258,7 @@ export default function AlertsPage() {
             <div className="rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.04] px-4 py-4">
               <div className="text-sm font-semibold text-foreground">Delivery rule</div>
               <p className="mt-2 text-sm text-muted-foreground">
-                Telegram alerts sirf connected paid ya demo users ko jayenge. Free user ya disconnected account ko signal bot message nahi milega.
+                Telegram alerts are delivered only to connected paid or demo users. Free or disconnected accounts do not receive bot messages.
               </p>
             </div>
 
@@ -268,7 +268,7 @@ export default function AlertsPage() {
                 WhatsApp
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                WhatsApp alerts phone mapping aur admin config par chalte hain. Is page par abhi manual setup nahi chahiye.
+                WhatsApp alerts depend on phone mapping and admin configuration. Manual setup is not required on this page.
               </p>
             </div>
 
@@ -288,7 +288,7 @@ export default function AlertsPage() {
                 {isEmailEnabled ? "Signal emails on" : "Signal emails off"}
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                Is toggle se sirf signal alert emails control hongi. Account, billing, OTP, aur important service emails normal flow me aate rahenge.
+                This toggle controls only signal alert emails. Account, billing, OTP, and important service emails continue as usual.
               </p>
               <div className="mt-3 text-xs text-muted-foreground">
                 Delivery email: <span className="font-semibold text-foreground">{meQuery.data?.email || "N/A"}</span>

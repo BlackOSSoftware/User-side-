@@ -4,8 +4,12 @@ import { buildMetadata } from "@/lib/seo/metadata";
 import { JsonLd, breadcrumbsJsonLd } from "@/lib/seo/jsonld";
 import { SITE_URL } from "@/lib/seo/metadata";
 
-export function generateMetadata({ params }: { params?: { slug?: string } }): Metadata {
-  const slug = params?.slug ?? "";
+type BlogPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
+  const { slug = "" } = await params;
   return buildMetadata({
     title: "Blog Article",
     description:
@@ -15,8 +19,8 @@ export function generateMetadata({ params }: { params?: { slug?: string } }): Me
   });
 }
 
-export default function Page({ params }: { params?: { slug?: string } }) {
-  const slug = params?.slug ?? "";
+export default async function Page({ params }: BlogPageProps) {
+  const { slug = "" } = await params;
   const slugLabel = slug ? slug.replace(/[-_]/g, " ") : "Blog";
   const breadcrumbs = breadcrumbsJsonLd([
     { name: "Home", url: SITE_URL },
