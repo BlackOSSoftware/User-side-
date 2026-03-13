@@ -1,7 +1,7 @@
 ﻿import Link from "next/link";
-import { ArrowRight, Instagram, Facebook, Youtube, Twitter } from "lucide-react";
+import { Apple, ArrowRight, Facebook, Instagram, Play, Twitter, Youtube } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { LOGIN_URL, TRIAL_URL } from "@/lib/external-links";
+import { APP_STORE_URL, LOGIN_URL, PLAY_STORE_URL, TRIAL_URL } from "@/lib/external-links";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
@@ -53,7 +53,7 @@ const Footer = () => {
           </Link>
         </div>
 
-        <div>
+        <div className="space-y-4">
           <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.12em] text-foreground/85">
             Platform
           </h4>
@@ -63,9 +63,30 @@ const Footer = () => {
             <li><Link className="transition hover:text-primary" href="/plans">Plans</Link></li>
             <li><Link className="transition hover:text-primary" href={TRIAL_URL} target="_blank" rel="noopener noreferrer">Free Trial</Link></li>
           </ul>
+
+          <div className="flex w-full items-center justify-center gap-2 sm:justify-start">
+            <a
+              href={PLAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 px-2 py-3 text-[11px] font-semibold leading-none text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:shadow-emerald-500/35 active:translate-y-0 active:scale-[0.98] min-[380px]:gap-2 min-[380px]:px-3 min-[380px]:text-xs"
+            >
+              <Play className="h-4 w-4" />
+              <span className="whitespace-nowrap">Play Store</span>
+            </a>
+            <a
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 px-2 py-3 text-[11px] font-semibold leading-none text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:shadow-black/35 active:translate-y-0 active:scale-[0.98] min-[380px]:gap-2 min-[380px]:px-3 min-[380px]:text-xs"
+            >
+              <Apple className="h-4 w-4" />
+              <span className="whitespace-nowrap">App Store</span>
+            </a>
+          </div>
         </div>
 
-        <div>
+        <div className="space-y-4">
           <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.12em] text-foreground/85">
             Company
           </h4>
@@ -94,7 +115,6 @@ const Footer = () => {
             Client Login
             <ArrowRight className="h-4 w-4" />
           </Link>
-
           <div className="flex items-center justify-center sm:justify-start gap-3">
             {[
               { label: "WhatsApp", Icon: WhatsAppIcon, href: whatsappUrl },

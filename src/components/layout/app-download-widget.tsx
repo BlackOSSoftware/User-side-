@@ -3,13 +3,11 @@
 import Image from "next/image";
 import { Apple, Play, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/external-links";
 
 export default function AppDownloadWidget() {
     const [isAppModalOpen, setIsAppModalOpen] = useState(false);
     const [showAppHint, setShowAppHint] = useState(true);
-
-    const appStoreUrl = "#";
-    const playStoreUrl = "#";
 
     useEffect(() => {
         const timer = setTimeout(() => setIsAppModalOpen(true), 45000);
@@ -67,14 +65,18 @@ export default function AppDownloadWidget() {
 
                                 <div className="flex flex-col sm:flex-row gap-3">
                                     <a
-                                        href={playStoreUrl}
+                                        href={PLAY_STORE_URL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 text-white px-4 py-2.5 text-sm font-semibold shadow-lg shadow-emerald-500/30 hover:scale-[1.01] transition"
                                     >
                                         <Play className="h-5 w-5" />
                                         <span className="text-sm">Get it on Play Store</span>
                                     </a>
                                     <a
-                                        href={appStoreUrl}
+                                        href={APP_STORE_URL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 text-white px-4 py-2.5 text-sm font-semibold shadow-lg shadow-black/30 hover:scale-[1.01] transition"
                                     >
                                         <Apple className="h-5 w-5" />
