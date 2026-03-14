@@ -14,6 +14,7 @@ export type PricingPlan = {
     buttonText: string;
     href: string;
     isPopular: boolean;
+    onClick?: () => void | Promise<void>;
 };
 
 type PricingSectionProps = {
@@ -82,12 +83,10 @@ export default function PricingSection({ plans }: PricingSectionProps) {
                                 ))}
                             </ul>
                             <div className="mt-auto w-full">
-                                <Link
-                                    href={plan.href}
-                                    target={isExternal ? "_blank" : undefined}
-                                    rel={isExternal ? "noopener noreferrer" : undefined}
-                                >
+                                {plan.onClick ? (
                                     <Button
+                                        type="button"
+                                        onClick={() => plan.onClick?.()}
                                         size="lg"
                                         variant={isPopular ? "default" : "outline"}
                                         className={`w-full ${isPopular
@@ -97,7 +96,24 @@ export default function PricingSection({ plans }: PricingSectionProps) {
                                     >
                                         {plan.buttonText}
                                     </Button>
-                                </Link>
+                                ) : (
+                                    <Link
+                                        href={plan.href}
+                                        target={isExternal ? "_blank" : undefined}
+                                        rel={isExternal ? "noopener noreferrer" : undefined}
+                                    >
+                                        <Button
+                                            size="lg"
+                                            variant={isPopular ? "default" : "outline"}
+                                            className={`w-full ${isPopular
+                                                ? "bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600 text-black font-bold shadow-lg shadow-blue-500/25"
+                                                : "border-slate-200 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-900 dark:text-white"
+                                            }`}
+                                        >
+                                            {plan.buttonText}
+                                        </Button>
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     );

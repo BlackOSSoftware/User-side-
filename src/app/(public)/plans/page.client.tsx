@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Star, Zap, ArrowLeft, ArrowRight } from "lucide-react";
+import { Check, Zap, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { usePlansQuery } from "@/services/plans/plan.hooks";
 import type { Plan } from "@/services/plans/plan.types";
 import { useSwipeCards } from "@/hooks/use-swipe-cards";
-import { buildPublicPlanCta, TRIAL_URL } from "@/lib/external-links";
+import { buildPublicPlanCta, formatPlanDuration, formatPlanPrice, TRIAL_URL } from "@/lib/external-links";
+import { trackPublicPlanEnquiry } from "@/lib/plan-enquiry-tracker";
 
 export default function PlansPage() {
   const words = ["Scale With Confidence.", "Execute With Precision.", "Grow With Structure."];
@@ -16,6 +17,23 @@ export default function PlansPage() {
   const [subIndex, setSubIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
   const { data: plans = [] } = usePlansQuery();
+  const openPlanDestination = useCallback(async (planHref: string, trackingData?: {
+    planId?: string;
+    planName: string;
+    planPriceLabel?: string;
+    planDurationLabel?: string;
+    planSegment?: string;
+    sourcePage: string;
+  }) => {
+    if (trackingData) {
+      try {
+        await trackPublicPlanEnquiry(trackingData);
+      } catch (error) {
+        console.error("Failed to create plan enquiry", error);
+      }
+    }
+    window.open(planHref, "_blank", "noopener,noreferrer");
+  }, []);
 
   useEffect(() => {
     if (subIndex === words[index].length + 1 && !reverse) {
@@ -48,6 +66,7 @@ export default function PlansPage() {
         buttonText: "Start 30-Day Access",
         href: TRIAL_URL,
         isPopular: false,
+        onClick: () => window.open(TRIAL_URL, "_blank", "noopener,noreferrer"),
       },
       {
         id: "pro",
@@ -56,7 +75,7 @@ export default function PlansPage() {
         price: "INR 25,000",
         duration: "Month",
         features: ["Full multi-strategy coverage", "Sub-100ms signal routing", "Deep analytics and exports", "Priority response support"],
-        buttonText: "Choose Plan",
+        buttonText: "Continue with Professional Access",
         href: buildPublicPlanCta({
           id: "pro",
           name: "Professional Access",
@@ -65,6 +84,24 @@ export default function PlansPage() {
           segment: "N/A",
         }).href,
         isPopular: true,
+        onClick: () =>
+          openPlanDestination(
+            buildPublicPlanCta({
+              id: "pro",
+              name: "Professional Access",
+              price: 25000,
+              durationDays: 30,
+              segment: "N/A",
+            }).href,
+            {
+              planId: "pro",
+              planName: "Professional Access",
+              planPriceLabel: "INR 25,000",
+              planDurationLabel: "30 Days",
+              planSegment: "N/A",
+              sourcePage: "public_plans_page",
+            }
+          ),
       },
       {
         id: "enterprise",
@@ -73,7 +110,7 @@ export default function PlansPage() {
         price: "Custom",
         duration: "30 Days",
         features: ["Dedicated infrastructure", "White-label deployment", "FIX/API integrations", "Dedicated relationship manager"],
-        buttonText: "Choose Plan",
+        buttonText: "Talk to Sales",
         href: buildPublicPlanCta({
           id: "enterprise",
           name: "Institutional Suite",
@@ -82,9 +119,27 @@ export default function PlansPage() {
           segment: "N/A",
         }).href,
         isPopular: false,
+        onClick: () =>
+          openPlanDestination(
+            buildPublicPlanCta({
+              id: "enterprise",
+              name: "Institutional Suite",
+              durationDays: 30,
+              isCustom: true,
+              segment: "N/A",
+            }).href,
+            {
+              planId: "enterprise",
+              planName: "Institutional Suite",
+              planPriceLabel: "Custom",
+              planDurationLabel: "30 Days",
+              planSegment: "N/A",
+              sourcePage: "public_plans_page",
+            }
+          ),
       },
     ],
-    []
+    [openPlanDestination]
   );
 
   const formattedPlans = useMemo(() => {
@@ -93,20 +148,6 @@ export default function PlansPage() {
     const popularId = plans
       .filter((plan) => !plan.isDemo)
       .sort((a, b) => (b.price ?? 0) - (a.price ?? 0))[0]?._id;
-
-    const formatPrice = (price?: number, isDemo?: boolean, isCustom?: boolean) => {
-      if (isDemo) return "Demo";
-      if (isCustom) return "Custom";
-      if (!price || price <= 0) return "Custom";
-      const value = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(price);
-      return `INR ${value}`;
-    };
-
-    const formatDuration = (durationDays?: number, isDemo?: boolean, isCustom?: boolean) => {
-      if ((isDemo || isCustom) && !durationDays) return "30 Days";
-      if (!durationDays) return "Flexible";
-      return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
-    };
 
     return plans.map((plan: Plan) => {
       const isPopular = plan._id === popularId;
@@ -135,15 +176,37 @@ export default function PlansPage() {
         id: plan._id,
         name: plan.name,
         description: plan.description || "Premium access with execution-ready workflows.",
-        price: formatPrice(plan.price, isDemo, isCustom),
-        duration: formatDuration(plan.durationDays, isDemo, isCustom),
+        price: formatPlanPrice(plan.price, isDemo, isCustom),
+        duration: formatPlanDuration(plan.durationDays, isDemo, isCustom),
         features: plan.features?.length
           ? plan.features
           : ["Execution-grade routing", "Priority strategy support", "Performance reporting", "Managed onboarding"],
         isPopular,
+        onClick: () =>
+          openPlanDestination(
+            buildPublicPlanCta({
+              id: plan._id,
+              name: plan.name,
+              price: plan.price,
+              durationDays: plan.durationDays,
+              segment: plan.segment,
+              isDemo,
+              isCustom,
+            }).href,
+            isDemo
+              ? undefined
+              : {
+                  planId: plan._id,
+                  planName: plan.name,
+                  planPriceLabel: formatPlanPrice(plan.price, isDemo, isCustom),
+                  planDurationLabel: formatPlanDuration(plan.durationDays, isDemo, isCustom),
+                  planSegment: plan.segment || "N/A",
+                  sourcePage: "public_plans_page",
+                }
+          ),
       };
     });
-  }, [fallbackPlans, plans]);
+  }, [fallbackPlans, openPlanDestination, plans]);
 
   const loopedPlans = useMemo(() => {
     if (!formattedPlans.length) return [];
@@ -411,13 +474,10 @@ const scrollByStep = useCallback(
                 </CardContent>
 
                 <CardFooter className="p-6 pt-0 mt-auto">
-                  <Link
-                    href={plan.href}
-                    className="w-full"
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noopener noreferrer" : undefined}
-                  >
+                  {plan.onClick ? (
                     <Button
+                      type="button"
+                      onClick={() => plan.onClick?.()}
                       size="lg"
                       className={`w-full h-12 rounded-xl text-sm font-bold transition-all duration-300
                         ${plan.isPopular
@@ -426,7 +486,24 @@ const scrollByStep = useCallback(
                     >
                       {plan.buttonText} <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
-                  </Link>
+                  ) : (
+                    <Link
+                      href={plan.href}
+                      className="w-full"
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noopener noreferrer" : undefined}
+                    >
+                      <Button
+                        size="lg"
+                        className={`w-full h-12 rounded-xl text-sm font-bold transition-all duration-300
+                          ${plan.isPopular
+                            ? "bg-primary text-black hover:bg-primary/90 shadow-xl shadow-primary/20 hover:scale-[1.02]"
+                            : "bg-foreground text-background hover:opacity-90"}`}
+                      >
+                        {plan.buttonText} <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                  )}
                 </CardFooter>
                 </Card>
               );

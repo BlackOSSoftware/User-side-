@@ -14,26 +14,37 @@ type PlanCtaInput = {
   isCustom?: boolean;
 };
 
-const formatPlanPrice = (price?: number, isDemo?: boolean, isCustom?: boolean) => {
+export const formatPlanPrice = (price?: number, isDemo?: boolean, isCustom?: boolean) => {
   if (isDemo) return "Demo";
   if (isCustom) return "Custom";
   if (!price || price <= 0) return "Custom";
   return `INR ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(price)}`;
 };
 
-const formatPlanDuration = (durationDays?: number) => {
+export const formatPlanDuration = (durationDays?: number, isDemo?: boolean, isCustom?: boolean) => {
+  if ((isDemo || isCustom) && !durationDays) return "30 Days";
   if (!durationDays) return "Flexible";
   return `${durationDays} Day${durationDays > 1 ? "s" : ""}`;
+};
+
+const getPlanButtonText = (plan: PlanCtaInput) => {
+  if (plan.isDemo) return "Start Demo Access";
+  if (plan.isCustom) return "Talk to Sales";
+  if (plan.name) return `Continue with ${plan.name}`;
+  return "Continue with Plan";
 };
 
 export const buildPublicPlanCta = (plan: PlanCtaInput) => {
   if (plan.isDemo) {
     return {
       href: plan.id ? `${TRIAL_URL}?planId=${encodeURIComponent(plan.id)}` : TRIAL_URL,
-      buttonText: "Start Demo Access",
+      buttonText: getPlanButtonText(plan),
       isExternal: true,
     };
   }
+
+  const planPrice = formatPlanPrice(plan.price, plan.isDemo, plan.isCustom);
+  const planDuration = formatPlanDuration(plan.durationDays, plan.isDemo, plan.isCustom);
 
   const message = [
     "Hello MSPK Team,",
@@ -41,8 +52,8 @@ export const buildPublicPlanCta = (plan: PlanCtaInput) => {
     "I want to proceed with this plan:",
     `- Plan Name: ${plan.name || "N/A"}`,
     `- Plan ID: ${plan.id || "N/A"}`,
-    `- Plan Price: ${formatPlanPrice(plan.price, plan.isDemo, plan.isCustom)}`,
-    `- Plan Duration: ${formatPlanDuration(plan.durationDays)}`,
+    `- Plan Price: ${planPrice}`,
+    `- Plan Duration: ${planDuration}`,
     `- Segment: ${plan.segment || "N/A"}`,
     "",
     "Please share the next steps for activation.",
@@ -50,7 +61,7 @@ export const buildPublicPlanCta = (plan: PlanCtaInput) => {
 
   return {
     href: `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent(message)}`,
-    buttonText: "Choose Plan",
+    buttonText: getPlanButtonText(plan),
     isExternal: true,
   };
 };
