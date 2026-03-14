@@ -1,7 +1,8 @@
 ﻿import Link from "next/link";
-import { Apple, ArrowRight, Facebook, Instagram, Play, Twitter, Youtube } from "lucide-react";
+import { ArrowRight, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { APP_STORE_URL, LOGIN_URL, PLAY_STORE_URL, TRIAL_URL } from "@/lib/external-links";
+import { StoreBadge } from "@/components/layout/store-badge";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
@@ -64,25 +65,9 @@ const Footer = () => {
             <li><Link className="transition hover:text-primary" href={TRIAL_URL} target="_blank" rel="noopener noreferrer">Free Trial</Link></li>
           </ul>
 
-          <div className="flex w-full items-center justify-center gap-2 sm:justify-start">
-            <a
-              href={PLAY_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 px-2 py-3 text-[11px] font-semibold leading-none text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:shadow-emerald-500/35 active:translate-y-0 active:scale-[0.98] min-[380px]:gap-2 min-[380px]:px-3 min-[380px]:text-xs"
-            >
-              <Play className="h-4 w-4" />
-              <span className="whitespace-nowrap">Play Store</span>
-            </a>
-            <a
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 px-2 py-3 text-[11px] font-semibold leading-none text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:shadow-black/35 active:translate-y-0 active:scale-[0.98] min-[380px]:gap-2 min-[380px]:px-3 min-[380px]:text-xs"
-            >
-              <Apple className="h-4 w-4" />
-              <span className="whitespace-nowrap">App Store</span>
-            </a>
+          <div className="grid w-full max-w-xs grid-cols-1 gap-2.5 sm:max-w-sm">
+            <StoreBadge href={PLAY_STORE_URL} store="google-play" />
+            <StoreBadge href={APP_STORE_URL} store="app-store" />
           </div>
         </div>
 

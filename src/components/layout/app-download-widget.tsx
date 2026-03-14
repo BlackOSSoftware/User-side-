@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Apple, Play, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/external-links";
+import { StoreBadge } from "@/components/layout/store-badge";
 
 export default function AppDownloadWidget() {
     const [isAppModalOpen, setIsAppModalOpen] = useState(false);
@@ -40,12 +41,12 @@ export default function AppDownloadWidget() {
                     onClick={() => setIsAppModalOpen(false)}
                 >
                     <div
-                        className="relative w-full max-w-[20rem] sm:max-w-md md:max-w-3xl bg-card rounded-2xl border border-white/10 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300"
+                        className="relative w-full max-w-[20rem] overflow-hidden rounded-2xl border border-border/70 bg-card shadow-2xl animate-in fade-in zoom-in-95 duration-300 sm:max-w-md md:max-w-3xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             onClick={() => setIsAppModalOpen(false)}
-                            className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-black/90 transition sm:top-4 sm:right-4 sm:h-9 sm:w-9"
+                            className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/70 text-white transition hover:bg-black/90 sm:top-4 sm:right-4 sm:h-9 sm:w-9"
                             aria-label="Close"
                         >
                             <X className="h-4 w-4" />
@@ -63,25 +64,9 @@ export default function AppDownloadWidget() {
                                     Get real-time signals, market alerts, and portfolio tracking on the go.
                                 </p>
 
-                                <div className="flex flex-col sm:flex-row gap-3">
-                                    <a
-                                        href={PLAY_STORE_URL}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 text-white px-4 py-2.5 text-sm font-semibold shadow-lg shadow-emerald-500/30 hover:scale-[1.01] transition"
-                                    >
-                                        <Play className="h-5 w-5" />
-                                        <span className="text-sm">Get it on Play Store</span>
-                                    </a>
-                                    <a
-                                        href={APP_STORE_URL}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 text-white px-4 py-2.5 text-sm font-semibold shadow-lg shadow-black/30 hover:scale-[1.01] transition"
-                                    >
-                                        <Apple className="h-5 w-5" />
-                                        <span className="text-sm">Download on App Store</span>
-                                    </a>
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    <StoreBadge href={PLAY_STORE_URL} store="google-play" />
+                                    <StoreBadge href={APP_STORE_URL} store="app-store" />
                                 </div>
                             </div>
 
