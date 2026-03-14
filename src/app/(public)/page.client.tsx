@@ -44,7 +44,9 @@ export default function Home() {
                 buttonText: "Start 30-Day Trial",
                 href: TRIAL_URL,
                 isPopular: false,
-                onClick: () => window.open(TRIAL_URL, "_blank", "noopener,noreferrer"),
+                onClick: () => {
+                    window.open(TRIAL_URL, "_blank", "noopener,noreferrer");
+                },
             },
             {
                 id: "pro",

@@ -66,7 +66,9 @@ export default function PlansPage() {
         buttonText: "Start 30-Day Access",
         href: TRIAL_URL,
         isPopular: false,
-        onClick: () => window.open(TRIAL_URL, "_blank", "noopener,noreferrer"),
+        onClick: () => {
+          window.open(TRIAL_URL, "_blank", "noopener,noreferrer");
+        },
       },
       {
         id: "pro",
