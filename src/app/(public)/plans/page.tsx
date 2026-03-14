@@ -7,9 +7,16 @@ import { SITE_URL } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildMetadata({
   title: "Plans & Pricing",
   description:
-    "Explore MSPK Trade Solutions plans for live trading signals across forex, commodities, indices, and Indian markets.",
+    "Explore MSPK Trade Solutions plans for live trading signals, referral code sharing, and subscription access across forex, commodities, indices, and Indian markets.",
   path: "/plans",
-  keywordsExtra: ["trading signal plans", "signal pricing", "subscription signals"],
+  keywordsExtra: [
+    "trading signal plans",
+    "signal pricing",
+    "subscription signals",
+    "referral code share",
+    "share referral code",
+    "referral plans page",
+  ],
 });
 
 export default function Page() {
@@ -28,6 +35,11 @@ export default function Page() {
       question: "How do I start a trial?",
       answer:
         "Use the Get Started or trial links to access the MSPK user portal for trial activation.",
+    },
+    {
+      question: "Can I share a referral code from MSPK?",
+      answer:
+        "Yes. MSPK users can share their referral code and referral trial link so new users can register through the correct referral journey.",
     },
   ]);
 

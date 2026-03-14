@@ -7,6 +7,9 @@ type PublicPlanTrackerInput = {
   planDurationLabel?: string;
   planSegment?: string;
   sourcePage: string;
+  userName?: string;
+  userEmail?: string;
+  googleAccountEmail?: string;
 };
 
 const getBrowserContext = () => {
@@ -79,6 +82,9 @@ export async function trackPublicPlanEnquiry(input: PublicPlanTrackerInput) {
     pageUrl: browserContext.pageUrl,
     referrerUrl: browserContext.referrerUrl,
     visitorId: browserContext.visitorId,
+    userName: input.userName,
+    userEmail: input.userEmail,
+    googleAccountEmail: input.googleAccountEmail,
     browserName: browserContext.browserName,
     browserVersion: browserContext.browserVersion,
     osName: browserContext.osName,

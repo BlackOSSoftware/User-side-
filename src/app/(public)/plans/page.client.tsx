@@ -533,6 +533,53 @@ const scrollByStep = useCallback(
             </div>
           ) : null}
         </div>
+
+        <section className="mx-auto mt-12 w-full max-w-[1180px] rounded-[2rem] border border-white/10 bg-white/5 p-5 backdrop-blur-sm sm:mt-16 sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+            <div>
+              <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+                Referral Access
+              </div>
+              <h2 className="mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Share your referral code with every MSPK plan journey.
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                MSPK plans are not only built for trading signal access, they also support referral code sharing,
+                referral-based onboarding, and referral link tracking for users who want to invite others into the platform.
+              </p>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                {
+                  title: "Referral Code Sharing",
+                  description:
+                    "Share your referral code with new users so their registration is mapped correctly inside MSPK.",
+                },
+                {
+                  title: "Referral Trial Link",
+                  description:
+                    "Send your MSPK trial link while discussing plans, pricing, and onboarding with new users.",
+                },
+                {
+                  title: "Referral-Based Signups",
+                  description:
+                    "When a user registers through your referral code, the relationship can be tracked in the platform.",
+                },
+                {
+                  title: "Plan and Referral Growth",
+                  description:
+                    "Use the public plans page to explain subscription plans and referral benefits in one place.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <h3 className="text-sm font-bold text-foreground sm:text-base">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
