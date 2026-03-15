@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/market`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/plans`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/privacy-policy`, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${SITE_URL}/delete-account`, changeFrequency: "yearly", priority: 0.5 },
     { url: LOGIN_URL, changeFrequency: "monthly", priority: 0.4 },
     { url: TRIAL_URL, changeFrequency: "monthly", priority: 0.5 },
   ];
