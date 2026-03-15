@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { Home, TrendingUp, BadgeDollarSign, Info, Menu, X, Mail, FileText, Twitter } from "lucide-react"
+import { Home, TrendingUp, BadgeDollarSign, Info, Menu, X, Mail, FileText } from "lucide-react"
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -23,8 +23,6 @@ export default function Navbar() {
     }, [])
 
     const pathname = usePathname()
-    const xUrl = "https://x.com/MspkTrade"
-
     const closeMobileMenu = () => {
         setMobileOpen(false)
     }
@@ -116,7 +114,7 @@ export default function Navbar() {
                 <div
                     className={cn(
                         "lg:hidden origin-top transition-all duration-300 overflow-hidden border-t border-border/40 bg-background/90 backdrop-blur-xl px-4",
-                        mobileOpen ? "max-h-96 py-4" : "max-h-0 py-0"
+                        mobileOpen ? "max-h-[80vh] py-4 overflow-y-auto" : "max-h-0 py-0"
                     )}
                 >
                     <div className="flex flex-col gap-2">
@@ -150,13 +148,8 @@ export default function Navbar() {
 
                         {/* Drawer actions */}
                         <div className="flex flex-col sm:flex-row gap-2 pt-3 mt-1 border-t border-border/40">
-                            <a href={xUrl} target="_blank" rel="noopener noreferrer" className="sm:flex-1">
-                                <Button variant="outline" className="w-full rounded-xl py-2.5 sm:py-2 text-sm sm:text-base">
-                                    <Twitter className="h-4 w-4 mr-2" /> X (Twitter)
-                                </Button>
-                            </a>
                             <Link href={LOGIN_URL} className="sm:flex-1" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
-                                <Button variant="ghost" className="w-full rounded-xl py-2.5 sm:py-2 text-sm sm:text-base">Log In</Button>
+                                <Button variant="outline" className="w-full rounded-xl py-2.5 sm:py-2 text-sm sm:text-base">Log In</Button>
                             </Link>
 
                             <Link href={TRIAL_URL} className="sm:flex-1" onClick={closeMobileMenu} target="_blank" rel="noopener noreferrer">
