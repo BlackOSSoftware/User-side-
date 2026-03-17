@@ -30,19 +30,13 @@ export function StoreBadge({ href, store, className }: StoreBadgeProps) {
         className
       )}
     >
-      {isApkDownload ? (
-        <span className="inline-flex w-full max-w-[196px] items-center justify-center rounded-xl border border-primary/30 bg-gradient-to-r from-primary/90 to-blue-500/90 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white shadow-[0_12px_28px_-16px_rgba(59,130,246,0.85)] transition-transform duration-200 group-hover:scale-[1.01]">
-          Download App
-        </span>
-      ) : (
-        <Image
-          src={imageSrc}
-          alt={imageAlt}
-          width={260}
-          height={78}
-          className="h-auto w-full max-w-[168px] object-contain transition-transform duration-200 group-hover:scale-[1.01] min-[360px]:max-w-[184px] sm:max-w-[196px]"
-        />
-      )}
+      <Image
+        src={imageSrc}
+        alt={imageAlt}
+        width={260}
+        height={78}
+        className="h-auto w-full max-w-[168px] object-contain transition-transform duration-200 group-hover:scale-[1.01] min-[360px]:max-w-[184px] sm:max-w-[196px]"
+      />
     </a>
   );
 }
