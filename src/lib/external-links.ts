@@ -1,7 +1,7 @@
 export const LOGIN_URL = "https://user.mspktradesolutions.com/login";
 export const TRIAL_URL = "https://user.mspktradesolutions.com/trial";
 export const SUPPORT_WHATSAPP = "917770039037";
-export const PLAY_STORE_URL = "#";
+export const PLAY_STORE_URL = "/MSPK.apk";
 export const APP_STORE_URL = "#";
 
 type PlanCtaInput = {
