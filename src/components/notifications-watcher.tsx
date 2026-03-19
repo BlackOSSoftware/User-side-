@@ -5,7 +5,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { getNotifications } from '@/services/notifications/notification.service';
 import type { NotificationItem, NotificationListResponse } from '@/services/notifications/notification.types';
-import { getAuthExpiresAt, getAuthToken } from '@/lib/auth/session';
+import { clearAuthSession, getAuthExpiresAt, getAuthToken } from '@/lib/auth/session';
+import { LOGIN_URL } from '@/lib/external-links';
 
 const LAST_SEEN_AT_KEY = 'mspk_notifications_last_seen_at_v1';
 const SEEN_IDS_KEY = 'mspk_notifications_seen_ids_v1';
@@ -69,6 +70,11 @@ function getNotificationSocketUrl(token: string): string {
   return `${wsProtocol}${host}/?token=${encodeURIComponent(token)}`;
 }
 
+function isAuthSocketClose(code?: number, reason?: string): boolean {
+  const normalizedReason = String(reason || '').trim().toLowerCase();
+  return code === 1008 || code === 4001 || /session expired|authentication failed|invalid connection url|user not found/.test(normalizedReason);
+}
+
 export function NotificationsWatcher() {
   const token = getAuthToken();
   const expiresAt = getAuthExpiresAt();
@@ -92,6 +98,12 @@ export function NotificationsWatcher() {
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectRef = useRef<number | null>(null);
   const reconnectAttemptsRef = useRef(0);
+  const handleAuthSocketFailure = useCallback(() => {
+    clearAuthSession();
+    if (typeof window !== 'undefined' && window.location.href !== LOGIN_URL) {
+      window.location.href = LOGIN_URL;
+    }
+  }, []);
 
   const notifyItem = useCallback((item: NotificationItem) => {
     const title = item.title || 'New Notification';
@@ -271,6 +283,11 @@ export function NotificationsWatcher() {
       socket.onmessage = (event: MessageEvent<string>) => {
         try {
           const message = JSON.parse(event.data) as { type?: string; payload?: unknown };
+          if (message.type === 'error' && /session expired|authentication failed/i.test(String(message.payload || ''))) {
+            handleAuthSocketFailure();
+            socket.close(4001, 'Session expired');
+            return;
+          }
           if (message.type !== 'notification:new') return;
           if (!message.payload || typeof message.payload !== 'object') return;
           processIncomingNotification(message.payload as NotificationItem);
@@ -283,8 +300,12 @@ export function NotificationsWatcher() {
         socket.close();
       };
 
-      socket.onclose = () => {
+      socket.onclose = (event) => {
         if (closedByEffect) return;
+        if (isAuthSocketClose(event.code, event.reason)) {
+          handleAuthSocketFailure();
+          return;
+        }
         scheduleReconnect();
       };
     };
@@ -300,7 +321,7 @@ export function NotificationsWatcher() {
         socket.close();
       }
     };
-  }, [hasValidSession, token, processIncomingNotification]);
+  }, [hasValidSession, token, processIncomingNotification, handleAuthSocketFailure]);
 
   return null;
 }

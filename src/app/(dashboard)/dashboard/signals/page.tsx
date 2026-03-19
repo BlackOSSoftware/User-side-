@@ -55,10 +55,18 @@ function getSignalId(signal: SignalItem) {
 function getSignalKey(signal: SignalItem) {
   return (
     getSignalId(signal) ||
-    [signal.symbol, signal.type, signal.signalTime || signal.timestamp || signal.createdAt]
+    [signal.symbol, signal.type, getDisplaySignalTime(signal)]
       .filter(Boolean)
       .join("|")
   );
+}
+
+function getDisplaySignalTime(signal: SignalItem) {
+  return signal.displaySignalTime || signal.signalTime || signal.timestamp || signal.createdAt;
+}
+
+function getDisplayExitTime(signal: SignalItem) {
+  return signal.displayExitTime || signal.exitTime || signal.updatedAt || signal.createdAt;
 }
 
 function getEntry(signal: SignalItem) {
@@ -629,7 +637,7 @@ export default function SignalsPage() {
                     <div className="inline-flex items-start gap-1.5 text-[10px] text-slate-700 dark:text-slate-300">
                       <Clock3 className="h-3.5 w-3.5 mt-[1px] text-amber-700 dark:text-amber-100" />
                       <span>
-                        {formatDate(signal.signalTime || signal.timestamp || signal.createdAt)}
+                        {formatDate(getDisplaySignalTime(signal))}
                       </span>
                     </div>
 
@@ -780,7 +788,7 @@ export default function SignalsPage() {
 
                       <div className="text-[10px] text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5">
                         <Clock3 className="h-3.5 w-3.5 text-amber-700 dark:text-amber-100" />
-                        {formatDate(signal.signalTime || signal.timestamp || signal.createdAt)}
+                        {formatDate(getDisplaySignalTime(signal))}
                       </div>
                     </div>
                   </button>
@@ -946,9 +954,7 @@ export default function SignalsPage() {
                           Signal Time
                         </div>
                         <div className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-                          {formatDate(
-                            detailSignal.signalTime || detailSignal.timestamp || detailSignal.createdAt,
-                          )}
+                          {formatDate(getDisplaySignalTime(detailSignal))}
                         </div>
                       </div>
 
@@ -958,7 +964,7 @@ export default function SignalsPage() {
                           Exit Time
                         </div>
                         <div className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-                          {formatDate(detailSignal.exitTime)}
+                          {formatDate(getDisplayExitTime(detailSignal))}
                         </div>
                       </div>
 
